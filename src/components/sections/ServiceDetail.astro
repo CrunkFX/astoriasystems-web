@@ -1,0 +1,622 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { t, tRaw, tArray } from '../../i18n/utils';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../ui/Container.astro';
+import GlassCard from '../ui/GlassCard.astro';
+import Breadcrumbs from '../seo/Breadcrumbs.astro';
+import CTA from '../sections/CTA.astro';
+import ServiceVisual from '../visuals/ServiceVisual.astro';
+import ServiceHeroCanvas from '../visuals/ServiceHeroCanvas.astro';
+
+interface Props {
+  locale: Locale;
+  serviceKey: 'communication' | 'security' | 'infrastructure' | 'development';
+}
+
+const { locale, serviceKey } = Astro.props;
+const routes = routeMap[locale];
+
+const serviceTitle = t(locale, `services.${serviceKey}.title`);
+const serviceDescription = t(locale, `services.${serviceKey}.description`);
+const pageDescription = t(locale, `services.${serviceKey}.pageDescription`);
+const intro = t(locale, `services.${serviceKey}.intro`);
+const features = tArray(locale, `services.${serviceKey}.features`);
+const benefits = tArray(locale, `services.${serviceKey}.benefits`);
+const detailSections = tRaw(locale, `services.${serviceKey}.detailSections`) as { title: string; description: string; icon: string }[];
+const portfolio = tArray(locale, `services.${serviceKey}.portfolio`);
+const portfolioNote = t(locale, `services.${serviceKey}.portfolioNote`);
+const industrySolutions = tRaw(locale, `services.${serviceKey}.industrySolutions`) as { title: string; categories: { name: string; icon: string; items: string[] }[] } | undefined;
+
+const colorMap = {
+  communication: {
+    gradient: 'from-cyan-500 to-blue-500',
+    gradientVia: 'from-cyan-400 via-cyan-500 to-blue-600',
+    text: 'text-cyan-400',
+    textLight: 'text-cyan-500',
+    rgb: '6, 182, 212',
+    rgbEnd: '59, 130, 246',
+    border: 'border-cyan-500/20',
+  },
+  security: {
+    gradient: 'from-green-500 to-emerald-500',
+    gradientVia: 'from-green-400 via-emerald-500 to-emerald-600',
+    text: 'text-green-400',
+    textLight: 'text-green-500',
+    rgb: '34, 197, 94',
+    rgbEnd: '16, 185, 129',
+    border: 'border-green-500/20',
+  },
+  infrastructure: {
+    gradient: 'from-violet-500 to-purple-500',
+    gradientVia: 'from-violet-400 via-purple-500 to-purple-600',
+    text: 'text-violet-400',
+    textLight: 'text-violet-500',
+    rgb: '139, 92, 246',
+    rgbEnd: '168, 85, 247',
+    border: 'border-violet-500/20',
+  },
+  development: {
+    gradient: 'from-orange-500 to-red-500',
+    gradientVia: 'from-orange-400 via-orange-500 to-red-500',
+    text: 'text-orange-400',
+    textLight: 'text-orange-500',
+    rgb: '249, 115, 22',
+    rgbEnd: '239, 68, 68',
+    border: 'border-orange-500/20',
+  },
+};
+const colors = colorMap[serviceKey];
+
+const iconSvgs: Record<string, string> = {
+  phone: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />',
+  chat: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />',
+  email: '<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />',
+  video: '<path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />',
+  crm: '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />',
+  automation: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
+  server: '<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 17.25v-.228a4.5 4.5 0 00-.12-1.03l-2.268-9.64a3.375 3.375 0 00-3.285-2.602H7.923a3.375 3.375 0 00-3.285 2.602l-2.268 9.64a4.5 4.5 0 00-.12 1.03v.228m19.5 0a3 3 0 01-3 3H5.25a3 3 0 01-3-3m19.5 0a3 3 0 00-3-3H5.25a3 3 0 00-3 3m16.5 0h.008v.008h-.008v-.008zm-3 0h.008v.008h-.008v-.008z" />',
+  mfa: '<path stroke-linecap="round" stroke-linejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33" />',
+  encryption: '<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />',
+  training: '<path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />',
+  api: '<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />',
+  password: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />',
+  erp: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />',
+  cloud: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />',
+  industry: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />',
+  accounting: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z" />',
+  hr: '<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />',
+  iot: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />',
+  custom: '<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.648 3.01a.75.75 0 01-1.024-.274l-.602-1.043a.75.75 0 01.274-1.024l5.648-3.01M11.42 15.17l2.597-6.528m-2.597 6.528L9 15.17m4.42-6.528l5.648-3.01a.75.75 0 011.024.274l.602 1.043a.75.75 0 01-.274 1.024l-5.648 3.01M13.597 8.642L15.75 2.25" />',
+  mobile: '<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />',
+  sensor: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12.75h.008v.008H12v-.008zm0 0a.375.375 0 10-.002-.75.375.375 0 00.002.75z" />',
+  database: '<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />',
+};
+
+// Filled (solid) icons for portfolio items — Heroicons 2 Solid
+const filledIcons: Record<string, string> = {
+  phone: '<path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" />',
+  chat: '<path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z" clip-rule="evenodd" />',
+  email: '<path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" /><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />',
+  video: '<path d="M4.5 4.5a3 3 0 00-3 3v9a3 3 0 003 3h8.25a3 3 0 003-3v-9a3 3 0 00-3-3H4.5zM19.94 18.75l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06z" />',
+  crm: '<path d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" /><path d="M17.25 8.25a2.625 2.625 0 115.25 0 2.625 2.625 0 01-5.25 0zM1.5 8.25a2.625 2.625 0 115.25 0 2.625 2.625 0 01-5.25 0z" />',
+  automation: '<path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 5.12a.998.998 0 01-.55.74 7.03 7.03 0 00-.837.483.998.998 0 01-.912.074l-1.262-.473a1.875 1.875 0 00-2.282.818l-.922 1.597a1.875 1.875 0 00.432 2.385l1.084.894c.265.218.39.555.368.9a6.97 6.97 0 000 .965c.022.346-.103.683-.368.9l-1.084.894a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.262-.473a.998.998 0 01.912.074c.268.164.548.312.837.483a.998.998 0 01.55.74l.178 1.302c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.302a.998.998 0 01.55-.74c.29-.17.569-.319.837-.483a.998.998 0 01.912-.074l1.262.473a1.875 1.875 0 002.282-.818l.922-1.597a1.875 1.875 0 00-.432-2.385l-1.084-.894a.998.998 0 01-.368-.9 6.97 6.97 0 000-.965.998.998 0 01.368-.9l1.084-.894a1.875 1.875 0 00.432-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.262.473a.998.998 0 01-.912-.074 7.03 7.03 0 00-.837-.483.998.998 0 01-.55-.74l-.178-1.302a1.875 1.875 0 00-1.85-1.567h-1.844zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />',
+  server: '<path d="M4.08 5.227A3 3 0 016.979 3H17.02a3 3 0 012.9 2.227l2.113 7.926A5.228 5.228 0 0018.75 12H5.25a5.228 5.228 0 00-3.284 1.153L4.08 5.227z" /><path fill-rule="evenodd" d="M5.25 13.5a3.75 3.75 0 00-3.75 3.75v.75c0 .414.336.75.75.75h18a.75.75 0 00.75-.75v-.75a3.75 3.75 0 00-3.75-3.75H5.25zm10.5 4.5a.75.75 0 100-1.5.75.75 0 000 1.5zm3-0.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" clip-rule="evenodd" />',
+  mfa: '<path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />',
+  encryption: '<path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />',
+  training: '<path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.88 50.88 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a.757.757 0 01.573-.063 49.541 49.541 0 014.255 1.507A.75.75 0 0013.5 12.5v-2a.75.75 0 00-.63-.736 51.09 51.09 0 00-5.37-1.418.75.75 0 01-.1-1.451A60.6 60.6 0 0111.7 2.805z" /><path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.878 47.878 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />',
+  api: '<path fill-rule="evenodd" d="M14.447 3.027a.75.75 0 01.527.92l-4.5 16.5a.75.75 0 01-1.448-.394l4.5-16.5a.75.75 0 01.921-.526zM16.72 6.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 010-1.06zm-9.44 0a.75.75 0 010 1.06L2.56 12l4.72 4.72a.75.75 0 11-1.06 1.06L.97 12.53a.75.75 0 010-1.06l5.25-5.25a.75.75 0 011.06 0z" clip-rule="evenodd" />',
+  password: '<path fill-rule="evenodd" d="M15.75 1.5a6.75 6.75 0 00-6.651 7.906c.067.39-.032.717-.386 1.07l-5.84 5.84a1.5 1.5 0 00-.44 1.061V19.5a1.5 1.5 0 001.5 1.5h2.25v-2.25h2.25V16.5h2.25v-2.25c.384 0 .678-.16.963-.356l.164-.137a1.875 1.875 0 011.07-.386A6.75 6.75 0 1015.75 1.5zm3.75 6.75a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" clip-rule="evenodd" />',
+  erp: '<path fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z" clip-rule="evenodd" /><path fill-rule="evenodd" d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z" clip-rule="evenodd" />',
+  cloud: '<path fill-rule="evenodd" d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-.735-10.448A6.034 6.034 0 014.5 9.75z" clip-rule="evenodd" />',
+  industry: '<path fill-rule="evenodd" d="M4.5 2.25a.75.75 0 000 1.5v16.5h-.75a.75.75 0 000 1.5h16.5a.75.75 0 000-1.5h-.75V3.75a.75.75 0 000-1.5h-15zM9 6a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75h.75a.75.75 0 00.75-.75v-.75A.75.75 0 009.75 6H9zm-.75 3.75A.75.75 0 019 9h.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v-.75zM9 12a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75h.75a.75.75 0 00.75-.75v-.75A.75.75 0 009.75 12H9zm3.75-5.25A.75.75 0 0113.5 6h.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75zM13.5 9a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75h.75a.75.75 0 00.75-.75v-.75a.75.75 0 00-.75-.75h-.75zm-.75 3.75a.75.75 0 01.75-.75h.75a.75.75 0 01.75.75v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75zM9 19.5v-2.25a.75.75 0 01.75-.75h4.5a.75.75 0 01.75.75v2.25H9z" clip-rule="evenodd" />',
+  accounting: '<path fill-rule="evenodd" d="M6.32 1.827a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V19.5a3 3 0 01-3 3H6.75a3 3 0 01-3-3V4.757c0-1.47 1.073-2.756 2.57-2.93zM7.5 11.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H8.25a.75.75 0 01-.75-.75v-.008zm.75 1.5a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H8.25zm3-2.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm.75 1.5a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H12zm2.25-2.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008zm.75 1.5a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75h-.008zM8.25 6h7.5v2.25H8.25V6z" clip-rule="evenodd" />',
+  hr: '<path d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z" />',
+  iot: '<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM8.547 4.505a8.25 8.25 0 106.906 0 9.72 9.72 0 00-1.453.093A.75.75 0 0113.8 3.66a.75.75 0 01-.1.463 9.72 9.72 0 00-1.7-.093.75.75 0 01.103-.92.75.75 0 01-.2.05 9.72 9.72 0 00-1.453.093.75.75 0 01-.903-.748zM12 17.25a.75.75 0 100-1.5.75.75 0 000 1.5zm0-3a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd" />',
+  mobile: '<path d="M10.5 18.75a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" /><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 005.25 4.125v15.75a3.375 3.375 0 003.375 3.375h6.75a3.375 3.375 0 003.375-3.375V4.125A3.375 3.375 0 0015.375.75h-6.75zM7.5 4.125C7.5 3.504 8.004 3 8.625 3h6.75C16.004 3 16.5 3.504 16.5 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 017.5 19.875V4.125z" clip-rule="evenodd" />',
+  sensor: '<path fill-rule="evenodd" d="M5.636 4.575a.75.75 0 010 1.061 9 9 0 000 12.728.75.75 0 11-1.06 1.06c-4.101-4.1-4.101-10.748 0-14.849a.75.75 0 011.06 0zm12.728 0a.75.75 0 011.06 0c4.101 4.1 4.101 10.749 0 14.85a.75.75 0 11-1.06-1.061 9 9 0 000-12.728.75.75 0 010-1.06zM7.757 6.697a.75.75 0 010 1.06 6 6 0 000 8.486.75.75 0 01-1.06 1.06 7.5 7.5 0 010-10.606.75.75 0 011.06 0zm8.486 0a.75.75 0 011.06 0 7.5 7.5 0 010 10.607.75.75 0 01-1.06-1.06 6 6 0 000-8.486.75.75 0 010-1.06zM12 12.75a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />',
+  database: '<path fill-rule="evenodd" d="M12 1.5c-2.363 0-4.64.304-6.816.876C3.616 2.818 2.25 4.282 2.25 6v12c0 1.718 1.366 3.182 2.934 3.624A23.967 23.967 0 0012 22.5c2.363 0 4.64-.304 6.816-.876 1.568-.442 2.934-1.906 2.934-3.624V6c0-1.718-1.366-3.182-2.934-3.624A23.967 23.967 0 0012 1.5zM4.5 6c0-.53.483-1.069 1.278-1.294A22.467 22.467 0 0112 3.75c2.18 0 4.286.28 6.222.956.795.225 1.278.764 1.278 1.294 0 .53-.483 1.069-1.278 1.294A22.467 22.467 0 0112 8.25c-2.18 0-4.286-.28-6.222-.956C4.983 7.069 4.5 6.53 4.5 6z" clip-rule="evenodd" />',
+  custom: '<path fill-rule="evenodd" d="M12 6.75a5.25 5.25 0 016.775-5.025.75.75 0 01.313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.641l3.318-3.319a.75.75 0 011.248.313 5.25 5.25 0 01-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 112.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0112 6.75zM4.117 19.125a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" clip-rule="evenodd" />',
+};
+
+// Map portfolio items to icons by keyword matching
+const portfolioIconMap: Record<string, string[]> = {
+  phone: ['DSL', 'VoIP', 'Telefon', 'Phone', 'Telekom', 'Telecommun'],
+  chat: ['Chat', 'Forum', 'Messaging', 'Firmeninter', 'Internal Com', 'Kommunikationsplattform', 'Communication Platform', 'Projektchat', 'Project Chat'],
+  email: ['E-Mail', 'Email', 'Mail', 'Massenmail', 'Mass Mail'],
+  video: ['Video', 'Webinar', 'Meeting'],
+  crm: ['CRM', 'Kunden', 'Customer', 'Vertrieb', 'Sales', 'Angebot', 'Quotation', 'Rechnung', 'Invoice', 'Shop', 'Ticket'],
+  automation: ['Automat', 'Marketing', 'Planungs', 'Planning', 'Aufgaben', 'Task', 'Projekt', 'Project', 'Persona', 'Staff', 'Schicht', 'Shift'],
+  training: ['Lern', 'Learn', 'Wiki', 'Wissen', 'Knowledge', 'Schulung', 'Training', 'Umfrage', 'Survey', 'Handbuch', 'Manual'],
+  encryption: ['Verschlüssel', 'Encrypt', 'Sicher', 'Secure', 'Haftung', 'Liability', 'DSGVO', 'GDPR', 'Passwort', 'Password'],
+  mfa: ['MFA', 'Mehrfaktor', 'Multi-Factor', 'Authentif'],
+  server: ['Server', 'Cloud', 'Hosting'],
+  api: ['API', 'Schnittstelle', 'Interface', 'WebHook', 'Webhook', 'Verknüpfung', 'Integration'],
+  mobile: ['App', 'Mobile', 'iOS', 'Android'],
+  sensor: ['Sensor', 'Kamera', 'Camera', 'LIDAR', 'Bewegung', 'Motion'],
+  database: ['Datenbank', 'Database'],
+  iot: ['IoT', 'Fertigung', 'Production', 'Werkstatt', 'Workshop', 'Barcode', 'Lager', 'Warehouse', 'Dropship'],
+  accounting: ['Buchhaltung', 'Account', 'DATEV', 'Kasse', 'POS', 'Bezahl', 'Payment', 'Steuer', 'Tax'],
+  hr: ['Mitarbeiter', 'HR', 'Employee', 'Urlaub', 'Leave', 'Absence', 'Vertrag', 'Contract'],
+  industry: ['Webseite', 'Website', 'Termin', 'Appointment', 'Booking', 'Kalender', 'Calendar', 'Veranstaltung', 'Event', 'Social', 'Signatur', 'Digital Sign', 'Qualität', 'Quality'],
+};
+
+// Track used icons to avoid duplicates within same portfolio
+const usedIcons = new Set<string>();
+const allIconKeys = Object.keys(filledIcons);
+let fallbackIdx = 0;
+
+function getPortfolioIcon(item: string): string {
+  const lower = item.toLowerCase();
+  for (const [icon, keywords] of Object.entries(portfolioIconMap)) {
+    if (keywords.some(kw => lower.includes(kw.toLowerCase()))) {
+      usedIcons.add(icon);
+      return icon;
+    }
+  }
+  // Fallback: cycle through all available icons (skip already-used ones if possible)
+  while (fallbackIdx < allIconKeys.length) {
+    const key = allIconKeys[fallbackIdx++];
+    if (!usedIcons.has(key)) {
+      usedIcons.add(key);
+      return key;
+    }
+  }
+  return 'custom';
+}
+
+const breadcrumbItems = [
+  { label: t(locale, 'nav.products'), href: routes.products },
+  { label: serviceTitle, href: routes[`products.${serviceKey}`] },
+];
+
+const breadcrumbsJsonLd = [
+  { name: 'Home', url: routes.home },
+  { name: t(locale, 'nav.products'), url: routes.products },
+  { name: serviceTitle, url: routes[`products.${serviceKey}`] },
+];
+---
+
+<BaseLayout
+  title={`${serviceTitle} | Astoria Systems`}
+  description={pageDescription}
+  locale={locale}
+  jsonLdType="service"
+  breadcrumbs={breadcrumbsJsonLd}
+>
+  <!-- Hero with themed interactive canvas -->
+  <section class={`relative pt-28 lg:pt-36 pb-24 lg:pb-32 overflow-hidden`}>
+    <ServiceHeroCanvas type={serviceKey} />
+    <div class="absolute inset-0 bg-[var(--color-surface-primary)]/40 dark:bg-[var(--color-dark-bg)]/40"></div>
+    <!-- Animated gradient line across top -->
+    <div class="absolute top-0 left-0 right-0 h-[2px] sd-gradient-line" style={`--line-from: rgb(${colors.rgb}); --line-to: rgb(${colors.rgbEnd});`}></div>
+    <Container class="relative z-10">
+      <Breadcrumbs locale={locale} items={breadcrumbItems} />
+      <div class="max-w-4xl">
+        <div class="animate-fade-in-up">
+          <span class={`sd-badge inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] mb-6 px-4 py-2 rounded-full`} style={`background: rgba(${colors.rgb}, 0.12); color: rgb(${colors.rgb}); border: 1px solid rgba(${colors.rgb}, 0.2);`}>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <Fragment set:html={iconSvgs[serviceKey === 'communication' ? 'chat' : serviceKey === 'security' ? 'encryption' : serviceKey === 'infrastructure' ? 'server' : 'api']} />
+            </svg>
+            {t(locale, 'nav.products')}
+          </span>
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 animate-fade-in-up animate-delay-1" data-text-reveal>{serviceTitle}</h1>
+        <p class="text-xl lg:text-2xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] max-w-2xl leading-relaxed mb-10 animate-fade-in-up animate-delay-2">
+          {serviceDescription}
+        </p>
+        <!-- Feature pills -->
+        <div class="flex flex-wrap gap-2.5 animate-fade-in-up animate-delay-3">
+          {features.map((feature, i) => (
+            <span class="sd-pill group inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl border transition-all duration-300" style={`background: rgba(${colors.rgb}, 0.06); border-color: rgba(${colors.rgb}, 0.15); --pill-color: ${colors.rgb};`}>
+              <span class="h-1.5 w-1.5 rounded-full" style={`background: rgb(${colors.rgb});`}></span>
+              {feature}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- Intro section -->
+  <section class="py-20 lg:py-28 relative overflow-hidden">
+    <div class="absolute inset-0 animated-bg-gradients opacity-40"></div>
+    <Container class="relative z-10">
+      <div class="max-w-4xl mx-auto" data-reveal>
+        <div class="sd-intro-card relative rounded-3xl overflow-hidden" style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
+          <!-- Animated gradient border -->
+          <div class="sd-animated-border absolute inset-0 rounded-3xl"></div>
+          <div class="relative glass rounded-3xl p-8 lg:p-12 m-[2px]">
+            <div class="flex items-center gap-3 mb-6">
+              <div class={`h-10 w-10 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center sd-icon-float`}>
+                <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                </svg>
+              </div>
+              <span class={`text-sm font-semibold uppercase tracking-widest ${colors.textLight}`}>
+                {locale === 'de' ? 'Über diesen Service' : 'About this Service'}
+              </span>
+            </div>
+            <p class="text-lg lg:text-xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-8">
+              {intro}
+            </p>
+            <div class="flex flex-wrap gap-3">
+              {benefits.map((benefit, i) => (
+                <span class="sd-benefit-chip group inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-semibold glass transition-all duration-500 hover:scale-105 cursor-default" style={`--chip-rgb: ${colors.rgb}; animation-delay: ${i * 0.1}s;`}>
+                  <span class={`flex-shrink-0 h-6 w-6 rounded-lg bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md sd-check-pop`} style={`box-shadow: 0 4px 12px rgba(${colors.rgb}, 0.3);`}>
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  </span>
+                  {benefit}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- Detail sections grid -->
+  <section class="py-20 lg:py-28 relative overflow-hidden">
+    <div class="absolute inset-0 animated-bg-grid opacity-30"></div>
+    <div class="absolute inset-0 animated-bg-dots opacity-20"></div>
+    <Container class="relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-16" data-reveal>
+        <div class="inline-flex items-center gap-3 mb-4">
+          <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+          <span class={`text-sm font-semibold uppercase tracking-widest ${colors.textLight}`}>
+            {locale === 'de' ? 'Leistungen' : 'Services'}
+          </span>
+          <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+        </div>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <span class="sd-gradient-text" style={`--gt-from: rgb(${colors.rgb}); --gt-to: rgb(${colors.rgbEnd});`}>{detailSections.length}</span>
+          {' '}{locale === 'de' ? 'Leistungen im Überblick' : 'Services at a Glance'}
+        </h2>
+        <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+          {locale === 'de' ? 'Entdecken Sie unsere Lösungen im Detail' : 'Discover our solutions in detail'}
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {detailSections.map((section, index) => (
+          <div class="sd-card-3d group" data-reveal data-reveal-delay={String(Math.min(index + 1, 5))}>
+            <div class="sd-card-inner relative h-full" style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
+              <!-- Animated border glow -->
+              <div class="sd-card-glow absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div class="relative glass rounded-2xl p-8 h-full overflow-hidden transition-all duration-500 group-hover:shadow-2xl border border-white/10 dark:border-white/5">
+                <!-- Shimmer on hover -->
+                <div class="sd-shimmer absolute inset-0 opacity-0 group-hover:opacity-100"></div>
+                <!-- Corner accent -->
+                <div class="absolute top-0 right-0 w-24 h-24 opacity-[0.03] dark:opacity-[0.06]" style={`background: radial-gradient(circle at top right, rgb(${colors.rgb}), transparent 70%);`}></div>
+                <!-- Number watermark -->
+                <div class="absolute top-4 right-6 text-6xl font-black opacity-[0.03] dark:opacity-[0.05] select-none transition-all duration-500 group-hover:opacity-[0.08]">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
+                <!-- Icon with animated glow -->
+                <div class="relative mb-6">
+                  <div class="sd-icon-glow absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" style={`background: rgb(${colors.rgb});`}></div>
+                  <div class={`relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`} style={`box-shadow: 0 8px 24px rgba(${colors.rgb}, 0.25);`}>
+                    <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <Fragment set:html={iconSvgs[section.icon] || iconSvgs.api} />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="text-xl font-bold mb-3 transition-colors duration-300">
+                  {section.title}
+                </h3>
+                <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
+                  {section.description}
+                </p>
+                <!-- Bottom accent line -->
+                <div class="absolute bottom-0 left-8 right-8 h-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 sd-bottom-line" style={`background: linear-gradient(90deg, transparent, rgb(${colors.rgb}), transparent);`}></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <!-- Portfolio list -->
+  {portfolio.length > 0 && (
+    <section class="py-20 lg:py-28 relative overflow-hidden">
+      <div class={`absolute inset-0 service-bg-${serviceKey} opacity-50`}></div>
+      <Container class="relative z-10">
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-14" data-reveal>
+            <div class="inline-flex items-center gap-3 mb-4">
+              <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+              <span class={`text-sm font-semibold uppercase tracking-widest ${colors.textLight}`}>Portfolio</span>
+              <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+            </div>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">
+              {locale === 'de' ? 'Unser Portfolio' : 'Our Portfolio'}
+            </h2>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {portfolio.map((item, index) => (
+              <div class="sd-portfolio-item group" data-reveal data-reveal-delay={String(Math.min(Math.floor(index / 3) + 1, 5))} style={`--item-rgb: ${colors.rgb};`}>
+                <div class="relative glass rounded-xl p-4 flex items-center gap-4 border border-white/10 dark:border-white/5 transition-all duration-400 group-hover:border-transparent overflow-hidden h-full">
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={`background: linear-gradient(135deg, rgba(${colors.rgb}, 0.05), transparent);`}></div>
+                  <div class={`relative flex-shrink-0 h-10 w-10 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`} style={`box-shadow: 0 4px 12px rgba(${colors.rgb}, 0.2);`}>
+                    <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <Fragment set:html={filledIcons[getPortfolioIcon(item)]} />
+                    </svg>
+                  </div>
+                  <span class="relative text-sm font-medium">{item}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <!-- Portfolio CTA -->
+          <div class="mt-10" data-reveal>
+            <div class="sd-cta-card relative rounded-2xl overflow-hidden" style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
+              <div class="sd-animated-border absolute inset-0 rounded-2xl"></div>
+              <div class="relative glass rounded-2xl p-8 m-[2px] text-center">
+                <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] italic mb-6 text-lg">
+                  {portfolioNote}
+                </p>
+                <a
+                  href={routes.contact}
+                  class={`sd-cta-btn inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-white transition-all duration-400 hover:scale-105`}
+                  style={`background: linear-gradient(135deg, rgb(${colors.rgb}), rgb(${colors.rgbEnd})); box-shadow: 0 8px 32px rgba(${colors.rgb}, 0.3);`}
+                >
+                  {t(locale, 'cta.button')}
+                  <svg class="h-4 w-4 sd-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  )}
+
+  <!-- Industry Solutions (only for infrastructure) -->
+  {industrySolutions && (
+    <section class="py-20 lg:py-28 relative overflow-hidden">
+      <div class="absolute inset-0 animated-bg-grid opacity-30"></div>
+      <Container class="relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-14" data-reveal>
+          <div class="inline-flex items-center gap-3 mb-4">
+            <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+            <span class={`text-sm font-semibold uppercase tracking-widest ${colors.textLight}`}>
+              {locale === 'de' ? 'Branchen' : 'Industries'}
+            </span>
+            <span class={`h-px w-12 bg-gradient-to-r ${colors.gradient} sd-line-grow`}></span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">{industrySolutions.title}</h2>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {industrySolutions.categories.map((category, catIndex) => (
+            <div class="sd-card-3d group" data-reveal data-reveal-delay={String(Math.min(catIndex + 1, 5))}>
+              <div class="sd-card-inner relative h-full" style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
+                <div class="sd-card-glow absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div class="relative glass rounded-2xl p-6 h-full overflow-hidden transition-all duration-500 group-hover:shadow-2xl border border-white/10 dark:border-white/5">
+                  <div class="sd-shimmer absolute inset-0 opacity-0 group-hover:opacity-100"></div>
+                  <div class="relative mb-4">
+                    <div class={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-md transition-all duration-500 group-hover:scale-110`} style={`box-shadow: 0 6px 16px rgba(${colors.rgb}, 0.2);`}>
+                      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <Fragment set:html={iconSvgs[category.icon] || iconSvgs.industry} />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 class="relative text-lg font-bold mb-3">{category.name}</h3>
+                  <div class="relative flex flex-wrap gap-2">
+                    {category.items.map((item) => (
+                      <span class={`sd-tag inline-block text-xs px-3 py-1.5 rounded-lg glass border ${colors.border} font-medium transition-all duration-300 hover:scale-105 cursor-default`} style={`--tag-rgb: ${colors.rgb};`}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )}
+
+  <!-- Benefits / Why choose us -->
+  <section class="py-20 lg:py-28">
+    <Container>
+      <div class="relative overflow-hidden rounded-3xl sd-why-section" data-reveal style={`--why-rgb: ${colors.rgb};`}>
+        <!-- Background visual -->
+        <div class="absolute inset-0 z-0">
+          <ServiceVisual type={serviceKey} class="!rounded-none !aspect-auto w-full h-full" />
+        </div>
+        <div class="absolute inset-0 z-[1] bg-gradient-to-br from-white/92 via-white/80 to-white/40 dark:from-[#0a0e1a]/95 dark:via-[#0a0e1a]/85 dark:to-[#0a0e1a]/40 backdrop-blur-sm"></div>
+        <!-- Animated accent particles -->
+        <div class="sd-why-particles absolute inset-0 z-[1] overflow-hidden">
+          <div class="sd-particle sd-particle-1" style={`background: rgb(${colors.rgb});`}></div>
+          <div class="sd-particle sd-particle-2" style={`background: rgb(${colors.rgbEnd});`}></div>
+          <div class="sd-particle sd-particle-3" style={`background: rgb(${colors.rgb});`}></div>
+        </div>
+        <div class="relative z-[2] p-8 md:p-12 lg:p-16">
+          <div class="max-w-2xl">
+            <span class={`inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest mb-4 ${colors.textLight}`}>
+              <span class={`h-1 w-8 rounded-full bg-gradient-to-r ${colors.gradient}`}></span>
+              {locale === 'de' ? 'Ihre Vorteile' : 'Your Benefits'}
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-10">
+              {locale === 'de' ? 'Warum Astoria Systems?' : 'Why Astoria Systems?'}
+            </h2>
+            <div class="space-y-4 mb-10">
+              {benefits.map((benefit, idx) => (
+                <div class="sd-benefit-row group animate-fade-in-up" style={`animation-delay: ${0.2 + idx * 0.15}s; --row-rgb: ${colors.rgb};`}>
+                  <div class="relative glass rounded-2xl p-5 flex items-center gap-5 border border-white/20 dark:border-white/10 transition-all duration-500 group-hover:shadow-xl overflow-hidden">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={`background: linear-gradient(135deg, rgba(${colors.rgb}, 0.05), transparent);`}></div>
+                    <!-- Animated left border -->
+                    <div class="absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all duration-500" style={`background: linear-gradient(to bottom, rgb(${colors.rgb}), rgb(${colors.rgbEnd}));`}></div>
+                    <div class={`relative flex-shrink-0 h-12 w-12 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`} style={`box-shadow: 0 4px 16px rgba(${colors.rgb}, 0.3);`}>
+                      <span class="text-white font-bold">{idx + 1}</span>
+                    </div>
+                    <span class="relative text-lg font-semibold">{benefit}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a
+              href={routes.contact}
+              class="sd-cta-btn inline-flex items-center gap-3 px-10 py-4 rounded-xl font-bold text-white text-lg transition-all duration-400 hover:scale-105"
+              style={`background: linear-gradient(135deg, rgb(${colors.rgb}), rgb(${colors.rgbEnd})); box-shadow: 0 8px 40px rgba(${colors.rgb}, 0.35);`}
+            >
+              {t(locale, 'cta.button')}
+              <svg class="h-5 w-5 sd-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CTA locale={locale} />
+</BaseLayout>
+
+<style is:global>
+  /* Gradient line across top of hero */
+  .sd-gradient-line {
+    background: linear-gradient(90deg, transparent, var(--line-from), var(--line-to), transparent);
+    background-size: 200% 100%;
+    animation: sdGradientLineMove 4s ease-in-out infinite;
+  }
+  @keyframes sdGradientLineMove {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Feature pills */
+  .sd-pill {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sd-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--pill-color), 0.12);
+    border-color: rgba(var(--pill-color), 0.35) !important;
+  }
+
+  /* Animated gradient border for intro/portfolio CTA */
+  .sd-animated-border {
+    background: conic-gradient(
+      from 0deg,
+      rgba(var(--card-rgb), 0.35),
+      rgba(var(--card-rgb-end), 0.35),
+      rgba(var(--card-rgb), 0.08),
+      rgba(var(--card-rgb-end), 0.08),
+      rgba(var(--card-rgb), 0.35)
+    );
+    animation: sdBorderSpin 6s linear infinite;
+  }
+  @keyframes sdBorderSpin {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  /* Gradient text */
+  .sd-gradient-text {
+    background: linear-gradient(135deg, var(--gt-from), var(--gt-to));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Decorative line grow */
+  .sd-line-grow {
+    animation: sdLineGrow 2s ease-out forwards;
+    transform-origin: center;
+  }
+  @keyframes sdLineGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* Card perspective container */
+  .sd-card-3d { perspective: 800px; }
+
+  /* Card glow border on hover */
+  .sd-card-glow {
+    background: linear-gradient(135deg,
+      rgba(var(--card-rgb), 0.25),
+      rgba(var(--card-rgb-end), 0.12),
+      rgba(var(--card-rgb), 0.25)
+    );
+    filter: blur(4px);
+  }
+
+  /* Subtle shimmer sweep on card hover */
+  .sd-shimmer {
+    background: linear-gradient(105deg,
+      transparent 35%, rgba(255,255,255,0.05) 48%,
+      rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.05) 52%,
+      transparent 65%);
+    background-size: 200% 100%;
+    animation: sdShimmerSweep 2.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes sdShimmerSweep {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Bottom accent line on card hover */
+  .sd-bottom-line {
+    transform: scaleX(0);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sd-card-3d:hover .sd-bottom-line { transform: scaleX(1); }
+
+  /* Portfolio item lift */
+  .sd-portfolio-item { transition: transform 0.3s ease; }
+  .sd-portfolio-item:hover { transform: translateY(-2px); }
+
+  /* Industry tag hover shimmer */
+  .sd-tag { position: relative; overflow: hidden; }
+  .sd-tag::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(var(--tag-rgb), 0.06), transparent);
+    transition: left 0.5s ease;
+  }
+  .sd-tag:hover::before { left: 100%; }
+  .sd-tag:hover {
+    border-color: rgba(var(--tag-rgb), 0.35);
+    box-shadow: 0 2px 8px rgba(var(--tag-rgb), 0.08);
+  }
+
+  /* CTA button */
+  .sd-cta-btn { position: relative; overflow: hidden; }
+  .sd-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s ease;
+  }
+  .sd-cta-btn:hover::before { left: 100%; }
+  .sd-arrow { transition: transform 0.3s ease; }
+  .sd-cta-btn:hover .sd-arrow { transform: translateX(4px); }
+
+  /* Benefit row slide */
+  .sd-benefit-row { transition: transform 0.3s ease; }
+  .sd-benefit-row:hover { transform: translateX(6px); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sd-gradient-line, .sd-animated-border, .sd-shimmer,
+    .sd-bottom-line, .sd-line-grow, .sd-cta-btn::before,
+    .sd-tag::before {
+      animation: none !important;
+      transition: none !important;
+    }
+    .sd-benefit-row:hover, .sd-portfolio-item:hover, .sd-pill:hover { transform: none; }
+  }
+</style>

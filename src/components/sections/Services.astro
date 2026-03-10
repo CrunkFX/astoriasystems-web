@@ -1,0 +1,114 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import ServiceVisual from '../visuals/ServiceVisual.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const routes = routeMap[locale];
+
+const services = [
+  {
+    key: 'communication',
+    icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>`,
+    color: 'from-cyan-500 to-blue-500',
+    borderColor: '#06b6d4',
+    glowColor: 'rgba(6, 182, 212, 0.12)',
+  },
+  {
+    key: 'security',
+    icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>`,
+    color: 'from-green-500 to-emerald-500',
+    borderColor: '#22c55e',
+    glowColor: 'rgba(34, 197, 94, 0.12)',
+  },
+  {
+    key: 'infrastructure',
+    icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" /></svg>`,
+    color: 'from-violet-500 to-purple-500',
+    borderColor: '#8b5cf6',
+    glowColor: 'rgba(139, 92, 246, 0.12)',
+  },
+  {
+    key: 'development',
+    icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>`,
+    color: 'from-orange-500 to-red-500',
+    borderColor: '#f97316',
+    glowColor: 'rgba(249, 115, 22, 0.12)',
+  },
+];
+---
+
+<Section id="services" class="!py-24 lg:!py-32">
+  <Container>
+    <!-- Section header -->
+    <div class="text-center mb-20" data-reveal>
+      <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+        {locale === 'de' ? 'Was wir tun' : 'What we do'}
+      </span>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" data-text-reveal>{t(locale, 'services.title')}</h2>
+      <p class="text-lg md:text-xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] max-w-2xl mx-auto">
+        {t(locale, 'services.subtitle')}
+      </p>
+    </div>
+
+    <!-- Services - 3D model + content -->
+    <div class="space-y-12 lg:space-y-16">
+      {services.map((service, index) => (
+        <Fragment>
+          {index > 0 && (
+            <div class="flex items-center justify-center py-2">
+              <div class="h-px w-16 bg-gradient-to-r from-transparent via-[var(--color-accent)]/30 to-transparent"></div>
+              <div class="mx-3 h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]/40"></div>
+              <div class="h-px w-16 bg-gradient-to-r from-transparent via-[var(--color-accent)]/30 to-transparent"></div>
+            </div>
+          )}
+          <div
+            class={`service-card group relative rounded-2xl p-6 lg:p-10 service-bg-${service.key} border border-[var(--color-border)]/30 dark:border-[var(--color-dark-border)] backdrop-blur-sm transition-all duration-500 hover:shadow-xl`}
+            style={`--card-glow: ${service.glowColor};`}
+            data-reveal
+          >
+            <div class:list={[
+              'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center',
+              index % 2 === 1 && 'lg:[direction:rtl]',
+            ]}>
+              <!-- Illustration -->
+              <div class:list={['lg:[direction:ltr]', index % 2 === 0 ? 'lg:pr-4' : 'lg:pl-4']}>
+                <ServiceVisual type={service.key} class="rounded-2xl" />
+              </div>
+
+              <!-- Content -->
+              <div class="lg:[direction:ltr]">
+                <div class="border-l-4 pl-6" style={`border-color: ${service.borderColor}`}>
+                  <div class={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${service.color} text-white mb-6`}>
+                    <Fragment set:html={service.icon} />
+                  </div>
+                  <h3 class="text-3xl md:text-4xl font-bold mb-4">{t(locale, `services.${service.key}.title`)}</h3>
+                  <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-8 leading-relaxed">
+                    {t(locale, `services.${service.key}.description`)}
+                  </p>
+                  <a
+                    href={routes.products}
+                    class="inline-flex items-center gap-2 font-medium text-lg group/link"
+                    style={`color: ${service.borderColor}`}
+                  >
+                    {locale === 'de' ? 'Mehr erfahren' : 'Learn more'}
+                    <svg class="h-5 w-5 transition-transform group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Fragment>
+      ))}
+    </div>
+  </Container>
+</Section>

@@ -1,0 +1,59 @@
+---
+import type { Locale } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const partners = [
+  { name: 'Odoo', url: 'https://www.odoo.com' },
+  { name: 'NetCup', url: 'https://www.netcup.de' },
+  { name: 'Nano Fassadendämmung', url: 'https://www.nanofassadendaemmung.de' },
+  { name: 'mkmFloor', url: 'https://www.mkmfloor.de' },
+];
+
+// Duplicate for seamless marquee loop
+const allPartners = [...partners, ...partners, ...partners];
+---
+
+<Section class="!py-20 lg:!py-28">
+  <Container>
+    <div class="text-center mb-12" data-reveal>
+      <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+        {locale === 'de' ? 'Unsere Partner' : 'Our Partners'}
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">{t(locale, 'partners.title')}</h2>
+      <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+        {t(locale, 'partners.subtitle')}
+      </p>
+    </div>
+
+    <!-- Marquee container -->
+    <div class="relative overflow-hidden" data-reveal>
+      <!-- Fade edges -->
+      <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[var(--color-surface-primary)] dark:from-[var(--color-dark-bg)] to-transparent z-10"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[var(--color-surface-primary)] dark:from-[var(--color-dark-bg)] to-transparent z-10"></div>
+
+      <div class="marquee-track py-8">
+        {allPartners.map((partner) => (
+          <a
+            href={partner.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex-shrink-0 flex items-center justify-center px-12 py-6 mx-4 rounded-2xl transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/5 border border-transparent hover:border-[var(--color-border)] dark:hover:border-[var(--color-dark-border)]"
+            aria-label={partner.name}
+          >
+            <span class="text-2xl font-bold text-[var(--color-text-tertiary)] dark:text-[var(--color-dark-text-tertiary)] group-hover:text-[var(--color-accent)] transition-colors whitespace-nowrap">
+              {partner.name}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </Container>
+</Section>

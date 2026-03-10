@@ -1,0 +1,255 @@
+---
+interface Props {
+  variant?: 'workspace' | 'collaboration';
+  class?: string;
+}
+
+const { variant = 'workspace', class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['network-graph relative overflow-hidden rounded-2xl', className]}
+  style="aspect-ratio: 4/3;"
+  data-network-variant={variant}
+>
+  <!-- Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 dark:from-[#080c18] dark:via-[#0a0e1a] dark:to-[#060a14]"></div>
+  <!-- Subtle grid -->
+  <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style="background-image: linear-gradient(rgba(6,182,212,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.4) 1px, transparent 1px); background-size: 50px 50px;"></div>
+  <!-- Canvas for interactive network -->
+  <canvas class="network-canvas w-full h-full relative z-10"></canvas>
+  <!-- Glow layers -->
+  <div class="absolute -bottom-10 -right-10 w-1/2 h-1/2 bg-[var(--color-accent)]/8 rounded-full blur-[70px]"></div>
+  <div class="absolute -top-10 -left-10 w-1/3 h-1/3 bg-blue-500/5 rounded-full blur-[50px]"></div>
+</div>
+
+<script is:inline>
+(function() {
+  var graphs = document.querySelectorAll('.network-graph');
+  graphs.forEach(function(wrapper) {
+    var canvas = wrapper.querySelector('.network-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var variant = wrapper.getAttribute('data-network-variant') || 'workspace';
+    var isDark = document.documentElement.classList.contains('dark');
+    var running = true;
+    var mouseX = -1000, mouseY = -1000;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function getColors() {
+      isDark = document.documentElement.classList.contains('dark');
+      return {
+        node: isDark ? [6, 182, 212] : [8, 145, 178],
+        nodeAlt: isDark ? [59, 130, 246] : [37, 99, 235],
+        line: isDark ? [6, 182, 212] : [8, 145, 178],
+        glow: isDark ? [6, 182, 212] : [14, 116, 144],
+      };
+    }
+    var colors = getColors();
+
+    var themeObs = new MutationObserver(function() { colors = getColors(); });
+    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    function resize() {
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var w = canvas.offsetWidth;
+    var h = canvas.offsetHeight;
+    var nodes = [];
+    var connectionDist = variant === 'workspace' ? 130 : 160;
+    var mouseRadius = 180;
+
+    if (variant === 'workspace') {
+      // Structured grid-like arrangement with some randomness
+      var gridCols = 6, gridRows = 4;
+      for (var r = 0; r < gridRows; r++) {
+        for (var c = 0; c < gridCols; c++) {
+          var baseX = (c + 0.5) * (w / gridCols);
+          var baseY = (r + 0.5) * (h / gridRows);
+          nodes.push({
+            x: baseX + (Math.random() - 0.5) * 30,
+            y: baseY + (Math.random() - 0.5) * 20,
+            homeX: baseX + (Math.random() - 0.5) * 30,
+            homeY: baseY + (Math.random() - 0.5) * 20,
+            r: 3 + Math.random() * 5,
+            vx: 0, vy: 0,
+            alt: Math.random() > 0.6,
+            pulse: Math.random() * Math.PI * 2,
+            hub: (r === 1 || r === 2) && (c === 2 || c === 3),
+          });
+        }
+      }
+    } else {
+      // Organic clustered arrangement
+      var cx = w / 2, cy = h / 2;
+      // Central hub
+      nodes.push({ x: cx, y: cy, homeX: cx, homeY: cy, r: 12, vx: 0, vy: 0, alt: false, pulse: 0, hub: true });
+      // Inner ring
+      for (var i = 0; i < 6; i++) {
+        var angle = (i / 6) * Math.PI * 2 + Math.random() * 0.3;
+        var radius = 60 + Math.random() * 20;
+        var nx = cx + Math.cos(angle) * radius;
+        var ny = cy + Math.sin(angle) * radius;
+        nodes.push({ x: nx, y: ny, homeX: nx, homeY: ny, r: 5 + Math.random() * 4, vx: 0, vy: 0, alt: i % 2 === 0, pulse: Math.random() * Math.PI * 2, hub: false });
+      }
+      // Outer ring
+      for (var i = 0; i < 10; i++) {
+        var angle = (i / 10) * Math.PI * 2 + Math.random() * 0.2;
+        var radius = 110 + Math.random() * 40;
+        var nx = cx + Math.cos(angle) * radius;
+        var ny = cy + Math.sin(angle) * radius;
+        nodes.push({ x: nx, y: ny, homeX: nx, homeY: ny, r: 3 + Math.random() * 3, vx: 0, vy: 0, alt: Math.random() > 0.5, pulse: Math.random() * Math.PI * 2, hub: false });
+      }
+      // Scattered outer nodes
+      for (var i = 0; i < 8; i++) {
+        var nx = 20 + Math.random() * (w - 40);
+        var ny = 20 + Math.random() * (h - 40);
+        nodes.push({ x: nx, y: ny, homeX: nx, homeY: ny, r: 2 + Math.random() * 2, vx: 0, vy: 0, alt: Math.random() > 0.5, pulse: Math.random() * Math.PI * 2, hub: false });
+      }
+    }
+
+    // Mouse
+    canvas.addEventListener('mousemove', function(e) {
+      var rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    });
+    canvas.addEventListener('mouseleave', function() { mouseX = -1000; mouseY = -1000; });
+    canvas.addEventListener('touchmove', function(e) {
+      var rect = canvas.getBoundingClientRect();
+      mouseX = e.touches[0].clientX - rect.left;
+      mouseY = e.touches[0].clientY - rect.top;
+    }, { passive: true });
+    canvas.addEventListener('touchend', function() { mouseX = -1000; mouseY = -1000; });
+
+    var observer = new IntersectionObserver(function(entries) {
+      running = entries[0].isIntersecting;
+    }, { threshold: 0 });
+    observer.observe(canvas);
+
+    var time = 0;
+
+    function draw() {
+      if (!running) { requestAnimationFrame(draw); return; }
+      time += 0.016;
+      var cw = canvas.offsetWidth;
+      var ch = canvas.offsetHeight;
+      ctx.clearRect(0, 0, cw, ch);
+
+      // Mouse glow
+      if (mouseX > 0 && mouseY > 0) {
+        var grd = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, mouseRadius);
+        grd.addColorStop(0, 'rgba(' + colors.glow.join(',') + ', ' + (isDark ? '0.06' : '0.04') + ')');
+        grd.addColorStop(1, 'rgba(' + colors.glow.join(',') + ', 0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, cw, ch);
+      }
+
+      // Update nodes
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        n.pulse += 0.015;
+
+        // Mouse interaction
+        var dx = mouseX - n.x;
+        var dy = mouseY - n.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouseRadius && dist > 0) {
+          var force = (1 - dist / mouseRadius);
+          n.vx += dx / dist * force * (n.hub ? 0.8 : 1.2);
+          n.vy += dy / dist * force * (n.hub ? 0.8 : 1.2);
+        }
+
+        // Spring back to home
+        n.vx += (n.homeX - n.x) * 0.03;
+        n.vy += (n.homeY - n.y) * 0.03;
+
+        // Gentle ambient floating
+        n.x += n.vx + Math.sin(time + n.pulse) * 0.15;
+        n.y += n.vy + Math.cos(time * 0.8 + n.pulse) * 0.12;
+        n.vx *= 0.92;
+        n.vy *= 0.92;
+      }
+
+      // Draw edges
+      for (var i = 0; i < nodes.length; i++) {
+        for (var j = i + 1; j < nodes.length; j++) {
+          var n1 = nodes[i], n2 = nodes[j];
+          var edx = n1.x - n2.x;
+          var edy = n1.y - n2.y;
+          var ed = Math.sqrt(edx * edx + edy * edy);
+          var maxD = connectionDist;
+          if (n1.hub || n2.hub) maxD *= 1.3;
+
+          if (ed < maxD) {
+            var alpha = (1 - ed / maxD);
+            var midX = (n1.x + n2.x) / 2;
+            var midY = (n1.y + n2.y) / 2;
+            var mDist = Math.sqrt(Math.pow(midX - mouseX, 2) + Math.pow(midY - mouseY, 2));
+            var mouseBoost = mDist < mouseRadius ? (1 - mDist / mouseRadius) * 0.35 : 0;
+
+            var lineAlpha = alpha * (isDark ? 0.15 : 0.1) + mouseBoost;
+            var lineW = (n1.hub && n2.hub) ? 1.5 : (n1.hub || n2.hub) ? 0.8 : 0.5;
+
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = 'rgba(' + colors.line.join(',') + ', ' + lineAlpha + ')';
+            ctx.lineWidth = lineW;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        var pulseO = 0.4 + Math.sin(n.pulse) * 0.15;
+        var col = n.alt ? colors.nodeAlt : colors.node;
+
+        // Glow halo
+        if (n.r > 3) {
+          var glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+          glow.addColorStop(0, 'rgba(' + col.join(',') + ', ' + (pulseO * 0.2) + ')');
+          glow.addColorStop(1, 'rgba(' + col.join(',') + ', 0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Core
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + col.join(',') + ', ' + pulseO + ')';
+        ctx.fill();
+
+        // Bright center for hub nodes
+        if (n.hub) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 0.4, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + col.join(',') + ', ' + (pulseO + 0.2) + ')';
+          ctx.fill();
+        }
+      }
+
+      if (!prefersReduced) requestAnimationFrame(draw);
+    }
+
+    if (prefersReduced) {
+      // Draw one static frame
+      draw();
+    } else {
+      requestAnimationFrame(draw);
+    }
+  });
+})();
+</script>

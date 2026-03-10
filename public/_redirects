@@ -1,0 +1,11 @@
+# Redirect old Odoo URLs to new pages
+/our-services /produkte 301
+/our-services#Dienstleistungen /produkte#communication 301
+/our-services#IT-Sicherheit /produkte#security 301
+/our-services#Digitale-Firmen-Infrastruktur /produkte#infrastructure 301
+/our-services#Software--und-App--Entwicklung /produkte#development 301
+/about-us /ueber-uns 301
+/contactus /kontakt 301
+/pricing /preise 301
+/hilfe /hilfe 301
+/privacy /datenschutz 301

@@ -1,0 +1,105 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const locale = 'en';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>`;
+---
+
+<LegalLayout
+  title="Privacy Policy | Astoria Systems"
+  description="Privacy policy of Astoria Systems GmbH"
+  locale={locale}
+  breadcrumbLabel="Privacy Policy"
+  breadcrumbHref="/en/privacy"
+  breadcrumbs={[{ name: 'Home', url: '/en' }, { name: 'Privacy Policy', url: '/en/privacy' }]}
+  icon={icon}
+  lastUpdated="March 10, 2026"
+>
+  <Fragment slot="title">Privacy Policy</Fragment>
+
+  <h2><span class="section-number">1</span> Data Protection at a Glance</h2>
+
+  <h3>General Information</h3>
+  <p>The following notes provide a simple overview of what happens to your personal data when you visit this website. Personal data is any data that can be used to personally identify you.</p>
+
+  <h3>Data Collection on This Website</h3>
+  <p><strong>Who is responsible for data collection on this website?</strong></p>
+  <div class="info-card">
+    <p><strong>Astoria Systems GmbH</strong></p>
+    <p>Bosenheimer Straße 219, 55543 Bad Kreuznach, Germany</p>
+    <p>Email: <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+  </div>
+
+  <p><strong>How do we collect your data?</strong></p>
+  <p>Your data is collected when you provide it to us, for example through our contact form. Other data is automatically collected by our IT systems when you visit the website. This is primarily technical data (e.g., internet browser, operating system, or time of page access).</p>
+
+  <p><strong>What do we use your data for?</strong></p>
+  <p>Some data is collected to ensure error-free provision of the website. Other data may be used to analyze your user behavior.</p>
+
+  <p><strong>What rights do you have regarding your data?</strong></p>
+  <div class="highlight-box">
+    <p>You have the right to receive information about the origin, recipients, and purpose of your stored personal data free of charge at any time. You also have the right to request correction or deletion of this data.</p>
+  </div>
+
+  <h2><span class="section-number">2</span> Hosting</h2>
+  <h3>Cloudflare Pages</h3>
+  <p>This website is hosted by Cloudflare, Inc. Cloudflare operates a global Content Delivery Network (CDN) and provides DDoS protection along with other security services.</p>
+
+  <div class="highlight-box">
+    <p>Cloudflare processes data in accordance with <strong>EU Standard Contractual Clauses</strong> and is certified under the <strong>EU-US Data Privacy Framework</strong>. Usage is based on Art. 6 para. 1 lit. f GDPR (legitimate interest in secure and efficient provision of our website).</p>
+  </div>
+
+  <h2><span class="section-number">3</span> General Notes and Mandatory Information</h2>
+
+  <h3>Data Protection</h3>
+  <p>The operators of these pages take the protection of your personal data very seriously. We treat your personal data confidentially and in accordance with statutory data protection regulations and this privacy policy.</p>
+
+  <h3>Storage Duration</h3>
+  <p>Unless a more specific storage period has been mentioned in this privacy policy, your personal data will remain with us until the purpose for data processing ceases to apply. If you assert a legitimate request for deletion or revoke consent for data processing, your data will be deleted unless we have other legally permissible reasons for storing your personal data.</p>
+
+  <h2><span class="section-number">4</span> Data Collection on This Website</h2>
+
+  <h3>Cookies</h3>
+  <p>This website exclusively uses <strong>technically necessary cookies</strong>:</p>
+  <ul>
+    <li><strong>Theme preference</strong> (localStorage) - Stores your color scheme setting (light/dark). No personal data.</li>
+  </ul>
+  <div class="highlight-box">
+    <p><strong>No tracking cookies</strong>, no analytics cookies, and no third-party cookies are used. No cookie banner is required.</p>
+  </div>
+
+  <h3>Server Log Files</h3>
+  <p>The hosting provider (Cloudflare) automatically collects and stores information in server log files that your browser transmits automatically. These are:</p>
+  <ul>
+    <li>Browser type and version</li>
+    <li>Operating system used</li>
+    <li>Referrer URL</li>
+    <li>IP address (anonymized)</li>
+    <li>Time of server request</li>
+  </ul>
+  <p>This data is not merged with other data sources. The basis is Art. 6 para. 1 lit. f GDPR.</p>
+
+  <h3>Contact Form</h3>
+  <p>When you send us inquiries via the contact form, your details from the form including the contact data you provided are stored for the purpose of processing the inquiry and for follow-up questions.</p>
+  <p>Processing is based on Art. 6 para. 1 lit. b GDPR (pre-contractual measures). Data is deleted once the purpose of storage ceases to apply.</p>
+
+  <h2><span class="section-number">5</span> External Services</h2>
+
+  <h3>Bunny Fonts</h3>
+  <div class="highlight-box">
+    <p>This website uses <strong>Bunny Fonts</strong> for consistent font rendering. Bunny Fonts is operated by BunnyWay d.o.o., based in the <strong>EU</strong>, and is a <strong>GDPR-compliant</strong> service.</p>
+    <p><strong>No personal data</strong> is transferred to Google or other US companies. No cookies are set.</p>
+  </div>
+
+  <h2><span class="section-number">6</span> Your Rights at a Glance</h2>
+  <p>Under the GDPR, you have the following rights:</p>
+  <ul>
+    <li><strong>Right of access</strong> (Art. 15 GDPR) - Right to information about your stored data</li>
+    <li><strong>Right to rectification</strong> (Art. 16 GDPR) - Right to correction of inaccurate data</li>
+    <li><strong>Right to erasure</strong> (Art. 17 GDPR) - Right to deletion of your data</li>
+    <li><strong>Right to restriction</strong> (Art. 18 GDPR) - Right to restriction of processing</li>
+    <li><strong>Right to data portability</strong> (Art. 20 GDPR) - Right to data transfer</li>
+    <li><strong>Right to object</strong> (Art. 21 GDPR) - Right to object to processing</li>
+  </ul>
+  <p>To exercise your rights, please contact: <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+</LegalLayout>

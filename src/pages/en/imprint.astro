@@ -1,0 +1,71 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const locale = 'en';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>`;
+---
+
+<LegalLayout
+  title="Legal Notice | Astoria Systems"
+  description="Legal notice of Astoria Systems GmbH, Bad Kreuznach, Germany"
+  locale={locale}
+  breadcrumbLabel="Legal Notice"
+  breadcrumbHref="/en/imprint"
+  breadcrumbs={[{ name: 'Home', url: '/en' }, { name: 'Legal Notice', url: '/en/imprint' }]}
+  icon={icon}
+  lastUpdated="March 10, 2026"
+>
+  <Fragment slot="title">Legal Notice</Fragment>
+
+  <h2><span class="section-number">1</span> Information according to § 5 TMG</h2>
+  <div class="info-card">
+    <p><strong>Astoria Systems GmbH</strong></p>
+    <p>Bosenheimer Straße 219</p>
+    <p>55543 Bad Kreuznach</p>
+    <p>Germany</p>
+  </div>
+
+  <h2><span class="section-number">2</span> Represented by</h2>
+  <p><strong>Kevin Lind</strong>, Managing Director</p>
+
+  <h2><span class="section-number">3</span> Contact</h2>
+  <div class="info-card">
+    <p><strong>Phone:</strong> <a href="tel:+492821398620">+49 2821 39 86 20</a></p>
+    <p><strong>Email:</strong> <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+  </div>
+
+  <h2><span class="section-number">4</span> VAT Identification Number</h2>
+  <p>VAT identification number according to § 27 a of the German VAT Act:</p>
+  <div class="highlight-box">
+    <p>[VAT ID to be entered]</p>
+  </div>
+
+  <h2><span class="section-number">5</span> Commercial Register</h2>
+  <div class="info-card">
+    <p><strong>Registration Court:</strong> [District Court to be entered]</p>
+    <p><strong>Registration Number:</strong> [HRB number to be entered]</p>
+  </div>
+
+  <h2><span class="section-number">6</span> Responsible for Content (§ 55 Abs. 2 RStV)</h2>
+  <div class="info-card">
+    <p><strong>Kevin Lind</strong></p>
+    <p>Bosenheimer Straße 219</p>
+    <p>55543 Bad Kreuznach, Germany</p>
+  </div>
+
+  <h2><span class="section-number">7</span> EU Dispute Resolution</h2>
+  <p>The European Commission provides a platform for online dispute resolution. Our email address can be found above in this legal notice.</p>
+  <div class="highlight-box">
+    <p>We are neither obligated nor willing to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+  </div>
+
+  <h2><span class="section-number">8</span> Disclaimer</h2>
+  <h3>Liability for Content</h3>
+  <p>As a service provider, we are responsible for our own content on these pages in accordance with § 7 para. 1 TMG. According to §§ 8 to 10 TMG, however, we are not obligated to monitor transmitted or stored third-party information.</p>
+
+  <h3>Liability for Links</h3>
+  <p>Our website contains links to external third-party websites over whose content we have no influence. We cannot accept any liability for this external content. The respective provider or operator of the linked pages is always responsible for the content of the linked pages.</p>
+
+  <h3>Copyright</h3>
+  <p>The content and works created by the site operators on these pages are subject to German copyright law. Duplication, processing, distribution, and any kind of exploitation beyond the limits of copyright law require the written consent of the respective author or creator.</p>
+</LegalLayout>

@@ -1,0 +1,79 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { getAlternatePath } from '../../i18n/config';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  ogImage?: string;
+  canonical?: string;
+  noindex?: boolean;
+  ogType?: string;
+  keywords?: string;
+}
+
+const {
+  title,
+  description,
+  locale,
+  ogImage = '/og-image.png',
+  canonical,
+  noindex = false,
+  ogType = 'website',
+  keywords,
+} = Astro.props;
+
+const siteUrl = 'https://www.astoria.systems';
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonicalUrl = canonical || `${siteUrl}${currentPath}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+const alternatePath = locale === 'de'
+  ? getAlternatePath(currentPath, 'de', 'en')
+  : getAlternatePath(currentPath, 'en', 'de');
+
+const dePath = locale === 'de' ? currentPath : alternatePath;
+const enPath = locale === 'en' ? currentPath : alternatePath;
+
+const fullTitle = title.includes('Astoria') ? title : `${title} | Astoria Systems`;
+const ogLocale = locale === 'de' ? 'de_DE' : 'en_US';
+const altLocale = locale === 'de' ? 'en_US' : 'de_DE';
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{keywords && <meta name="keywords" content={keywords} />}
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+<meta name="author" content="Astoria Systems GmbH" />
+
+<link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" hreflang="de" href={`${siteUrl}${dePath}`} />
+<link rel="alternate" hreflang="en" href={`${siteUrl}${enPath}`} />
+<link rel="alternate" hreflang="x-default" href={`${siteUrl}${dePath}`} />
+
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="Astoria Systems" />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:locale:alternate" content={altLocale} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+<link rel="preconnect" href="https://fonts.bunny.net" />
+<link href="https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900" rel="stylesheet" />

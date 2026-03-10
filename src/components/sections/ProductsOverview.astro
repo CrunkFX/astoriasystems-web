@@ -1,0 +1,98 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import ServiceVisual from '../visuals/ServiceVisual.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const routes = routeMap[locale];
+
+const products = [
+  {
+    key: 'communication' as const,
+    route: routes['products.communication'],
+    color: '#06b6d4',
+    gradient: 'from-cyan-500/10 to-blue-500/10',
+    borderHover: 'hover:border-cyan-500/40',
+  },
+  {
+    key: 'security' as const,
+    route: routes['products.security'],
+    color: '#22c55e',
+    gradient: 'from-green-500/10 to-emerald-500/10',
+    borderHover: 'hover:border-green-500/40',
+  },
+  {
+    key: 'infrastructure' as const,
+    route: routes['products.infrastructure'],
+    color: '#8b5cf6',
+    gradient: 'from-violet-500/10 to-purple-500/10',
+    borderHover: 'hover:border-violet-500/40',
+  },
+  {
+    key: 'development' as const,
+    route: routes['products.development'],
+    color: '#f97316',
+    gradient: 'from-orange-500/10 to-red-500/10',
+    borderHover: 'hover:border-orange-500/40',
+  },
+];
+---
+
+<Section id="products-overview" class="!py-16 lg:!py-24">
+  <Container>
+    <div class="text-center mb-12" data-reveal>
+      <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+        {t(locale, 'productsOverview.badge')}
+      </span>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" data-text-reveal>
+        {t(locale, 'productsOverview.title')}
+      </h2>
+      <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] max-w-2xl mx-auto">
+        {t(locale, 'productsOverview.subtitle')}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" data-reveal>
+      {products.map((product) => (
+        <a
+          href={product.route}
+          class:list={[
+            'group relative block rounded-2xl border border-[var(--color-border)]/50 dark:border-[var(--color-dark-border)]/50',
+            'bg-[var(--color-surface)] dark:bg-[var(--color-dark-surface)]',
+            'transition-all duration-300',
+            'hover:shadow-lg hover:-translate-y-1',
+            product.borderHover,
+          ]}
+        >
+          <div class="overflow-hidden rounded-t-2xl">
+            <ServiceVisual type={product.key} class="transition-transform duration-500 group-hover:scale-105" />
+          </div>
+          <div class="p-4 md:p-5 text-center">
+            <h3 class="text-sm md:text-base lg:text-lg font-semibold mb-1" style={`color: ${product.color}`}>
+              {t(locale, `services.${product.key}.title`)}
+            </h3>
+            <p class="text-xs md:text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] line-clamp-2 hidden md:block">
+              {t(locale, `services.${product.key}.description`)}
+            </p>
+            <span
+              class="inline-flex items-center gap-1 text-xs md:text-sm font-medium mt-2 transition-colors"
+              style={`color: ${product.color}`}
+            >
+              {locale === 'de' ? 'Mehr erfahren' : 'Learn more'}
+              <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </Container>
+</Section>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import GlassCard from '../../components/ui/GlassCard.astro';
+import Breadcrumbs from '../../components/seo/Breadcrumbs.astro';
+import Button from '../../components/ui/Button.astro';
+import ParticleNetwork from '../../components/visuals/ParticleNetwork.astro';
+import { t } from '../../i18n/utils';
+
+const locale = 'en';
+---
+
+<BaseLayout
+  title={t(locale, 'jobs.pageTitle')}
+  description={t(locale, 'jobs.pageDescription')}
+  locale={locale}
+  keywords="careers, jobs, openings, Astoria Systems, IT jobs Germany"
+  jsonLdType="jobs"
+  breadcrumbs={[{ name: 'Home', url: '/en' }, { name: t(locale, 'nav.jobs'), url: '/en/jobs' }]}
+>
+  <section class="relative pt-28 lg:pt-32 pb-20 lg:pb-28 overflow-hidden">
+    <ParticleNetwork density="low" />
+    <div class="absolute inset-0 bg-[var(--color-surface-primary)]/75 dark:bg-[var(--color-dark-bg)]/70"></div>
+    <Container class="relative z-10">
+      <Breadcrumbs locale={locale} items={[{ label: t(locale, 'nav.jobs'), href: '/en/jobs' }]} />
+      <div class="max-w-3xl" data-reveal>
+        <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">Careers</span>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" data-text-reveal>{t(locale, 'jobs.title')}</h1>
+        <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{t(locale, 'jobs.subtitle')}</p>
+      </div>
+    </Container>
+  </section>
+
+  <Section>
+    <Container class="max-w-3xl">
+      <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-12" data-reveal>{t(locale, 'jobs.description')}</p>
+      <h2 class="text-2xl font-bold mb-6" data-reveal>{t(locale, 'jobs.openPositions')}</h2>
+      <div data-reveal>
+        <GlassCard class="text-center py-12">
+          <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-6">{t(locale, 'jobs.noPositions')}</p>
+        </GlassCard>
+      </div>
+      <div class="mt-12" data-reveal>
+        <GlassCard>
+          <h3 class="text-lg font-semibold mb-2">{t(locale, 'jobs.initiativeTitle')}</h3>
+          <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] text-sm mb-4">{t(locale, 'jobs.initiativeText')}</p>
+          <Button href="mailto:service@astoria.systems" variant="primary" size="sm">{t(locale, 'jobs.applyNow')}</Button>
+        </GlassCard>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

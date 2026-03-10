@@ -1,0 +1,125 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+
+const locale = 'de';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>`;
+---
+
+<LegalLayout
+  title="Datenschutzrichtlinie | Astoria Systems"
+  description="Datenschutzerklärung der Astoria Systems GmbH"
+  locale={locale}
+  breadcrumbLabel="Datenschutz"
+  breadcrumbHref="/datenschutz"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Datenschutz', url: '/datenschutz' }]}
+  icon={icon}
+  lastUpdated="10. März 2026"
+>
+  <Fragment slot="title">Datenschutzerklärung</Fragment>
+
+  <h2><span class="section-number">1</span> Datenschutz auf einen Blick</h2>
+
+  <h3>Allgemeine Hinweise</h3>
+  <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+
+  <h3>Datenerfassung auf dieser Website</h3>
+  <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
+  <div class="info-card">
+    <p><strong>Astoria Systems GmbH</strong></p>
+    <p>Bosenheimer Straße 219, 55543 Bad Kreuznach</p>
+    <p>E-Mail: <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+  </div>
+
+  <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
+  <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen, beispielsweise über unser Kontaktformular. Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs).</p>
+
+  <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
+  <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
+
+  <p><strong>Welche Rechte haben Sie bezüglich Ihrer Daten?</strong></p>
+  <div class="highlight-box">
+    <p>Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder Löschung dieser Daten zu verlangen.</p>
+  </div>
+
+  <h2><span class="section-number">2</span> Hosting</h2>
+  <h3>Cloudflare Pages</h3>
+  <p>Diese Website wird bei Cloudflare, Inc. gehostet. Cloudflare betreibt ein weltweites Content Delivery Network (CDN) und bietet DDoS-Schutz sowie weitere Sicherheitsdienste.</p>
+
+  <div class="highlight-box">
+    <p>Cloudflare verarbeitet Daten gemäß den <strong>EU-Standardvertragsklauseln</strong> und ist nach dem <strong>EU-US Data Privacy Framework</strong> zertifiziert. Die Nutzung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und effizienten Bereitstellung unseres Internetauftritts).</p>
+  </div>
+
+  <h2><span class="section-number">3</span> Allgemeine Hinweise und Pflichtinformationen</h2>
+
+  <h3>Datenschutz</h3>
+  <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
+
+  <h3>Verantwortliche Stelle</h3>
+  <div class="info-card">
+    <p><strong>Astoria Systems GmbH</strong></p>
+    <p>Bosenheimer Straße 219</p>
+    <p>55543 Bad Kreuznach</p>
+    <p>Telefon: <a href="tel:+492821398620">+49 2821 39 86 20</a></p>
+    <p>E-Mail: <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+  </div>
+
+  <h3>Speicherdauer</h3>
+  <p>Soweit innerhalb dieser Datenschutzerklärung keine speziellere Speicherdauer genannt wurde, verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck für die Datenverarbeitung entfällt. Wenn Sie ein berechtigtes Löschersuchen geltend machen oder eine Einwilligung zur Datenverarbeitung widerrufen, werden Ihre Daten gelöscht, sofern wir keine anderen rechtlich zulässigen Gründe für die Speicherung Ihrer personenbezogenen Daten haben.</p>
+
+  <h3>Widerruf Ihrer Einwilligung</h3>
+  <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt.</p>
+
+  <h3>Recht auf Datenübertragbarkeit</h3>
+  <p>Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen, maschinenlesbaren Format aushändigen zu lassen.</p>
+
+  <h3>Recht auf Beschwerde</h3>
+  <div class="highlight-box">
+    <p>Sie haben das Recht, sich bei der zuständigen Aufsichtsbehörde zu beschweren, wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer personenbezogenen Daten gegen die DSGVO verstößt.</p>
+  </div>
+
+  <h2><span class="section-number">4</span> Datenerfassung auf dieser Website</h2>
+
+  <h3>Cookies</h3>
+  <p>Diese Website verwendet ausschließlich <strong>technisch notwendige Cookies</strong>:</p>
+  <ul>
+    <li><strong>Theme-Präferenz</strong> (localStorage) - Speichert Ihre Einstellung für das Farbschema (Hell/Dunkel). Keine personenbezogenen Daten.</li>
+  </ul>
+  <div class="highlight-box">
+    <p>Es werden <strong>keine Tracking-Cookies</strong>, keine Analyse-Cookies und keine Cookies von Drittanbietern eingesetzt. Es ist kein Cookie-Banner erforderlich.</p>
+  </div>
+
+  <h3>Server-Log-Dateien</h3>
+  <p>Der Provider der Seiten (Cloudflare) erhebt und speichert automatisch Informationen in Server-Log-Dateien, die Ihr Browser automatisch übermittelt. Dies sind:</p>
+  <ul>
+    <li>Browsertyp und Browserversion</li>
+    <li>Verwendetes Betriebssystem</li>
+    <li>Referrer URL</li>
+    <li>IP-Adresse (anonymisiert)</li>
+    <li>Uhrzeit der Serveranfrage</li>
+  </ul>
+  <p>Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen. Grundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+
+  <h3>Kontaktformular</h3>
+  <p>Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Formular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.</p>
+  <p>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen). Die Daten werden gelöscht, sobald der Zweck der Speicherung entfällt.</p>
+
+  <h2><span class="section-number">5</span> Externe Dienste</h2>
+
+  <h3>Bunny Fonts</h3>
+  <div class="highlight-box">
+    <p>Diese Website nutzt <strong>Bunny Fonts</strong> zur einheitlichen Darstellung von Schriftarten. Bunny Fonts wird betrieben von BunnyWay d.o.o. mit Sitz in der <strong>EU</strong> und ist ein <strong>DSGVO-konformer</strong> Dienst.</p>
+    <p>Es werden <strong>keine personenbezogenen Daten</strong> an Google oder andere US-Unternehmen übertragen. Es werden keine Cookies gesetzt.</p>
+  </div>
+
+  <h2><span class="section-number">6</span> Ihre Rechte im Überblick</h2>
+  <p>Nach der DSGVO stehen Ihnen folgende Rechte zu:</p>
+  <ul>
+    <li><strong>Auskunftsrecht</strong> (Art. 15 DSGVO) - Recht auf Auskunft über Ihre gespeicherten Daten</li>
+    <li><strong>Berichtigungsrecht</strong> (Art. 16 DSGVO) - Recht auf Korrektur unrichtiger Daten</li>
+    <li><strong>Löschungsrecht</strong> (Art. 17 DSGVO) - Recht auf Löschung Ihrer Daten</li>
+    <li><strong>Einschränkungsrecht</strong> (Art. 18 DSGVO) - Recht auf Einschränkung der Verarbeitung</li>
+    <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO) - Recht auf Datenübertragung</li>
+    <li><strong>Widerspruchsrecht</strong> (Art. 21 DSGVO) - Recht auf Widerspruch gegen die Verarbeitung</li>
+  </ul>
+  <p>Zur Wahrnehmung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+</LegalLayout>

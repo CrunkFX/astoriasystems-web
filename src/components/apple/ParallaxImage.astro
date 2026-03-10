@@ -1,0 +1,31 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  speed?: string;
+  class?: string;
+  aspectRatio?: string;
+  rounded?: boolean;
+}
+
+const { src, alt, speed = '0.3', class: className = '', aspectRatio = '16/9', rounded = true } = Astro.props;
+---
+
+<div
+  class:list={[
+    'overflow-hidden relative',
+    rounded && 'rounded-2xl',
+    className,
+  ]}
+  style={`aspect-ratio: ${aspectRatio};`}
+>
+  <img
+    src={src}
+    alt={alt}
+    loading="lazy"
+    decoding="async"
+    data-parallax
+    data-parallax-speed={speed}
+    class="w-full h-[120%] object-cover absolute top-[-10%] left-0"
+  />
+</div>

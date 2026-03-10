@@ -1,0 +1,464 @@
+{
+  "site": {
+    "title": "Astoria Systems GmbH",
+    "description": "Innovative Softwarelösungen für Kommunikation, IT-Sicherheit, digitale Infrastruktur und individuelle Softwareentwicklung.",
+    "ogTitle": "Astoria Systems - Innovative Softwarelösungen"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Produkte",
+    "pricing": "Preise",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "help": "Hilfe",
+    "jobs": "Jobs",
+    "login": "Kunden Login",
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "hero": {
+    "title": "Wir entwickeln innovative Softwarelösungen",
+    "subtitle": "Von der Kommunikation über IT-Sicherheit und digitale Firmen-Infrastruktur bis hin zur individuellen Software- und App-Entwicklung. Alles aus einer Hand.",
+    "cta": "Kontaktieren Sie uns",
+    "ctaSecondary": "Unsere Produkte"
+  },
+  "productsOverview": {
+    "badge": "Schnellüberblick",
+    "title": "Unsere Produkte",
+    "subtitle": "Wir stärken Unternehmen mit einer stabilen, sicheren und automatisierten IT-Infrastruktur für nachhaltiges Wachstum."
+  },
+  "services": {
+    "title": "Unsere Leistungen",
+    "subtitle": "Ganzheitliche Lösungen für Ihr digitales Unternehmen",
+    "communication": {
+      "title": "Kommunikation",
+      "description": "Digitale Kommunikationslösungen für jeden Kanal – intern wie extern, von VoIP bis KI-Bots.",
+      "features": ["DSL & VoIP", "Chat & Messaging", "E-Mail & Marketing", "Video & Webinare", "CRM & Support", "KI & Automatisierung"],
+      "pageDescription": "Professionelle Kommunikationslösungen von Astoria Systems: VoIP, Firmenchats, E-Mail, Videokonferenzen, CRM, Marketing-Automatisierung, KI-Bots und vieles mehr.",
+      "intro": "Wir befinden uns im Kommunikationszeitalter! Wir bieten Ihnen umfassende Lösungen rund um digitale Kommunikation – von DSL und VoIP über Firmenchats und E-Mail bis hin zu KI-Bots und Marketing-Automatisierung. Sie haben eine Kommunikationsherausforderung? Wir haben Lösungen!",
+      "detailSections": [
+        {
+          "title": "Telefonie & Internet",
+          "description": "DSL-Anbindung und moderne VoIP-Telefonanlagen (Voice over IP) für Ihr Unternehmen. Flexible Rufnummernverwaltung, Anrufweiterleitung und Integration in Ihre bestehende Infrastruktur.",
+          "icon": "phone"
+        },
+        {
+          "title": "Chat & Messaging",
+          "description": "Firmeninterne Chats, Kundenchats für Ihre Webseite und Apps, Projektchats sowie Kunden- und Partnerforen (intern und öffentlich). KI-Bots für automatisierte Kommunikation.",
+          "icon": "chat"
+        },
+        {
+          "title": "E-Mail & Marketing",
+          "description": "E-Mail Clients und Server, Massenmails, Social-Marketing-Tools und Link-Tracker. Sehen Sie, wer und wie auf Ihre Marketingaktionen reagiert. Marketing-Automatisierungen wie Reaktivierungs-E-Mails und Gutscheinaktionen.",
+          "icon": "email"
+        },
+        {
+          "title": "Video, Webinare & Lernen",
+          "description": "Videomeetings, Webinar-Tools, Umfrage-Tools und eine integrierte E-Lernplattform. Alles für den digitalen Wissensaustausch in Ihrem Unternehmen.",
+          "icon": "video"
+        },
+        {
+          "title": "CRM, Support & Vertrieb",
+          "description": "Integriertes CRM-System, Ticketsysteme für Ihre Kunden und Ihren Support, Terminbuchungssoftware sowie ein vollständiges Shopsystem. Alles vernetzt in einer Plattform.",
+          "icon": "crm"
+        },
+        {
+          "title": "Planung & Zusammenarbeit",
+          "description": "Planungs- und Personalplanungs-Tools, Aufgaben- und Projektverwaltung mit Kunden- und Partnerchats sowie Funktionen zum gemeinsamen Arbeiten. Dazu eine Wissensdatenbank (Wiki) für Ihr Unternehmen.",
+          "icon": "automation"
+        }
+      ],
+      "portfolio": [
+        "DSL", "VoIP (Voice over IP)", "Firmeninterne Chats", "E-Mail Clients und Server",
+        "Terminbuchungssoftware", "Massenmails", "Firmenchats für Kunden", "Ticketsysteme",
+        "Videomeetings", "Webinar-Tools", "Umfragen-Tools", "Planungstools",
+        "Personalplanungs-Tool", "Wissensdatenbank (Wiki)", "E-Lernplattform", "CRM-System",
+        "Social-Marketing-Tools", "Link-Tracker", "Marketing-Automatisierungen", "Shopsystem",
+        "Kunden- und Partnerforen", "Chats für Apps", "KI-Bots", "Kundenchats für Webseiten",
+        "Webseitenaufbau", "Projektchats", "Aufgaben- und Projektverwaltung"
+      ],
+      "portfolioNote": "Und vieles mehr – gerne auch individuelle oder Branchenlösungen. Sprechen Sie uns an!",
+      "benefits": ["Alle Kanäle aus einer Hand", "Interne & externe Kommunikation", "KI-gestützte Automatisierung", "Individuelle Branchenlösungen"],
+      "learnMore": "Mehr erfahren"
+    },
+    "security": {
+      "title": "IT-Sicherheit",
+      "description": "Haftungsabsicherung trifft IT-Sicherheit – unser Rundum-Sorglos-Paket für Ihr Unternehmen.",
+      "features": ["Haftungsabsicherung", "DSGVO-Server", "Verschlüsselung", "MFA", "Sicherheitsschulungen", "Sicherheitskonzepte"],
+      "pageDescription": "IT-Sicherheitslösungen von Astoria Systems: Haftungsabsicherung, DSGVO-konforme Server, Verschlüsselung, MFA, sichere Cloud-Lösungen und Sicherheitsschulungen.",
+      "intro": "Durch unser einzigartiges Konzept der Kombination von Haftungsabsicherung und IT-Sicherheitsstruktur können wir Ihnen ein klar strukturiertes Rundum-Sorglos-Paket anbieten. Sie konzentrieren sich auf Ihr Geschäft – wir kümmern uns um Ihre IT-Sicherheit.",
+      "detailSections": [
+        {
+          "title": "Haftungsabsicherung",
+          "description": "Auslagerung der IT-Sicherheitshaftung – wir übernehmen die Verantwortung für Ihre IT-Sicherheit und minimieren Ihr unternehmerisches Risiko durch professionelle Absicherung.",
+          "icon": "encryption"
+        },
+        {
+          "title": "Sichere Serverlösungen",
+          "description": "Verschlüsselte DSGVO-konforme Serverlösungen und sichere Cloud-Lösungen. Ihre Daten sind auf zertifizierten Servern innerhalb der EU gespeichert und vollständig geschützt.",
+          "icon": "server"
+        },
+        {
+          "title": "Authentifizierung & Passwörter",
+          "description": "Mehrfaktor-Authentifizierung und sichere Passwortverwaltung für Ihr gesamtes Unternehmen. Maximale Zugangssicherheit über alle Systeme hinweg.",
+          "icon": "mfa"
+        },
+        {
+          "title": "Sichere Kommunikation",
+          "description": "Sichere E-Mail-Kommunikation und sichere Telekommunikation. Verschlüsselte Kanäle für alle internen und externen Kommunikationswege.",
+          "icon": "email"
+        },
+        {
+          "title": "Sichere Schnittstellen",
+          "description": "Sichere API-Schnittstellen und WebHook-Konzepte. Sichere Verknüpfung zwischen CRM, Webanwendungen und Mobile Apps.",
+          "icon": "api"
+        },
+        {
+          "title": "Schulungen & Konzepte",
+          "description": "Sicherheitsschulungen für Mitarbeiter (online) und Entwicklung individueller Sicherheitskonzepte. Sichere CRM-Systeme für Ihr Unternehmen.",
+          "icon": "training"
+        }
+      ],
+      "portfolio": [
+        "Auslagerung der IT-Sicherheitshaftung", "Verschlüsselte DSGVO-konforme Serverlösungen",
+        "Sichere Passwortverwaltung", "Sichere E-Mail-Kommunikation",
+        "Mehrfaktor-Authentifizierung", "Sichere Cloud-Lösungen",
+        "Sichere API-Schnittstellen", "Sichere WebHook-Konzepte",
+        "Sichere Verknüpfung CRM, Web & Mobile Apps", "Sichere CRM-Systeme",
+        "Sichere Telekommunikation", "Sicherheitsschulungen für Mitarbeiter (online)",
+        "Entwicklung von Sicherheitskonzepten"
+      ],
+      "portfolioNote": "Und vieles mehr – gerne auch individuelle oder Branchenlösungen. Sprechen Sie uns an!",
+      "benefits": ["Rundum-Sorglos-Paket", "Haftungsabsicherung inklusive", "DSGVO-Compliance", "Individuelle Sicherheitskonzepte"],
+      "learnMore": "Mehr erfahren"
+    },
+    "infrastructure": {
+      "title": "Digitale Infrastruktur",
+      "description": "Individuelle oder branchenspezifische digitale Umgebungen, die mit Ihrem Unternehmen wachsen – inklusive KI und Automatisierung.",
+      "features": ["CRM-Lösung", "Buchhaltung & DATEV", "Mitarbeiterverwaltung", "IoT-Lösungen", "Branchenlösungen", "KI & Automatisierung"],
+      "pageDescription": "Digitale Infrastrukturlösungen von Astoria Systems: CRM, Buchhaltung mit DATEV, Mitarbeiterverwaltung, IoT, Kassensysteme, Branchenlösungen und vieles mehr.",
+      "intro": "KI und Automatisierung ist in aller Munde – wollen Sie dabei sein? Es geht nicht mehr um die Frage, ob man KI-Bots, -Teams oder Automatisierungen nutzt, es geht nur noch um die Frage, wie und ab wann. Wir bieten Ihnen eine individuelle oder branchenspezifische digitale Umgebung, die mit Ihrem Unternehmen wachsen kann.",
+      "detailSections": [
+        {
+          "title": "CRM & Vertrieb",
+          "description": "Integrierte CRM-Lösung (Kundenverwaltung), Webseiten-Lösung, Angebots-, Verkaufs- und Rechnungsverwaltung inkl. E-Rechnung und Mahnverfahren. Alles in einer Plattform.",
+          "icon": "crm"
+        },
+        {
+          "title": "Buchhaltung & Finanzen",
+          "description": "Integrierte Buchhaltungslösung mit DATEV-Export für den Steuerberater und Zugangsregelung für den Wirtschaftsprüfer. Integriertes Kassensystem für Gastronomie, Einzelhandel und Großhandel sowie integrierte Bezahlsysteme.",
+          "icon": "accounting"
+        },
+        {
+          "title": "Mitarbeiterverwaltung",
+          "description": "Urlaubs- und Abwesenheitsverwaltung, Schicht- und Einsatzverwaltung, Mitarbeitervertragsverwaltung. Digitale Signaturen für wirklich papierloses Arbeiten.",
+          "icon": "hr"
+        },
+        {
+          "title": "Kommunikation & Marketing",
+          "description": "Firmeninterne Kommunikationsplattform, externe Kommunikation aus einer Hand, Kalenderfunktionen mit Buchungssystem, Social-Media-Marketing, Marketingautomatisierung und Veranstaltungsplanung mit Kartenverkauf.",
+          "icon": "chat"
+        },
+        {
+          "title": "Produktion & Logistik",
+          "description": "IoT-Lösungen für Fertigungsstraßen, Werkstatt-Tool, Qualitätskontrolle, Lagerverwaltung mit Automatisierung, Barcodeverwaltung und Dropshipping mit Anbindung an Amazon.",
+          "icon": "iot"
+        },
+        {
+          "title": "Wissen & Support",
+          "description": "Wissensdatenbank (Handbücher) intern und extern, E-Learningplattform, Kundendienst- und Ticketsystem sowie Aufgaben- und Projektverwaltung.",
+          "icon": "training"
+        }
+      ],
+      "portfolio": [
+        "Integrierte CRM-Lösung", "Integrierte Webseiten-Lösung",
+        "Buchhaltung mit DATEV-Export", "Mitarbeiterverwaltung",
+        "Urlaubs- und Abwesenheitsverwaltung", "Schicht- und Einsatzverwaltung",
+        "IoT-Lösungen für Fertigungsstraßen", "Aufgaben- und Projektverwaltung",
+        "Wissensdatenbank (Wiki)", "Firmeninterne Kommunikationsplattform",
+        "Kalenderfunktionen mit Buchungssystem", "Angebots- und Rechnungsverwaltung (inkl. E-Rechnung)",
+        "Kassensystem für Gastronomie und Handel", "Integrierte Bezahlsysteme",
+        "Digitale Signaturen", "Kundendienst- und Ticketsystem",
+        "E-Learningplattform", "Veranstaltungsplanung mit Kartenverkauf",
+        "Social-Media-Marketing", "Marketingautomatisierung",
+        "Fertigungsstraßen-Verwaltung", "Werkstatt-Tool",
+        "Qualitätskontrolle", "Lagerverwaltung",
+        "Barcodeverwaltung", "Dropshipping mit Amazon-Anbindung"
+      ],
+      "industrySolutions": {
+        "title": "Fertige Branchenlösungen",
+        "categories": [
+          {
+            "name": "Ausbildung & Schulung",
+            "icon": "training",
+            "items": ["DIY-Workshops & Ateliers", "Fahrschulen", "E-Learning-Plattformen", "Studentenvereinigungen"]
+          },
+          {
+            "name": "Einzelhandel & E-Commerce",
+            "icon": "industry",
+            "items": ["Agrarbedarf", "Kfz-Ersatzteile", "Buchläden", "Kleidergeschäfte", "Kosmetik", "Dropshipping", "Elektronik", "Floristen", "Lebensmittel", "Möbelhäuser", "Baumärkte", "Spielwaren", "Vinotheken"]
+          },
+          {
+            "name": "Essen & Getränke",
+            "icon": "industry",
+            "items": ["Bäckereien", "Bars & Kneipen", "Getränkehändler", "Konditoreien", "Catering", "Fast-Food", "Foodtrucks", "Fine Dining", "Takeaway"]
+          },
+          {
+            "name": "Fertigung & Lieferkette",
+            "icon": "iot",
+            "items": ["Externe Logistik", "Holzverarbeitung", "Firmengeschenke & Merchandising", "Individuelle Möbel", "Metallbau", "Mikrobrauereien", "Textilfertigung", "Weinbau"]
+          },
+          {
+            "name": "Gastgewerbe & Tourismus",
+            "icon": "industry",
+            "items": ["Bowlingbahnen & Freizeitzentren", "Campingplätze", "Escape-Rooms", "Gästehäuser & B&Bs", "Geführte Touren", "Ferienwohnungen", "Hotels & Resorts", "Nachtclubs", "Outdoor-Aktivitäten", "Spa & Wellness", "Yoga & Pilates"]
+          },
+          {
+            "name": "Gesundheit & Wellness",
+            "icon": "hr",
+            "items": ["Kletterhallen", "Optiker", "Fitnessstudios", "Friseursalons", "Personal Trainer", "Apotheken", "Tierarztpraxen", "Therapeutische Praxen"]
+          },
+          {
+            "name": "Handwerk & Dienstleistungen",
+            "icon": "industry",
+            "items": ["Fahrrad-Leasing & Werkstätten", "Reinigungsdienste", "Elektriker", "Gartenarbeit & Landschaftspflege", "Handwerksdienstleistungen", "Schuhmacher", "Vermessung & Kartierung"]
+          },
+          {
+            "name": "Immobilien & Bauwesen",
+            "icon": "industry",
+            "items": ["Architekturbüros", "Eigentümergemeinschaften", "Bauunternehmer", "HLK-Dienstleistungen", "Immobilien & Vermietung", "Maschinen- & Werkzeugvermietung", "Immobilienagenturen", "Solartechnik"]
+          },
+          {
+            "name": "Kultur & Kunst",
+            "icon": "industry",
+            "items": ["Kunsthandwerksläden", "Konzerthallen", "Galerien", "Bibliotheken", "Museen", "Fotostudios", "Tattoostudios", "Theater"]
+          },
+          {
+            "name": "Unternehmensdienstleistungen",
+            "icon": "erp",
+            "items": ["Steuerberater", "Werbeflächen", "Audit & Zertifizierung", "Energiehandel", "Umweltdienstleister", "Recruiting", "Anwaltskanzleien", "IT-Support", "Marketingagenturen"]
+          },
+          {
+            "name": "Veranstaltungen & Vereine",
+            "icon": "industry",
+            "items": ["Coworking-Spaces", "Event-Management", "Mitgliedsvereine", "Gemeinnützige Organisationen", "Sportveranstaltungen", "Sportclubs", "Sommerlager", "Hochzeitsplaner"]
+          }
+        ]
+      },
+      "portfolioNote": "Und vieles mehr – gerne auch individuelle oder Branchenlösungen. Sprechen Sie uns an!",
+      "benefits": ["Wächst mit Ihrem Unternehmen", "KI & Automatisierung integriert", "Fertige Branchenlösungen", "Alles aus einer Hand"],
+      "learnMore": "Mehr erfahren"
+    },
+    "development": {
+      "title": "Software & App-Entwicklung",
+      "description": "Maßgeschneiderte Software- und App-Lösungen mit CRM-Integration, Sensor-Anbindung und Hardware-Zugriff.",
+      "features": ["CRM-Integration", "Externe Geräte", "Sensoren & Kameras", "Datenbanken", "Mobile Apps", "Individuelle Lösungen"],
+      "pageDescription": "Individuelle Softwareentwicklung von Astoria Systems: Maßgeschneiderte Software und Apps mit CRM-Integration, Sensor-Anbindung, Datenbank-Lösungen und mehr.",
+      "intro": "Sie brauchen eine individuelle Software- oder App-Lösung? Kein Problem! Wir entwickeln Software- und App-Lösungen, die direkt mit Ihrem CRM interagieren, auf externe Geräte zugreifen und interne Sensoren wie Bewegungssensoren, Kameras oder LIDAR nutzen.",
+      "detailSections": [
+        {
+          "title": "CRM-Integration",
+          "description": "Software- und App-Lösungen, die direkt mit Ihrer CRM-Lösung interagieren. Nahtloser Datenaustausch und einheitliche Kundensicht über alle Kanäle.",
+          "icon": "crm"
+        },
+        {
+          "title": "Externe Geräte",
+          "description": "Anwendungen, die auf externe Geräte zugreifen und diese steuern. Verbinden Sie Hardware und Software zu einer leistungsfähigen Gesamtlösung.",
+          "icon": "mobile"
+        },
+        {
+          "title": "Sensoren & Kameras",
+          "description": "Nutzung interner Sensoren wie Bewegungssensoren, Kameras oder LIDAR. Wir verbinden die physische mit der digitalen Welt.",
+          "icon": "sensor"
+        },
+        {
+          "title": "Datenbank-Anwendungen",
+          "description": "Leistungsfähige Datenbank-Lösungen für große Datenmengen. Optimierte Abfragen, sichere Speicherung und intuitive Verwaltungsoberflächen.",
+          "icon": "database"
+        },
+        {
+          "title": "Mobile Apps",
+          "description": "Native und Cross-Platform Apps für iOS und Android. Intuitive Benutzeroberflächen, Offline-Funktionalität und Push-Benachrichtigungen.",
+          "icon": "mobile"
+        },
+        {
+          "title": "API-Entwicklung",
+          "description": "RESTful und GraphQL APIs für die Vernetzung Ihrer Systeme. Dokumentierte Schnittstellen, Versionierung und automatisierte Tests.",
+          "icon": "api"
+        }
+      ],
+      "portfolio": [
+        "Software mit CRM-Integration", "Zugriff auf externe Geräte",
+        "Bewegungssensoren-Anbindung", "Kamera-Integration",
+        "LIDAR-Anbindung", "Datenbank-Anwendungen",
+        "Mobile Apps (iOS & Android)", "API-Entwicklung"
+      ],
+      "portfolioNote": "Und vieles mehr – gerne auch individuelle oder Branchenlösungen. Sprechen Sie uns an!",
+      "benefits": ["Passgenaue Lösungen", "CRM-integriert", "Hardware-Anbindung", "Individuelle Branchenlösungen"],
+      "learnMore": "Mehr erfahren"
+    }
+  },
+  "stats": {
+    "title": "Zahlen, die überzeugen",
+    "crmApps": {
+      "value": "40+",
+      "label": "Integrierte CRM Apps"
+    },
+    "availability": {
+      "value": "98%",
+      "label": "Erreichbarkeit"
+    },
+    "liability": {
+      "value": "0 €",
+      "label": "IT-Sicherheit-Haftung"
+    },
+    "users": {
+      "value": "∞",
+      "label": "Registrierte Nutzer"
+    },
+    "retention": {
+      "value": "90%",
+      "label": "Kundenbindung"
+    },
+    "productivity": {
+      "value": "3x",
+      "label": "Produktivitätssteigerung"
+    }
+  },
+  "partners": {
+    "title": "Unsere Partner",
+    "subtitle": "Vertrauenswürdige Zusammenarbeit mit führenden Unternehmen"
+  },
+  "about": {
+    "title": "Über Astoria Systems",
+    "subtitle": "Das ultimative Erlebnis der Vernetzung",
+    "description": "Innovation setzt Möglichkeiten in die Tat um. Unser Team aus Spezialisten in IT, Vertrieb, Sicherheitsberatung, Maschinenbau und Architektur vereint sich zu einem ganzheitlichen Unternehmen.",
+    "founded": "Gegründet 2025 als kollektives Unternehmen, das individuelle Spezialisten zu einer leistungsfähigen Einheit verbindet.",
+    "cta": "Mehr erfahren",
+    "pageTitle": "Über uns",
+    "pageDescription": "Lernen Sie Astoria Systems kennen - ein Team aus diversen Spezialisten, das IT-Expertise mit Unternehmensberatung, Sicherheit und Ingenieurwesen kombiniert.",
+    "missionTitle": "Unsere Mission",
+    "missionText": "Wir glauben daran, dass Technologie Unternehmen befähigen sollte, nicht behindern. Unsere Mission ist es, innovative und zugängliche Softwarelösungen zu schaffen, die echten Geschäftswert liefern.",
+    "teamTitle": "Unser Team",
+    "teamText": "Unser Team vereint Experten aus verschiedenen Disziplinen: IT-Spezialisten, Vertriebserfahrene, Unternehmens- und Startup-Berater, Sicherheitsberater, technische Zeichner, Maschinenbauer, Architekten und Organisationsspezialisten.",
+    "valuesTitle": "Unsere Werte",
+    "values": [
+      { "title": "Innovation", "description": "Stets auf der Suche nach besseren Lösungen und neuen Möglichkeiten." },
+      { "title": "Zuverlässigkeit", "description": "98%+ Erreichbarkeit und beständige Qualität in allem was wir tun." },
+      { "title": "Sicherheit", "description": "Datenschutz und IT-Sicherheit stehen an erster Stelle." },
+      { "title": "Partnerschaft", "description": "Langfristige Beziehungen auf Augenhöhe mit unseren Kunden." }
+    ]
+  },
+  "cta": {
+    "title": "Bereit für die digitale Zukunft?",
+    "subtitle": "Lassen Sie uns gemeinsam die passende Lösung für Ihr Unternehmen finden.",
+    "button": "Jetzt Kontakt aufnehmen"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Wir freuen uns auf Ihre Anfrage",
+    "pageTitle": "Kontakt aufnehmen",
+    "pageDescription": "Kontaktieren Sie Astoria Systems GmbH für innovative Softwarelösungen. Wir beraten Sie gerne zu Kommunikation, IT-Sicherheit und digitaler Infrastruktur.",
+    "form": {
+      "name": "Ihr Name",
+      "email": "Ihre E-Mail",
+      "phone": "Telefonnummer",
+      "company": "Ihr Unternehmen",
+      "subject": "Betreff",
+      "message": "Ihre Nachricht",
+      "submit": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "success": "Vielen Dank! Wir melden uns in Kürze.",
+      "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    },
+    "info": {
+      "title": "Kontaktinformationen",
+      "address": "Bosenheimer Straße 219, 55543 Bad Kreuznach",
+      "phone": "+49 2821 39 86 20",
+      "email": "service@astoria.systems",
+      "representative": "Vertreten durch Kevin Lind"
+    }
+  },
+  "pricing": {
+    "title": "Preise",
+    "subtitle": "Transparente Pakete für jede Unternehmensgröße",
+    "pageTitle": "Unsere Preise",
+    "pageDescription": "Flexible Preispläne von Astoria Systems für Kommunikation, IT-Sicherheit, digitale Infrastruktur und Softwareentwicklung.",
+    "monthly": "monatlich",
+    "getStarted": "Jetzt starten",
+    "contactUs": "Kontaktieren Sie uns",
+    "popular": "Beliebt",
+    "starter": {
+      "name": "Starter",
+      "price": "Auf Anfrage",
+      "description": "Ideal für kleine Unternehmen und Startups",
+      "features": ["Grundlegende Kommunikation", "E-Mail & Chat", "Basis IT-Sicherheit", "Cloud-Hosting", "Standard Support"]
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "Auf Anfrage",
+      "description": "Für wachsende Unternehmen mit höheren Anforderungen",
+      "features": ["Erweiterte Kommunikation", "VoIP & Videokonferenzen", "Erweiterte IT-Sicherheit", "CRM-Integration", "ERP-Grundfunktionen", "Prioritäts-Support"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Individuell",
+      "description": "Maßgeschneiderte Lösungen für große Unternehmen",
+      "features": ["Vollständige Kommunikationssuite", "Maximale IT-Sicherheit", "Vollständiges ERP-System", "Individuelle Softwareentwicklung", "IoT-Integration", "Dedizierter Account Manager", "24/7 Premium Support"]
+    }
+  },
+  "help": {
+    "pageTitle": "Hilfe & Support",
+    "pageDescription": "Hilfezentrum von Astoria Systems - finden Sie Antworten auf häufig gestellte Fragen oder kontaktieren Sie unseren Support.",
+    "title": "Wie können wir helfen?",
+    "subtitle": "Finden Sie schnell Antworten oder kontaktieren Sie unser Support-Team",
+    "faq": "Häufig gestellte Fragen",
+    "supportTitle": "Direkter Support",
+    "supportText": "Unser Support-Team steht Ihnen bei Fragen und Problemen zur Verfügung.",
+    "questions": [
+      { "q": "Wie kann ich den Kunden-Login erreichen?", "a": "Sie können sich über odoo.astoria.systems in Ihr Kundenportal einloggen." },
+      { "q": "Welche Support-Kanäle stehen zur Verfügung?", "a": "Sie erreichen uns per Telefon, E-Mail und über unser Kontaktformular. Für schnelle Hilfe steht auch QuickSupport bereit." },
+      { "q": "Gibt es eine kostenlose Testphase?", "a": "Ja, wir bieten eine individuelle Beratung und Demonstration unserer Lösungen an. Kontaktieren Sie uns für weitere Details." },
+      { "q": "Wie werden meine Daten geschützt?", "a": "Alle Daten werden auf DSGVO-konformen Servern in der EU gespeichert. Wir nutzen Ende-zu-Ende-Verschlüsselung und regelmäßige Sicherheitsaudits." }
+    ]
+  },
+  "jobs": {
+    "pageTitle": "Karriere bei Astoria Systems",
+    "pageDescription": "Werden Sie Teil des Astoria Systems Teams. Entdecken Sie aktuelle Stellenangebote in IT, Vertrieb, Beratung und Entwicklung.",
+    "title": "Karriere",
+    "subtitle": "Werden Sie Teil unseres Teams",
+    "description": "Wir suchen engagierte Talente, die gemeinsam mit uns die digitale Zukunft gestalten möchten. Bei Astoria Systems arbeiten Sie in einem dynamischen Umfeld mit flachen Hierarchien und großem Gestaltungsspielraum.",
+    "openPositions": "Offene Stellen",
+    "noPositions": "Aktuell keine offenen Stellen. Senden Sie uns gerne eine Initiativbewerbung!",
+    "applyNow": "Jetzt bewerben",
+    "initiativeTitle": "Initiativbewerbung",
+    "initiativeText": "Keine passende Stelle gefunden? Wir freuen uns über Ihre Initiativbewerbung an service@astoria.systems"
+  },
+  "footer": {
+    "services": "Leistungen & Preise",
+    "support": "Kundenbetreuung",
+    "helpCenter": "Hilfezentrum",
+    "contactUs": "Kontaktieren Sie uns",
+    "company": "Unternehmen",
+    "legal": "Rechtliches",
+    "terms": "Geschäftsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "imprint": "Impressum",
+    "copyright": "Astoria Systems GmbH. Alle Rechte vorbehalten."
+  },
+  "theme": {
+    "light": "Hell",
+    "dark": "Dunkel",
+    "toggle": "Farbschema wechseln"
+  },
+  "language": {
+    "switchTo": "Switch to English"
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Die angeforderte Seite existiert nicht oder wurde verschoben.",
+    "backHome": "Zurück zur Startseite"
+  }
+}

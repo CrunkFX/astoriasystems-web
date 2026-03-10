@@ -1,0 +1,73 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import Button from '../ui/Button.astro';
+import GlassCard from '../ui/GlassCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const routes = routeMap[locale];
+---
+
+<Section variant="alt" class="!py-24 lg:!py-32 overflow-hidden">
+  <Container>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Content side -->
+      <div data-reveal="left">
+        <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+          {locale === 'de' ? 'Über uns' : 'About us'}
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold mb-6" data-text-reveal>{t(locale, 'about.title')}</h2>
+        <p class="text-xl text-[var(--color-accent)] font-medium mb-6">{t(locale, 'about.subtitle')}</p>
+        <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-4 leading-relaxed">
+          {t(locale, 'about.description')}
+        </p>
+        <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-10 leading-relaxed">
+          {t(locale, 'about.founded')}
+        </p>
+        <Button href={routes.about} variant="ghost" size="lg">
+          {t(locale, 'about.cta')}
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </Button>
+      </div>
+
+      <!-- Image + stats side -->
+      <div data-reveal="right">
+        <!-- Workspace illustration -->
+        <div class="mb-6" data-image-reveal>
+          <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-[#083344] dark:to-[#0c1a2e]">
+            <img src="/illustrations/workspace.svg" alt="Team collaboration" loading="lazy" decoding="async" class="w-full h-full object-contain p-6" />
+          </div>
+        </div>
+
+        <!-- Stats grid -->
+        <div class="grid grid-cols-2 gap-4">
+          <GlassCard class="text-center py-5">
+            <div class="text-3xl font-bold gradient-text mb-1">2025</div>
+            <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{locale === 'de' ? 'Gegründet' : 'Founded'}</div>
+          </GlassCard>
+          <GlassCard class="text-center py-5">
+            <div class="text-3xl font-bold gradient-text mb-1">360°</div>
+            <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{locale === 'de' ? 'Ganzheitlich' : 'Holistic'}</div>
+          </GlassCard>
+          <GlassCard class="text-center py-5">
+            <div class="text-3xl font-bold gradient-text mb-1">DSGVO</div>
+            <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{locale === 'de' ? 'Konform' : 'Compliant'}</div>
+          </GlassCard>
+          <GlassCard class="text-center py-5">
+            <div class="text-3xl font-bold gradient-text mb-1">EU</div>
+            <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{locale === 'de' ? 'Hosting' : 'Hosted'}</div>
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>

@@ -1,0 +1,67 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+
+const locale = 'en';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>`;
+---
+
+<LegalLayout
+  title="Terms of Service | Astoria Systems"
+  description="Terms of service of Astoria Systems GmbH"
+  locale={locale}
+  breadcrumbLabel="Terms"
+  breadcrumbHref="/en/terms"
+  breadcrumbs={[{ name: 'Home', url: '/en' }, { name: 'Terms', url: '/en/terms' }]}
+  icon={icon}
+  lastUpdated="March 10, 2026"
+>
+  <Fragment slot="title">Terms of Service</Fragment>
+
+  <h2><span class="section-number">§1</span> Scope</h2>
+  <p>These General Terms and Conditions apply to all contracts between Astoria Systems GmbH, Bosenheimer Straße 219, 55543 Bad Kreuznach, Germany (hereinafter "Provider") and the customer for the provision of IT services, software development and related services.</p>
+  <div class="highlight-box">
+    <p>Deviating terms and conditions of the customer are not recognized unless the Provider expressly agrees to their validity in writing.</p>
+  </div>
+
+  <h2><span class="section-number">§2</span> Contract Formation</h2>
+  <p>A contract is concluded upon written acceptance of an offer by the customer. Offers from the Provider are non-binding unless explicitly marked as binding.</p>
+  <p>Acceptance of an offer may also occur through conclusive behavior (e.g., use of the service).</p>
+
+  <h2><span class="section-number">§3</span> Scope of Services</h2>
+  <p>The scope of services is determined by the respective service description or individual offer. Changes and extensions to the scope of services require the written agreement of both parties.</p>
+  <p>The Provider is entitled to replace the contractually agreed services with qualitatively equivalent or higher-quality services, provided this is reasonable for the customer.</p>
+
+  <h2><span class="section-number">§4</span> Remuneration and Payment</h2>
+  <p>Remuneration is based on the prices agreed upon in the offer. All prices are in Euros plus statutory VAT.</p>
+  <div class="info-card">
+    <p><strong>Payment terms:</strong> Invoices are due within 14 days of invoicing without deduction, unless otherwise agreed.</p>
+    <p><strong>Default:</strong> In case of late payment, the Provider is entitled to charge default interest at the statutory rate.</p>
+  </div>
+
+  <h2><span class="section-number">§5</span> Customer Obligations</h2>
+  <p>The customer shall provide the Provider with all information, documents, and access required for the performance of the agreed services in a timely and free-of-charge manner.</p>
+  <p>The customer shall designate a responsible contact person authorized to make binding decisions on behalf of the customer.</p>
+
+  <h2><span class="section-number">§6</span> Liability</h2>
+  <p>The Provider's liability is governed by statutory provisions, subject to the following limitations:</p>
+  <ul>
+    <li>Liability for slight negligence is excluded unless essential contractual obligations (cardinal obligations) are affected.</li>
+    <li>In case of breach of essential contractual obligations, liability is limited to typical, foreseeable damages.</li>
+    <li>The above limitations do not apply in cases of intent, gross negligence, or injury to life, body, or health.</li>
+  </ul>
+
+  <h2><span class="section-number">§7</span> Data Protection and Confidentiality</h2>
+  <p>The processing of personal data is carried out in accordance with our <a href="/en/privacy">Privacy Policy</a> and the provisions of the GDPR.</p>
+  <p>Both parties undertake to keep confidential information of the other party secret and to use it only for the performance of the contract.</p>
+
+  <h2><span class="section-number">§8</span> Term and Termination</h2>
+  <p>The contract term is determined by the respective offer. Unless otherwise agreed, contracts may be terminated with 3 months' notice at the end of the contract term.</p>
+  <p>The right to extraordinary termination for good cause remains unaffected.</p>
+
+  <h2><span class="section-number">§9</span> Final Provisions</h2>
+  <div class="info-card">
+    <p><strong>Applicable law:</strong> The law of the Federal Republic of Germany applies, excluding the UN Convention on Contracts for the International Sale of Goods.</p>
+    <p><strong>Place of jurisdiction:</strong> Bad Kreuznach, as far as legally permissible.</p>
+    <p><strong>Severability clause:</strong> Should individual provisions be invalid, the validity of the remaining provisions shall remain unaffected.</p>
+  </div>
+</LegalLayout>

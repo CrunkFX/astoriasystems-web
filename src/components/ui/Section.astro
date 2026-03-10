@@ -1,0 +1,24 @@
+---
+interface Props {
+  id?: string;
+  class?: string;
+  reveal?: boolean;
+  variant?: 'default' | 'alt' | 'gradient';
+}
+
+const { id, class: className, reveal = true, variant = 'default' } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  default: '',
+  alt: 'bg-[var(--color-surface-secondary)] dark:bg-[var(--color-dark-surface)]',
+  gradient: 'hero-gradient',
+};
+---
+
+<section
+  id={id}
+  class:list={['py-16 md:py-24', variantClasses[variant], className]}
+  {...reveal ? { 'data-reveal': '' } : {}}
+>
+  <slot />
+</section>

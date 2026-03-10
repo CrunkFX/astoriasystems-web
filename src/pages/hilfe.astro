@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Section from '../components/ui/Section.astro';
+import GlassCard from '../components/ui/GlassCard.astro';
+import Breadcrumbs from '../components/seo/Breadcrumbs.astro';
+import Button from '../components/ui/Button.astro';
+import ParticleNetwork from '../components/visuals/ParticleNetwork.astro';
+import { t } from '../i18n/utils';
+
+const locale = 'de';
+
+const questions = [
+  { q: 'Wie kann ich den Kunden-Login erreichen?', a: 'Sie können sich über odoo.astoria.systems in Ihr Kundenportal einloggen.' },
+  { q: 'Welche Support-Kanäle stehen zur Verfügung?', a: 'Sie erreichen uns per Telefon, E-Mail und über unser Kontaktformular. Für schnelle Hilfe steht auch QuickSupport bereit.' },
+  { q: 'Gibt es eine kostenlose Testphase?', a: 'Ja, wir bieten eine individuelle Beratung und Demonstration unserer Lösungen an. Kontaktieren Sie uns für weitere Details.' },
+  { q: 'Wie werden meine Daten geschützt?', a: 'Alle Daten werden auf DSGVO-konformen Servern in der EU gespeichert. Wir nutzen Ende-zu-Ende-Verschlüsselung und regelmäßige Sicherheitsaudits.' },
+];
+---
+
+<BaseLayout
+  title={t(locale, 'help.pageTitle')}
+  description={t(locale, 'help.pageDescription')}
+  locale={locale}
+  keywords="Hilfe, Support, FAQ, Astoria Systems, Kundendienst"
+  jsonLdType="faq"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: t(locale, 'nav.help'), url: '/hilfe' }]}
+  faqItems={questions.map(q => ({ question: q.q, answer: q.a }))}
+>
+  <section class="relative pt-28 lg:pt-32 pb-20 lg:pb-28 overflow-hidden">
+    <ParticleNetwork density="low" />
+    <div class="absolute inset-0 bg-[var(--color-surface-primary)]/75 dark:bg-[var(--color-dark-bg)]/70"></div>
+    <Container class="relative z-10">
+      <Breadcrumbs locale={locale} items={[{ label: t(locale, 'nav.help'), href: '/hilfe' }]} />
+      <div class="max-w-3xl text-center mx-auto" data-reveal>
+        <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">Hilfe & FAQ</span>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" data-text-reveal>{t(locale, 'help.title')}</h1>
+        <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{t(locale, 'help.subtitle')}</p>
+      </div>
+    </Container>
+  </section>
+
+  <Section>
+    <Container class="max-w-3xl">
+      <h2 class="text-2xl font-bold mb-8" data-reveal>{t(locale, 'help.faq')}</h2>
+      <div class="space-y-4">
+        {questions.map((item, index) => (
+          <div data-reveal data-reveal-delay={index + 1}>
+            <GlassCard>
+              <h3 class="text-lg font-semibold mb-2">{item.q}</h3>
+              <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] text-sm leading-relaxed">{item.a}</p>
+            </GlassCard>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </Section>
+
+  <Section variant="alt">
+    <Container class="text-center max-w-2xl">
+      <h2 class="text-2xl font-bold mb-4" data-reveal>{t(locale, 'help.supportTitle')}</h2>
+      <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-8" data-reveal>{t(locale, 'help.supportText')}</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4" data-reveal>
+        <Button href="/kontakt" variant="primary">{t(locale, 'footer.contactUs')}</Button>
+        <Button href="tel:+492821398620" variant="secondary">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+          </svg>
+          {t(locale, 'contact.info.phone')}
+        </Button>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

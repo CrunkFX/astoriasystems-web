@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+
+const locale = 'de';
+---
+
+<BaseLayout
+  title="404 - Seite nicht gefunden"
+  description="Die angeforderte Seite existiert nicht."
+  locale={locale}
+  noindex={true}
+>
+  <section class="min-h-[60vh] flex items-center pt-20">
+    <Container class="text-center">
+      <div class="animate-fade-in-up">
+        <div class="text-8xl font-bold gradient-text mb-4">404</div>
+        <h1 class="text-2xl font-bold mb-4">Seite nicht gefunden</h1>
+        <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-8 max-w-md mx-auto">
+          Die angeforderte Seite existiert nicht oder wurde verschoben.
+        </p>
+        <Button href="/" variant="primary" size="lg">
+          Zurück zur Startseite
+        </Button>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

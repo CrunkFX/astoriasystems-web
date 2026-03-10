@@ -1,0 +1,51 @@
+---
+import type { Locale } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+import Container from '../ui/Container.astro';
+import StatCard from '../ui/StatCard.astro';
+import ParticleNetwork from '../visuals/ParticleNetwork.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const stats = [
+  { key: 'crmApps', delay: 1 },
+  { key: 'availability', delay: 2 },
+  { key: 'liability', delay: 3 },
+  { key: 'users', delay: 4 },
+  { key: 'retention', delay: 5 },
+  { key: 'productivity', delay: 1 },
+];
+---
+
+<section class="relative py-32 lg:py-40 overflow-hidden">
+  <!-- Background pattern -->
+  <ParticleNetwork density="low" />
+  <div class="absolute inset-0 bg-[var(--color-surface-secondary)]/80 dark:bg-[var(--color-dark-bg)]/75"></div>
+  <!-- Decorative orbs -->
+  <div class="absolute -top-20 -left-20 w-[400px] h-[400px] bg-[var(--color-accent)]/8 dark:bg-[var(--color-accent)]/12 rounded-full blur-[100px] animate-float" aria-hidden="true"></div>
+  <div class="absolute -bottom-20 -right-20 w-[350px] h-[350px] bg-blue-500/6 dark:bg-blue-500/10 rounded-full blur-[80px] animate-float" style="animation-delay: -2s;" aria-hidden="true"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-500/4 dark:bg-violet-500/6 rounded-full blur-[100px]" aria-hidden="true"></div>
+
+  <Container class="relative z-10">
+    <div class="text-center mb-16" data-reveal>
+      <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+        {locale === 'de' ? 'In Zahlen' : 'By the numbers'}
+      </span>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold">{t(locale, 'stats.title')}</h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
+      {stats.map((stat) => (
+        <StatCard
+          value={t(locale, `stats.${stat.key}.value`)}
+          label={t(locale, `stats.${stat.key}.label`)}
+          delay={stat.delay}
+        />
+      ))}
+    </div>
+  </Container>
+</section>

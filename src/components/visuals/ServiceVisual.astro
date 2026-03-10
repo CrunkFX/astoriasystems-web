@@ -1,0 +1,87 @@
+---
+interface Props {
+  type: 'communication' | 'security' | 'infrastructure' | 'development';
+  class?: string;
+}
+
+const { type, class: className = '' } = Astro.props;
+
+const illustrations: Record<string, { src: string; alt: string; bg: string; bgDark: string }> = {
+  communication: {
+    src: '/illustrations/communication.svg',
+    alt: 'Communication & Collaboration Illustration',
+    bg: 'linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)',
+    bgDark: 'linear-gradient(135deg, #083344 0%, #0c1a2e 100%)',
+  },
+  security: {
+    src: '/illustrations/security.svg',
+    alt: 'Cybersecurity & Data Protection Illustration',
+    bg: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+    bgDark: 'linear-gradient(135deg, #052e16 0%, #0a1f1a 100%)',
+  },
+  infrastructure: {
+    src: '/illustrations/infrastructure.svg',
+    alt: 'Cloud Hosting & Infrastructure Illustration',
+    bg: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
+    bgDark: 'linear-gradient(135deg, #1e1b4b 0%, #1a1533 100%)',
+  },
+  development: {
+    src: '/illustrations/development.svg',
+    alt: 'Software Development & Programming Illustration',
+    bg: 'linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%)',
+    bgDark: 'linear-gradient(135deg, #431407 0%, #2a1a0a 100%)',
+  },
+};
+
+const illus = illustrations[type];
+---
+
+<div
+  class:list={['service-illustration relative overflow-hidden rounded-2xl', className]}
+  style={`aspect-ratio: 4/3; background: ${illus.bg};`}
+  data-visual-type={type}
+  data-bg-dark={illus.bgDark}
+>
+  <img
+    src={illus.src}
+    alt={illus.alt}
+    loading="lazy"
+    decoding="async"
+    class="w-full h-full object-contain p-6 md:p-8"
+  />
+</div>
+
+<style>
+  :global(.dark) .service-illustration {
+    background: var(--svc-bg-dark) !important;
+  }
+</style>
+
+<script>
+  // Apply dark background from data attribute
+  function updateIllustrationBg() {
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('.service-illustration').forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      if (isDark) {
+        const darkBg = htmlEl.dataset.bgDark;
+        if (darkBg) htmlEl.style.background = darkBg;
+      } else {
+        // Re-read from type to get light bg
+        const type = htmlEl.dataset.visualType;
+        const lightBgs: Record<string, string> = {
+          communication: 'linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)',
+          security: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+          infrastructure: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
+          development: 'linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%)',
+        };
+        if (type && lightBgs[type]) htmlEl.style.background = lightBgs[type];
+      }
+    });
+  }
+
+  updateIllustrationBg();
+
+  const observer = new MutationObserver(() => updateIllustrationBg());
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+</script>

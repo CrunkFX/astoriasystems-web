@@ -1,0 +1,71 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+
+const locale = 'de';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>`;
+---
+
+<LegalLayout
+  title="Impressum | Astoria Systems"
+  description="Impressum der Astoria Systems GmbH, Bad Kreuznach"
+  locale={locale}
+  breadcrumbLabel="Impressum"
+  breadcrumbHref="/impressum"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Impressum', url: '/impressum' }]}
+  icon={icon}
+  lastUpdated="10. März 2026"
+>
+  <Fragment slot="title">Impressum</Fragment>
+
+  <h2><span class="section-number">1</span> Angaben gemäß § 5 TMG</h2>
+  <div class="info-card">
+    <p><strong>Astoria Systems GmbH</strong></p>
+    <p>Bosenheimer Straße 219</p>
+    <p>55543 Bad Kreuznach</p>
+    <p>Deutschland</p>
+  </div>
+
+  <h2><span class="section-number">2</span> Vertreten durch</h2>
+  <p><strong>Kevin Lind</strong>, Geschäftsführer</p>
+
+  <h2><span class="section-number">3</span> Kontakt</h2>
+  <div class="info-card">
+    <p><strong>Telefon:</strong> <a href="tel:+492821398620">+49 2821 39 86 20</a></p>
+    <p><strong>E-Mail:</strong> <a href="mailto:service@astoria.systems">service@astoria.systems</a></p>
+  </div>
+
+  <h2><span class="section-number">4</span> Umsatzsteuer-Identifikationsnummer</h2>
+  <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:</p>
+  <div class="highlight-box">
+    <p>[USt-IdNr. eintragen]</p>
+  </div>
+
+  <h2><span class="section-number">5</span> Handelsregister</h2>
+  <div class="info-card">
+    <p><strong>Registergericht:</strong> [Amtsgericht eintragen]</p>
+    <p><strong>Registernummer:</strong> [HRB-Nummer eintragen]</p>
+  </div>
+
+  <h2><span class="section-number">6</span> Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+  <div class="info-card">
+    <p><strong>Kevin Lind</strong></p>
+    <p>Bosenheimer Straße 219</p>
+    <p>55543 Bad Kreuznach</p>
+  </div>
+
+  <h2><span class="section-number">7</span> EU-Streitschlichtung</h2>
+  <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit. Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+  <div class="highlight-box">
+    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+
+  <h2><span class="section-number">8</span> Haftungsausschluss</h2>
+  <h3>Haftung für Inhalte</h3>
+  <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+
+  <h3>Haftung für Links</h3>
+  <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+
+  <h3>Urheberrecht</h3>
+  <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+</LegalLayout>

@@ -1,0 +1,125 @@
+---
+import type { Locale } from '../../i18n/config';
+
+interface Props {
+  locale: Locale;
+  type?: 'homepage' | 'service' | 'contact' | 'about' | 'faq' | 'pricing' | 'jobs';
+  breadcrumbs?: { name: string; url: string }[];
+  faqItems?: { question: string; answer: string }[];
+  serviceName?: string;
+  serviceDescription?: string;
+}
+
+const {
+  locale,
+  type = 'homepage',
+  breadcrumbs,
+  faqItems,
+  serviceName,
+  serviceDescription,
+} = Astro.props;
+
+const siteUrl = 'https://www.astoria.systems';
+
+const organization = {
+  '@type': 'Organization',
+  '@id': `${siteUrl}/#organization`,
+  name: 'Astoria Systems GmbH',
+  url: siteUrl,
+  logo: `${siteUrl}/favicon.svg`,
+  foundingDate: '2025',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Bosenheimer Straße 219',
+    addressLocality: 'Bad Kreuznach',
+    postalCode: '55543',
+    addressCountry: 'DE',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+49-2821-398620',
+    contactType: 'customer service',
+    availableLanguage: ['German', 'English'],
+  },
+  sameAs: [],
+};
+
+const localBusiness = {
+  '@type': 'LocalBusiness',
+  '@id': `${siteUrl}/#localbusiness`,
+  name: 'Astoria Systems GmbH',
+  url: siteUrl,
+  telephone: '+49-2821-398620',
+  email: 'service@astoria.systems',
+  address: organization.address,
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '49.8407',
+    longitude: '7.8671',
+  },
+  priceRange: '$$',
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  url: siteUrl,
+  name: 'Astoria Systems',
+  inLanguage: locale === 'de' ? 'de-DE' : 'en-US',
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+const schemas: Record<string, unknown>[] = [organization, localBusiness, website];
+
+if (breadcrumbs && breadcrumbs.length > 0) {
+  schemas.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${siteUrl}${item.url}`,
+    })),
+  });
+}
+
+if (type === 'faq' && faqItems) {
+  schemas.push({
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  });
+}
+
+if (type === 'service' && serviceName) {
+  schemas.push({
+    '@type': 'Service',
+    name: serviceName,
+    description: serviceDescription,
+    provider: { '@id': `${siteUrl}/#organization` },
+    areaServed: { '@type': 'Country', name: 'Germany' },
+  });
+}
+
+if (type === 'contact') {
+  schemas.push({
+    '@type': 'ContactPage',
+    name: locale === 'de' ? 'Kontakt' : 'Contact',
+    url: `${siteUrl}${locale === 'de' ? '/kontakt' : '/en/contact'}`,
+    mainEntity: { '@id': `${siteUrl}/#organization` },
+  });
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': schemas,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

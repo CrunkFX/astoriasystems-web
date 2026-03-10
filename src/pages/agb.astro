@@ -1,0 +1,67 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+
+const locale = 'de';
+const icon = `<svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>`;
+---
+
+<LegalLayout
+  title="Geschäftsbedingungen | Astoria Systems"
+  description="Allgemeine Geschäftsbedingungen der Astoria Systems GmbH"
+  locale={locale}
+  breadcrumbLabel="AGB"
+  breadcrumbHref="/agb"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'AGB', url: '/agb' }]}
+  icon={icon}
+  lastUpdated="10. März 2026"
+>
+  <Fragment slot="title">Allgemeine Geschäftsbedingungen</Fragment>
+
+  <h2><span class="section-number">§1</span> Geltungsbereich</h2>
+  <p>Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge zwischen der Astoria Systems GmbH, Bosenheimer Straße 219, 55543 Bad Kreuznach (nachfolgend "Anbieter") und dem Kunden über die Erbringung von IT-Dienstleistungen, Softwareentwicklung und verwandten Services.</p>
+  <div class="highlight-box">
+    <p>Abweichende Geschäftsbedingungen des Kunden werden nicht anerkannt, es sei denn, der Anbieter stimmt ihrer Geltung ausdrücklich schriftlich zu.</p>
+  </div>
+
+  <h2><span class="section-number">§2</span> Vertragsschluss</h2>
+  <p>Ein Vertrag kommt durch die schriftliche Annahme eines Angebots durch den Kunden zustande. Angebote des Anbieters sind freibleibend und unverbindlich, sofern sie nicht ausdrücklich als verbindlich gekennzeichnet sind.</p>
+  <p>Die Annahme eines Angebots kann auch durch schlüssiges Verhalten (z.B. Inanspruchnahme der Leistung) erfolgen.</p>
+
+  <h2><span class="section-number">§3</span> Leistungsumfang</h2>
+  <p>Der Umfang der Leistungen ergibt sich aus der jeweiligen Leistungsbeschreibung bzw. dem individuellen Angebot. Änderungen und Erweiterungen des Leistungsumfangs bedürfen der schriftlichen Vereinbarung beider Parteien.</p>
+  <p>Der Anbieter ist berechtigt, die vertraglich vereinbarten Leistungen durch qualitativ gleichwertige oder höherwertige Leistungen zu ersetzen, sofern dies dem Kunden zumutbar ist.</p>
+
+  <h2><span class="section-number">§4</span> Vergütung und Zahlung</h2>
+  <p>Die Vergütung richtet sich nach den im Angebot vereinbarten Preisen. Alle Preise verstehen sich in Euro zuzüglich der gesetzlichen Umsatzsteuer.</p>
+  <div class="info-card">
+    <p><strong>Zahlungsbedingungen:</strong> Rechnungen sind innerhalb von 14 Tagen nach Rechnungsstellung ohne Abzug fällig, sofern nicht abweichend vereinbart.</p>
+    <p><strong>Verzug:</strong> Bei Zahlungsverzug ist der Anbieter berechtigt, Verzugszinsen in gesetzlicher Höhe zu berechnen.</p>
+  </div>
+
+  <h2><span class="section-number">§5</span> Mitwirkungspflichten des Kunden</h2>
+  <p>Der Kunde stellt dem Anbieter alle zur Durchführung der vereinbarten Leistungen erforderlichen Informationen, Unterlagen und Zugänge rechtzeitig und unentgeltlich zur Verfügung.</p>
+  <p>Der Kunde benennt einen verantwortlichen Ansprechpartner, der befugt ist, für den Kunden verbindliche Entscheidungen zu treffen.</p>
+
+  <h2><span class="section-number">§6</span> Haftung</h2>
+  <p>Die Haftung des Anbieters richtet sich nach den gesetzlichen Bestimmungen, mit folgenden Einschränkungen:</p>
+  <ul>
+    <li>Eine Haftung für leicht fahrlässige Pflichtverletzungen wird ausgeschlossen, sofern nicht wesentliche Vertragspflichten (Kardinalpflichten) betroffen sind.</li>
+    <li>Bei Verletzung wesentlicher Vertragspflichten ist die Haftung auf den vertragstypischen, vorhersehbaren Schaden begrenzt.</li>
+    <li>Die vorstehenden Haftungsbeschränkungen gelten nicht bei Vorsatz, grober Fahrlässigkeit oder der Verletzung von Leben, Körper und Gesundheit.</li>
+  </ul>
+
+  <h2><span class="section-number">§7</span> Datenschutz und Vertraulichkeit</h2>
+  <p>Die Verarbeitung personenbezogener Daten erfolgt gemäß unserer <a href="/datenschutz">Datenschutzerklärung</a> und den Bestimmungen der DSGVO.</p>
+  <p>Beide Parteien verpflichten sich, vertrauliche Informationen der jeweils anderen Partei geheim zu halten und nur zur Durchführung des Vertrages zu verwenden.</p>
+
+  <h2><span class="section-number">§8</span> Laufzeit und Kündigung</h2>
+  <p>Die Vertragslaufzeit ergibt sich aus dem jeweiligen Angebot. Sofern nicht anders vereinbart, können Verträge mit einer Frist von 3 Monaten zum Ende der Vertragslaufzeit gekündigt werden.</p>
+  <p>Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt.</p>
+
+  <h2><span class="section-number">§9</span> Schlussbestimmungen</h2>
+  <div class="info-card">
+    <p><strong>Anwendbares Recht:</strong> Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</p>
+    <p><strong>Gerichtsstand:</strong> Bad Kreuznach, soweit gesetzlich zulässig.</p>
+    <p><strong>Salvatorische Klausel:</strong> Sollten einzelne Bestimmungen unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
+  </div>
+</LegalLayout>

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import ProductsOverview from '../../components/sections/ProductsOverview.astro';
+import Services from '../../components/sections/Services.astro';
+import Stats from '../../components/sections/Stats.astro';
+import Partners from '../../components/sections/Partners.astro';
+import About from '../../components/sections/About.astro';
+import CTA from '../../components/sections/CTA.astro';
+import { t } from '../../i18n/utils';
+
+const locale = 'en';
+---
+
+<BaseLayout
+  title={t(locale, 'site.ogTitle')}
+  description={t(locale, 'site.description')}
+  locale={locale}
+  keywords="software solutions, IT security, communication, digital infrastructure, ERP, CRM, Germany"
+  jsonLdType="homepage"
+>
+  <Hero locale={locale} />
+  <ProductsOverview locale={locale} />
+  <Services locale={locale} />
+  <Stats locale={locale} />
+  <Partners locale={locale} />
+  <About locale={locale} />
+  <CTA locale={locale} />
+</BaseLayout>

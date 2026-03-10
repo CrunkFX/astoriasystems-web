@@ -1,0 +1,230 @@
+---
+import type { Locale } from '../i18n/config';
+import SEOHead from '../components/seo/SEOHead.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import SkipLink from '../components/layout/SkipLink.astro';
+import AnimatedBackground from '../components/visuals/AnimatedBackground.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  ogImage?: string;
+  noindex?: boolean;
+  ogType?: string;
+  keywords?: string;
+  jsonLdType?: 'homepage' | 'service' | 'contact' | 'about' | 'faq' | 'pricing' | 'jobs';
+  breadcrumbs?: { name: string; url: string }[];
+  faqItems?: { question: string; answer: string }[];
+  serviceName?: string;
+  serviceDescription?: string;
+}
+
+const {
+  title,
+  description,
+  locale,
+  ogImage,
+  noindex,
+  ogType,
+  keywords,
+  jsonLdType = 'homepage',
+  breadcrumbs,
+  faqItems,
+  serviceName,
+  serviceDescription,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale === 'de' ? 'de-DE' : 'en-US'} class="dark">
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      locale={locale}
+      ogImage={ogImage}
+      noindex={noindex}
+      ogType={ogType}
+      keywords={keywords}
+    />
+    <JsonLd
+      locale={locale}
+      type={jsonLdType}
+      breadcrumbs={breadcrumbs}
+      faqItems={faqItems}
+      serviceName={serviceName}
+      serviceDescription={serviceDescription}
+    />
+    <!-- Theme init: prevent flash -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = stored === 'dark' || (!stored && prefersDark);
+        document.documentElement.classList.toggle('dark', isDark);
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-[var(--color-surface-primary)] dark:bg-[var(--color-dark-bg)] text-[var(--color-text-primary)] dark:text-[var(--color-dark-text-primary)] transition-colors duration-300">
+    <AnimatedBackground />
+    <SkipLink locale={locale} />
+    <Header locale={locale} />
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+
+    <!-- Unified scroll controller -->
+    <script is:inline>
+      (function() {
+        var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var isMobile = window.innerWidth < 768;
+
+        /* 1. Scroll reveal observer (data-reveal + data-image-reveal) */
+        var revealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('revealed');
+              revealObserver.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('[data-reveal], [data-image-reveal]').forEach(function(el) {
+          revealObserver.observe(el);
+        });
+
+        /* 2. Text reveal - split words and stagger on intersection */
+        var textRevealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('revealed');
+              textRevealObserver.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('[data-text-reveal]').forEach(function(el) {
+          if (prefersReduced) { el.classList.add('revealed'); return; }
+          var text = el.textContent.trim();
+          var words = text.split(/\s+/);
+          el.innerHTML = words.map(function(w, i) {
+            return '<span class="word" style="transition-delay:' + (i * 0.06) + 's">' + w + '</span>';
+          }).join(' ');
+          textRevealObserver.observe(el);
+        });
+
+        /* 3. Stats count-up animation */
+        var countObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              var el = e.target;
+              var target = el.getAttribute('data-count-target');
+              if (!target) return;
+              var isNumber = /^\d+$/.test(target);
+              if (isNumber) {
+                var end = parseInt(target, 10);
+                var duration = 1500;
+                var start = performance.now();
+                function step(now) {
+                  var progress = Math.min((now - start) / duration, 1);
+                  var eased = 1 - Math.pow(1 - progress, 3);
+                  el.textContent = Math.floor(eased * end).toString();
+                  if (progress < 1) requestAnimationFrame(step);
+                  else el.textContent = target;
+                }
+                requestAnimationFrame(step);
+              } else {
+                el.textContent = target;
+              }
+              countObserver.unobserve(el);
+            }
+          });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('[data-count-target]').forEach(function(el) {
+          countObserver.observe(el);
+        });
+
+        /* 4. Parallax (desktop only, skip reduced motion) */
+        if (!prefersReduced && !isMobile) {
+          var parallaxEls = document.querySelectorAll('[data-parallax]');
+          if (parallaxEls.length > 0) {
+            var ticking = false;
+            window.addEventListener('scroll', function() {
+              if (!ticking) {
+                requestAnimationFrame(function() {
+                  var scrollY = window.scrollY;
+                  parallaxEls.forEach(function(el) {
+                    var speed = parseFloat(el.getAttribute('data-parallax-speed') || '0.3');
+                    var rect = el.getBoundingClientRect();
+                    var center = rect.top + rect.height / 2;
+                    var offset = (center - window.innerHeight / 2) * speed;
+                    el.style.transform = 'translateY(' + offset + 'px)';
+                  });
+                  ticking = false;
+                });
+                ticking = true;
+              }
+            }, { passive: true });
+          }
+        }
+
+        /* 5. Sticky pin sections (desktop only) */
+        if (!prefersReduced && !isMobile) {
+          document.querySelectorAll('[data-sticky-pin]').forEach(function(wrapper) {
+            var steps = wrapper.querySelectorAll('.sticky-step');
+            if (steps.length === 0) return;
+            var totalSteps = steps.length;
+
+            var stickyObserver = new IntersectionObserver(function() {
+              // Just trigger scroll check
+            }, { threshold: 0 });
+            stickyObserver.observe(wrapper);
+
+            function updateSticky() {
+              var rect = wrapper.getBoundingClientRect();
+              var wrapperHeight = wrapper.offsetHeight;
+              var scrolled = -rect.top;
+              var progress = Math.max(0, Math.min(1, scrolled / (wrapperHeight - window.innerHeight)));
+              var activeIndex = Math.min(Math.floor(progress * totalSteps), totalSteps - 1);
+
+              steps.forEach(function(step, i) {
+                step.classList.toggle('active', i === activeIndex);
+              });
+
+              // Update progress dots if present
+              var dots = wrapper.querySelectorAll('.sticky-dot');
+              dots.forEach(function(dot, i) {
+                dot.classList.toggle('active', i === activeIndex);
+              });
+            }
+
+            window.addEventListener('scroll', function() {
+              var rect = wrapper.getBoundingClientRect();
+              if (rect.top < window.innerHeight && rect.bottom > 0) {
+                requestAnimationFrame(updateSticky);
+              }
+            }, { passive: true });
+          });
+        } else {
+          /* Mobile fallback: show all sticky steps as regular sections */
+          document.querySelectorAll('.sticky-step').forEach(function(step) {
+            step.style.position = 'relative';
+            step.style.opacity = '1';
+            step.style.transform = 'none';
+            step.style.pointerEvents = 'auto';
+          });
+          document.querySelectorAll('.sticky-pin-content').forEach(function(el) {
+            el.style.position = 'relative';
+            el.style.height = 'auto';
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

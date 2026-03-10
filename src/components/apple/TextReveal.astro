@@ -1,0 +1,16 @@
+---
+interface Props {
+  tag?: string;
+  class?: string;
+}
+
+const { tag: Tag = 'p', class: className = '' } = Astro.props;
+---
+
+<Fragment>
+  {Tag === 'h1' && <h1 class={className} data-text-reveal><slot /></h1>}
+  {Tag === 'h2' && <h2 class={className} data-text-reveal><slot /></h2>}
+  {Tag === 'h3' && <h3 class={className} data-text-reveal><slot /></h3>}
+  {Tag === 'p' && <p class={className} data-text-reveal><slot /></p>}
+  {Tag === 'span' && <span class={className} data-text-reveal><slot /></span>}
+</Fragment>

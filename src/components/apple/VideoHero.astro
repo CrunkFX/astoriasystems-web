@@ -1,0 +1,64 @@
+---
+interface Props {
+  videoSrc: string;
+  posterSrc: string;
+  fallbackSrc?: string;
+  overlay?: boolean;
+  class?: string;
+}
+
+const { videoSrc, posterSrc, fallbackSrc, overlay = true, class: className = '' } = Astro.props;
+---
+
+<section class:list={['relative min-h-screen flex items-center justify-center overflow-hidden', className]}>
+  <!-- Video background -->
+  <video
+    class="absolute inset-0 w-full h-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={posterSrc}
+  >
+    <source src={videoSrc} type="video/mp4" />
+  </video>
+
+  <!-- Fallback image for no-video / reduced motion -->
+  {fallbackSrc && (
+    <img
+      src={fallbackSrc}
+      alt=""
+      class="absolute inset-0 w-full h-full object-cover hidden"
+      aria-hidden="true"
+      data-video-fallback
+    />
+  )}
+
+  <!-- Dark overlay gradient -->
+  {overlay && (
+    <div class="absolute inset-0 video-hero-overlay dark:video-hero-overlay"></div>
+  )}
+
+  <!-- Grid pattern on top -->
+  <div class="absolute inset-0 grid-pattern opacity-30"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 w-full">
+    <slot />
+  </div>
+
+  <!-- Bottom fade -->
+  <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--color-surface-primary)] dark:from-[var(--color-dark-bg)] to-transparent"></div>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    video {
+      display: none;
+    }
+    [data-video-fallback] {
+      display: block !important;
+    }
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--color-accent)] focus:text-white focus:text-sm focus:font-medium"
+>
+  {t(locale, 'nav.skipToContent')}
+</a>

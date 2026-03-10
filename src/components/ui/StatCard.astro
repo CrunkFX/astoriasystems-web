@@ -1,0 +1,32 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  delay?: number;
+}
+
+const { value, label, delay = 0 } = Astro.props;
+
+const numericMatch = value.match(/^(\d+)/);
+const numericTarget = numericMatch ? numericMatch[1] : null;
+const suffix = numericMatch ? value.slice(numericMatch[1].length) : '';
+---
+
+<div
+  class="text-center p-6"
+  data-reveal
+  data-reveal-delay={delay}
+>
+  <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">
+    {numericTarget ? (
+      <>
+        <span data-count-target={numericTarget}>0</span>{suffix}
+      </>
+    ) : (
+      <span>{value}</span>
+    )}
+  </div>
+  <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+    {label}
+  </div>
+</div>

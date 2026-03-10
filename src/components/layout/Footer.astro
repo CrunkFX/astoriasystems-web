@@ -1,0 +1,96 @@
+---
+import type { Locale } from '../../i18n/config';
+import { routeMap } from '../../i18n/config';
+import { t } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const routes = routeMap[locale];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)] bg-[var(--color-surface-secondary)] dark:bg-[var(--color-dark-surface)]">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- Brand column -->
+      <div class="sm:col-span-2 lg:col-span-1">
+        <a href={routes.home} class="flex items-center gap-2 mb-4">
+          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white font-bold text-sm">
+            AS
+          </div>
+          <span class="text-lg font-semibold">
+            Astoria<span class="text-[var(--color-accent)]">Systems</span>
+          </span>
+        </a>
+        <p class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-4 max-w-xs">
+          {t(locale, 'site.description')}
+        </p>
+        <div class="text-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-dark-text-tertiary)] space-y-1">
+          <p>{t(locale, 'contact.info.address')}</p>
+          <p>
+            <a href="tel:+4928213986​20" class="hover:text-[var(--color-accent)] transition-colors">
+              {t(locale, 'contact.info.phone')}
+            </a>
+          </p>
+          <p>
+            <a href="mailto:service@astoria.systems" class="hover:text-[var(--color-accent)] transition-colors">
+              {t(locale, 'contact.info.email')}
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Services & Pricing -->
+      <div>
+        <h3 class="text-sm font-semibold mb-4">{t(locale, 'footer.services')}</h3>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+          <li><a href={routes.products} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'services.communication.title')}</a></li>
+          <li><a href={routes.products} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'services.security.title')}</a></li>
+          <li><a href={routes.products} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'services.infrastructure.title')}</a></li>
+          <li><a href={routes.products} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'services.development.title')}</a></li>
+          <li><a href={routes.pricing} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'pricing.title')}</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <h3 class="text-sm font-semibold mb-4">{t(locale, 'footer.company')}</h3>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+          <li><a href={routes.about} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'nav.about')}</a></li>
+          <li><a href={routes.jobs} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'nav.jobs')}</a></li>
+          <li><a href={routes.contact} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'nav.contact')}</a></li>
+          <li>
+            <a href="https://odoo.astoria.systems" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--color-accent)] transition-colors">
+              {t(locale, 'nav.login')}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Support & Legal -->
+      <div>
+        <h3 class="text-sm font-semibold mb-4">{t(locale, 'footer.support')}</h3>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+          <li><a href={routes.help} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'footer.helpCenter')}</a></li>
+          <li><a href={routes.contact} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'footer.contactUs')}</a></li>
+        </ul>
+        <h3 class="text-sm font-semibold mb-4 mt-6">{t(locale, 'footer.legal')}</h3>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+          <li><a href={routes.terms} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'footer.terms')}</a></li>
+          <li><a href={routes.privacy} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'footer.privacy')}</a></li>
+          <li><a href={routes.imprint} class="hover:text-[var(--color-accent)] transition-colors">{t(locale, 'footer.imprint')}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 pt-8 border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-dark-text-tertiary)]">
+        &copy; {year} {t(locale, 'footer.copyright')}
+      </p>
+    </div>
+  </div>
+</footer>

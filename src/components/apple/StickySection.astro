@@ -1,0 +1,35 @@
+---
+interface Props {
+  steps: number;
+  class?: string;
+}
+
+const { steps, class: className = '' } = Astro.props;
+const height = `${(steps + 1) * 100}vh`;
+---
+
+<div
+  class:list={['sticky-pin-wrapper', className]}
+  data-sticky-pin
+  style={`height: ${height};`}
+>
+  <div class="sticky-pin-content">
+    <!-- Navigation dots -->
+    <div class="absolute right-6 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3">
+      {Array.from({ length: steps }).map((_, i) => (
+        <div class:list={['sticky-dot w-2 h-2 rounded-full transition-all duration-300', i === 0 ? 'active bg-[var(--color-accent)] scale-125' : 'bg-white/20 dark:bg-white/20']}>
+        </div>
+      ))}
+    </div>
+
+    <slot />
+  </div>
+</div>
+
+<style>
+  .sticky-dot.active {
+    background-color: var(--color-accent) !important;
+    transform: scale(1.5);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.5);
+  }
+</style>
