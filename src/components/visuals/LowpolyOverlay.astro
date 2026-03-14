@@ -1,0 +1,228 @@
+---
+// Canvas-based Delaunay triangulation overlay for images
+// Matches the animated background style but renders over images
+---
+
+<script is:inline>
+(function() {
+  function initOverlays() {
+    var canvases = document.querySelectorAll('.lowpoly-overlay-canvas');
+    canvases.forEach(function(canvas) {
+      if (canvas._lpInit) return;
+      canvas._lpInit = true;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      var isDark = document.documentElement.classList.contains('dark');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function getPalette() {
+        isDark = document.documentElement.classList.contains('dark');
+        if (isDark) {
+          return {
+            colors: [
+              [3,7,18,0.35],[4,9,22,0.30],[6,12,28,0.25],[8,16,34,0.20],
+              [10,25,42,0.25],[14,35,50,0.30],[18,50,60,0.25],
+              [22,65,72,0.20],[28,85,92,0.25],[36,110,118,0.30],
+            ],
+            lineColor: '255,255,255',
+            lineAlpha: 0.06,
+          };
+        }
+        return {
+          colors: [
+            [14,116,144,0.18],[0,229,255,0.15],[30,214,214,0.12],
+            [63,224,208,0.15],[14,116,144,0.20],[0,229,255,0.18],
+            [30,214,214,0.15],[63,224,208,0.12],[14,116,144,0.15],
+            [0,229,255,0.20],
+          ],
+          lineColor: '255,255,255',
+          lineAlpha: 0.15,
+        };
+      }
+
+      function triangulate(points) {
+        var n = points.length;
+        if (n < 3) return [];
+        var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (var i = 0; i < n; i++) {
+          if (points[i][0] < minX) minX = points[i][0];
+          if (points[i][1] < minY) minY = points[i][1];
+          if (points[i][0] > maxX) maxX = points[i][0];
+          if (points[i][1] > maxY) maxY = points[i][1];
+        }
+        var dx = maxX - minX, dy = maxY - minY, dMax = Math.max(dx, dy);
+        var midX = (minX + maxX) / 2, midY = (minY + maxY) / 2;
+        points.push([midX - 20 * dMax, midY - dMax]);
+        points.push([midX + 20 * dMax, midY - dMax]);
+        points.push([midX, midY + 20 * dMax]);
+        var triangles = [[n, n + 1, n + 2]];
+        for (var i = 0; i < n; i++) {
+          var edges = [], toRemove = [];
+          for (var j = 0; j < triangles.length; j++) {
+            var t = triangles[j];
+            if (inCircumcircle(points[i], points[t[0]], points[t[1]], points[t[2]])) {
+              toRemove.push(j);
+              edges.push([t[0], t[1]]); edges.push([t[1], t[2]]); edges.push([t[2], t[0]]);
+            }
+          }
+          for (var j = toRemove.length - 1; j >= 0; j--) triangles.splice(toRemove[j], 1);
+          var ue = [];
+          for (var j = 0; j < edges.length; j++) {
+            var dup = false;
+            for (var k = 0; k < edges.length; k++) {
+              if (j !== k && edges[j][0] === edges[k][1] && edges[j][1] === edges[k][0]) { dup = true; break; }
+            }
+            if (!dup) ue.push(edges[j]);
+          }
+          for (var j = 0; j < ue.length; j++) triangles.push([ue[j][0], ue[j][1], i]);
+        }
+        var result = [];
+        for (var i = 0; i < triangles.length; i++) {
+          if (triangles[i][0] < n && triangles[i][1] < n && triangles[i][2] < n) result.push(triangles[i]);
+        }
+        points.splice(n, 3);
+        return result;
+      }
+
+      function inCircumcircle(p, a, b, c) {
+        var ax=a[0]-p[0],ay=a[1]-p[1],bx=b[0]-p[0],by=b[1]-p[1],cx=c[0]-p[0],cy=c[1]-p[1];
+        return (ax*ax+ay*ay)*(bx*cy-cx*by)-(bx*bx+by*by)*(ax*cy-cx*ay)+(cx*cx+cy*cy)*(ax*by-bx*ay)>0;
+      }
+
+      function lerpColor(a, b, t) {
+        return [
+          Math.round(a[0]+(b[0]-a[0])*t),
+          Math.round(a[1]+(b[1]-a[1])*t),
+          Math.round(a[2]+(b[2]-a[2])*t),
+          a[3]+(b[3]-a[3])*t
+        ];
+      }
+
+      function pickColor(arr, t) {
+        t = Math.max(0, Math.min(1, t));
+        var idx = t * (arr.length - 1);
+        var lo = Math.floor(idx);
+        return lerpColor(arr[lo], arr[Math.min(lo+1, arr.length-1)], idx - lo);
+      }
+
+      var basePoints = [];
+      var tris = [];
+      var triColors = [];
+      var pointSeeds = [];
+      var w = 0, h = 0;
+      var startTime = performance.now();
+      var animDrift = 3;
+      var animSpeed = 0.0002;
+      var needsRegen = false;
+
+      var themeObs = new MutationObserver(function() { needsRegen = true; });
+      themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+      function setupMesh() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        w = rect.width; h = rect.height;
+        if (w === 0 || h === 0) return;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+
+        var palette = getPalette();
+        var cellSize = 80;
+        var jitter = cellSize * 0.6;
+
+        basePoints = [];
+        pointSeeds = [];
+        var cols = Math.ceil(w / cellSize) + 2;
+        var rows = Math.ceil(h / cellSize) + 2;
+        for (var row = -1; row <= rows; row++) {
+          for (var col = -1; col <= cols; col++) {
+            basePoints.push([
+              col * cellSize + (Math.random() - 0.5) * jitter,
+              row * cellSize + (Math.random() - 0.5) * jitter,
+            ]);
+            pointSeeds.push([
+              Math.random() * Math.PI * 2,
+              Math.random() * Math.PI * 2,
+              0.7 + Math.random() * 0.6,
+            ]);
+          }
+        }
+
+        var pts = [];
+        for (var i = 0; i < basePoints.length; i++) pts.push([basePoints[i][0], basePoints[i][1]]);
+        tris = triangulate(pts);
+
+        triColors = [];
+        for (var i = 0; i < tris.length; i++) {
+          var t = tris[i];
+          var centX = (basePoints[t[0]][0]+basePoints[t[1]][0]+basePoints[t[2]][0])/3;
+          var centY = (basePoints[t[0]][1]+basePoints[t[1]][1]+basePoints[t[2]][1])/3;
+          var gradPos = (centX/w * 0.5 + centY/h * 0.5);
+          var noise = (Math.random() - 0.5) * 0.15;
+          var colorPos = Math.max(0, Math.min(1, gradPos + noise));
+          triColors.push(pickColor(palette.colors, colorPos));
+        }
+
+        needsRegen = false;
+      }
+
+      function draw(now) {
+        if (needsRegen) setupMesh();
+        if (basePoints.length === 0) { requestAnimationFrame(draw); return; }
+
+        var time = (now - startTime) * animSpeed;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+
+        var palette = getPalette();
+
+        for (var i = 0; i < tris.length; i++) {
+          var t = tris[i];
+          var s0 = pointSeeds[t[0]], s1 = pointSeeds[t[1]], s2 = pointSeeds[t[2]];
+
+          var x0 = basePoints[t[0]][0] + Math.sin(time * s0[2] + s0[0]) * animDrift;
+          var y0 = basePoints[t[0]][1] + Math.cos(time * s0[2] + s0[1]) * animDrift;
+          var x1 = basePoints[t[1]][0] + Math.sin(time * s1[2] + s1[0]) * animDrift;
+          var y1 = basePoints[t[1]][1] + Math.cos(time * s1[2] + s1[1]) * animDrift;
+          var x2 = basePoints[t[2]][0] + Math.sin(time * s2[2] + s2[0]) * animDrift;
+          var y2 = basePoints[t[2]][1] + Math.cos(time * s2[2] + s2[1]) * animDrift;
+
+          var c = triColors[i];
+          ctx.beginPath();
+          ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x2, y2);
+          ctx.closePath();
+          ctx.fillStyle = 'rgba('+c[0]+','+c[1]+','+c[2]+','+c[3]+')';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba('+palette.lineColor+','+palette.lineAlpha+')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+
+        if (!prefersReduced) requestAnimationFrame(draw);
+      }
+
+      setupMesh();
+      if (prefersReduced) {
+        draw(startTime);
+      } else {
+        requestAnimationFrame(draw);
+      }
+
+      var rt;
+      window.addEventListener('resize', function() {
+        clearTimeout(rt);
+        rt = setTimeout(function() { needsRegen = true; }, 250);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOverlays);
+  } else {
+    initOverlays();
+  }
+})();
+</script>

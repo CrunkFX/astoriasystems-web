@@ -20,13 +20,13 @@ const currentPath = Astro.url.pathname;
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between lg:h-20">
       <!-- Logo -->
-      <a href={locale === 'de' ? '/' : '/en'} class="flex items-center gap-2 group" aria-label="Astoria Systems Home">
-        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white font-bold text-sm transition-transform group-hover:scale-105">
-          AS
-        </div>
-        <span class="text-lg font-semibold text-[var(--color-text-primary)] dark:text-[var(--color-dark-text-primary)]">
-          Astoria<span class="text-[var(--color-accent)]">Systems</span>
-        </span>
+      <a href={locale === 'de' ? '/' : '/en'} class="flex items-center group" aria-label="Astoria Systems Home">
+        <!-- Mobile: icon only -->
+        <img src="/logo-icon-light.svg" alt="Astoria Systems" class="h-9 w-auto lg:hidden dark:hidden" />
+        <img src="/logo-icon-dark.svg" alt="Astoria Systems" class="h-9 w-auto hidden dark:block lg:dark:hidden" />
+        <!-- Desktop: full horizontal logo -->
+        <img src="/logo-light.svg" alt="Astoria Systems" class="h-14 w-auto hidden lg:block dark:lg:hidden" />
+        <img src="/logo-dark.svg" alt="Astoria Systems" class="h-14 w-auto hidden lg:dark:block" />
       </a>
 
       <!-- Desktop Navigation -->

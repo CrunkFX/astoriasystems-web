@@ -3,8 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/ui/Container.astro';
 import Breadcrumbs from '../components/seo/Breadcrumbs.astro';
 import CTA from '../components/sections/CTA.astro';
-import ParticleNetwork from '../components/visuals/ParticleNetwork.astro';
-import ServiceVisual from '../components/visuals/ServiceVisual.astro';
+import LowpolyOverlay from '../components/visuals/LowpolyOverlay.astro';
 import { t, tArray } from '../i18n/utils';
 import { routeMap } from '../i18n/config';
 
@@ -19,10 +18,10 @@ const serviceRoutes: Record<string, string> = {
 };
 
 const services = [
-  { key: 'communication', color: 'from-cyan-500 to-blue-500', borderColor: '#06b6d4', glowColor: 'rgba(6, 182, 212, 0.12)', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>` },
-  { key: 'security', color: 'from-green-500 to-emerald-500', borderColor: '#22c55e', glowColor: 'rgba(34, 197, 94, 0.12)', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>` },
-  { key: 'infrastructure', color: 'from-violet-500 to-purple-500', borderColor: '#8b5cf6', glowColor: 'rgba(139, 92, 246, 0.12)', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7" /></svg>` },
-  { key: 'development', color: 'from-orange-500 to-red-500', borderColor: '#f97316', glowColor: 'rgba(249, 115, 22, 0.12)', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>` },
+  { key: 'communication', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>`, image: '/images/services/communication.jpg' },
+  { key: 'security', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>`, image: '/images/services/security.jpg' },
+  { key: 'infrastructure', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7" /></svg>`, image: '/images/services/infrastructure.jpg' },
+  { key: 'development', icon: `<svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>`, image: '/images/services/development.jpg' },
 ];
 ---
 
@@ -36,8 +35,6 @@ const services = [
 >
   <!-- Hero banner -->
   <section class="relative pt-28 lg:pt-32 pb-20 lg:pb-28 overflow-hidden">
-    <ParticleNetwork density="low" />
-    <div class="absolute inset-0 bg-[var(--color-surface-primary)]/75 dark:bg-[var(--color-dark-bg)]/70"></div>
     <Container class="relative z-10">
       <Breadcrumbs locale={locale} items={[{ label: t(locale, 'nav.products'), href: '/produkte' }]} />
       <div class="max-w-4xl" data-reveal>
@@ -52,64 +49,119 @@ const services = [
     </Container>
   </section>
 
-  <!-- Service sections with 3D models -->
+  <!-- Service sections -->
   {services.map((service, index) => (
-    <Fragment>
-      {index > 0 && (
-        <div class="flex items-center justify-center py-2">
-          <div class="h-px w-16 bg-gradient-to-r from-transparent via-[var(--color-accent)]/30 to-transparent"></div>
-          <div class="mx-3 h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]/40"></div>
-          <div class="h-px w-16 bg-gradient-to-r from-transparent via-[var(--color-accent)]/30 to-transparent"></div>
-        </div>
-      )}
-      <section class={`py-16 lg:py-24 service-bg-${service.key}`}>
-        <Container>
-          <div class:list={[
-            'grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center',
-            index % 2 === 1 && 'lg:[direction:rtl]',
-          ]} data-reveal>
-            <!-- Illustration -->
-            <div class="lg:[direction:ltr]">
-              <ServiceVisual type={service.key} class="rounded-2xl" />
-            </div>
+    <section class="py-6 lg:py-24">
+      <Container>
+        <!-- Desktop: side by side -->
+        <div class:list={['service-block relative rounded-2xl overflow-hidden backdrop-blur-md bg-[var(--color-surface-primary)]/30 dark:bg-[var(--color-dark-surface)]/30 border border-white/10 dark:border-white/5 shadow-lg', index % 2 === 1 && 'lg-rtl']} data-reveal>
+          <!-- Image (full width on mobile, half on desktop) -->
+          <div class="service-img relative aspect-[16/10] lg:aspect-auto lg:absolute lg:inset-0 lg:w-[65%]">
+            <img
+              src={service.image}
+              alt={t(locale, `services.${service.key}.title`)}
+              class="w-full h-full object-cover grayscale"
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+            <!-- Brand color tint (grayscale + color overlay) -->
+            <div class="absolute inset-0 bg-[#0e7490]/50 mix-blend-color"></div>
+            <!-- Lowpoly canvas overlay -->
+            <canvas class="lowpoly-overlay-canvas absolute inset-0 w-full h-full mix-blend-overlay"></canvas>
+            <!-- Mobile/tablet: gradient for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent lg:hidden"></div>
+          </div>
 
-            <!-- Content -->
-            <div class="lg:[direction:ltr]">
-              <div class="border-l-4 pl-6" style={`border-color: ${service.borderColor}`}>
-                <div class={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${service.color} text-white mb-6`}>
+          <!-- Content: overlaid on mobile, beside on desktop -->
+          <div class="service-content relative z-10">
+            <!-- Mobile overlay content -->
+            <div class="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:hidden text-white">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="icon-lowpoly flex-shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-xl text-white bg-white/20 backdrop-blur-sm">
                   <Fragment set:html={service.icon} />
                 </div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">{t(locale, `services.${service.key}.title`)}</h2>
-                <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-6">
-                  {t(locale, `services.${service.key}.description`)}
-                </p>
-                <ul class="space-y-2 mb-8">
-                  {tArray(locale, `services.${service.key}.features`).map((feature) => (
-                    <li class="flex items-start gap-2.5 text-sm">
-                      <svg class="h-4 w-4 flex-shrink-0 mt-0.5" style={`color: ${service.borderColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                      </svg>
-                      <span class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={serviceRoutes[service.key]}
-                  class="inline-flex items-center gap-2 font-medium hover:underline transition-colors"
-                  style={`color: ${service.borderColor}`}
-                >
-                  Mehr erfahren
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </a>
+                <h2 class="text-xl md:text-2xl font-bold">{t(locale, `services.${service.key}.title`)}</h2>
               </div>
+              <p class="text-sm text-white/80 leading-relaxed mb-4 line-clamp-3">
+                {t(locale, `services.${service.key}.description`)}
+              </p>
+              <a
+                href={serviceRoutes[service.key]}
+                class="inline-flex items-center gap-2 text-sm font-medium text-[#00e5ff] hover:text-white transition-colors"
+              >
+                Mehr erfahren
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+            </div>
+
+            <!-- Desktop content -->
+            <div class="hidden lg:block lg:ml-auto lg:w-1/2 lg:p-12 xl:p-16">
+              <div class="flex items-start gap-4 mb-6">
+                <div class="icon-lowpoly flex-shrink-0 inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white bg-gradient-to-br from-[#0e7490] to-[#2dd4bf]">
+                  <Fragment set:html={service.icon} />
+                </div>
+                <div>
+                  <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold">{t(locale, `services.${service.key}.title`)}</h2>
+                </div>
+              </div>
+              <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-8">
+                {t(locale, `services.${service.key}.description`)}
+              </p>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 mb-8">
+                {tArray(locale, `services.${service.key}.features`).map((feature) => (
+                  <li class="flex items-start gap-2.5 text-sm">
+                    <svg class="h-4 w-4 flex-shrink-0 mt-0.5 text-[var(--color-accent-dark)] dark:text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                    <span class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={serviceRoutes[service.key]}
+                class="inline-flex items-center gap-2 font-medium text-[var(--color-accent-dark)] dark:text-[var(--color-accent)] hover:underline transition-colors"
+              >
+                Mehr erfahren
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
             </div>
           </div>
-        </Container>
-      </section>
-    </Fragment>
+        </div>
+      </Container>
+    </section>
   ))}
 
+  <LowpolyOverlay />
   <CTA locale={locale} />
 </BaseLayout>
+
+<style>
+  @media (min-width: 1024px) {
+    .service-block {
+      min-height: 420px;
+    }
+    .service-block .service-img {
+      height: 100%;
+    }
+    .service-img {
+      -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
+      mask-image: linear-gradient(to right, black 50%, transparent 100%);
+    }
+    .service-block.lg-rtl .service-img {
+      left: auto;
+      right: 0;
+    }
+    .service-block.lg-rtl .service-img {
+      -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%);
+      mask-image: linear-gradient(to left, black 50%, transparent 100%);
+    }
+    .service-block.lg-rtl .service-content > .hidden.lg\:block {
+      margin-left: 0;
+      margin-right: auto;
+    }
+  }
+</style>
+

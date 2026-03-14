@@ -74,9 +74,8 @@ export default function MobileNav({ locale, navItems, loginLabel, currentPath }:
             class="fixed top-0 right-0 bottom-0 z-50 w-72 bg-[var(--color-surface-primary)] dark:bg-[var(--color-dark-surface)] shadow-2xl lg:hidden overflow-y-auto"
           >
             <div class="flex items-center justify-between p-4 border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
-              <span class="text-lg font-semibold">
-                Astoria<span class="text-[var(--color-accent)]">Systems</span>
-              </span>
+              <img src="/logo-light.svg" alt="Astoria Systems" class="h-8 w-auto dark:hidden" />
+              <img src="/logo-dark.svg" alt="Astoria Systems" class="h-8 w-auto hidden dark:block" />
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"

@@ -4,7 +4,6 @@ import { routeMap } from '../../i18n/config';
 import { t } from '../../i18n/utils';
 import Container from '../ui/Container.astro';
 import Button from '../ui/Button.astro';
-import ParticleNetwork from '../visuals/ParticleNetwork.astro';
 
 interface Props {
   locale: Locale;
@@ -14,33 +13,9 @@ const { locale } = Astro.props;
 const routes = routeMap[locale];
 ---
 
-<section class="relative min-h-screen flex items-center overflow-hidden bg-[var(--color-surface-primary)] dark:bg-[var(--color-dark-bg)]">
-  <!-- Canvas particle network background -->
-  <ParticleNetwork />
-
-  <!-- Overlay for text readability -->
-  <div class="absolute inset-0 bg-white/20 dark:bg-[var(--color-dark-bg)]/30"></div>
-
-  <!-- Decorative animated orbs -->
-  <div class="absolute top-1/6 left-1/6 w-[600px] h-[600px] bg-[var(--color-accent)]/12 dark:bg-[var(--color-accent)]/18 rounded-full blur-[100px] animate-float" aria-hidden="true"></div>
-  <div class="absolute bottom-1/4 right-1/6 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-[90px] animate-float" style="animation-delay: -3s;" aria-hidden="true"></div>
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-violet-500/5 dark:bg-violet-500/8 rounded-full blur-[120px] animate-spin-slow" aria-hidden="true"></div>
-  <div class="absolute bottom-1/6 left-1/4 w-[300px] h-[300px] bg-emerald-500/6 dark:bg-emerald-500/10 rounded-full blur-[80px] animate-float" style="animation-delay: -5s;" aria-hidden="true"></div>
-
-  <!-- Animated accent lines -->
-  <div class="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-[var(--color-accent)]/10 to-transparent animate-pulse" style="animation-duration: 4s;" aria-hidden="true"></div>
-  <div class="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-blue-500/8 to-transparent animate-pulse" style="animation-duration: 5s; animation-delay: 1s;" aria-hidden="true"></div>
-
-  <Container class="relative z-10 pt-32 pb-20">
+<section class="relative min-h-screen flex items-center overflow-hidden">
+<Container class="relative z-10 pt-32 pb-20">
     <div class="max-w-5xl mx-auto text-center">
-      <!-- Badge -->
-      <div class="animate-fade-in-up animate-delay-1">
-        <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-medium bg-[var(--color-text-primary)]/8 text-[var(--color-text-secondary)] dark:bg-white/10 dark:text-white/90 border border-[var(--color-border)] dark:border-white/20 backdrop-blur-sm mb-8">
-          <span class="h-2 w-2 rounded-full bg-[var(--color-accent)] animate-glow-pulse"></span>
-          {locale === 'de' ? 'Innovative Softwarelösungen seit 2025' : 'Innovative software solutions since 2025'}
-        </span>
-      </div>
-
       <!-- Headline -->
       <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[6.5rem] font-bold tracking-tight leading-[1.05] mb-8 animate-fade-in-up animate-delay-2">
         <span class="text-[var(--color-text-primary)] dark:text-white">

@@ -17,13 +17,9 @@ const year = new Date().getFullYear();
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
       <!-- Brand column -->
       <div class="sm:col-span-2 lg:col-span-1">
-        <a href={routes.home} class="flex items-center gap-2 mb-4">
-          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white font-bold text-sm">
-            AS
-          </div>
-          <span class="text-lg font-semibold">
-            Astoria<span class="text-[var(--color-accent)]">Systems</span>
-          </span>
+        <a href={routes.home} class="flex items-center mb-4">
+          <img src="/logo-light.svg" alt="Astoria Systems" class="h-10 w-auto dark:hidden" />
+          <img src="/logo-dark.svg" alt="Astoria Systems" class="h-10 w-auto hidden dark:block" />
         </a>
         <p class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-4 max-w-xs">
           {t(locale, 'site.description')}

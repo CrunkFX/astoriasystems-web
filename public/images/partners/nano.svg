@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60">
+  <!-- NANO text -->
+  <text x="0" y="42" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="38" fill="#1a2e5a" letter-spacing="2">NANO</text>
+  <!-- Separator dots -->
+  <circle cx="148" cy="18" r="3" fill="#3cb878"/>
+  <circle cx="158" cy="14" r="2.5" fill="#2da8d8"/>
+  <circle cx="148" cy="30" r="2.5" fill="#2da8d8"/>
+  <circle cx="158" cy="26" r="3" fill="#3cb878"/>
+  <circle cx="148" cy="42" r="2" fill="#3cb878"/>
+  <!-- FASSADENDÄMMUNG text -->
+  <text x="168" y="28" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="13" fill="#1a2e5a" letter-spacing="0.5">FASSADEN-</text>
+  <text x="168" y="46" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="13" fill="#1a2e5a" letter-spacing="0.5">DÄMMUNG</text>
+</svg>
