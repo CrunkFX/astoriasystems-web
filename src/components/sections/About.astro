@@ -43,8 +43,23 @@ const routes = routeMap[locale];
       <div data-reveal="right">
         <!-- Workspace illustration -->
         <div class="mb-6" data-image-reveal>
-          <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-[#083344] dark:to-[#0c1a2e]">
-            <img src="/illustrations/workspace.svg" alt="Team collaboration" loading="lazy" decoding="async" class="w-full h-full object-contain p-6" />
+          <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 via-slate-100/80 to-slate-50 dark:from-[#080c18] dark:via-[#0c1020] dark:to-[#080c18] flex items-center justify-center p-12" style="aspect-ratio: 4/3;">
+            <svg viewBox="0 0 120 120" fill="none" class="w-full h-full max-w-[180px] max-h-[180px] text-[var(--color-accent-dark)] dark:text-[var(--color-accent)]">
+              <polygon points="60,15 25,55 95,55" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.06" />
+              <polygon points="40,55 60,30 80,55" stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.04" />
+              <line x1="60" y1="15" x2="30" y2="85" stroke="currentColor" stroke-width="0.75" opacity="0.2" />
+              <line x1="60" y1="15" x2="90" y2="85" stroke="currentColor" stroke-width="0.75" opacity="0.2" />
+              <line x1="25" y1="55" x2="95" y2="55" stroke="currentColor" stroke-width="0.75" opacity="0.2" />
+              <circle cx="60" cy="15" r="3" fill="currentColor" opacity="0.6" />
+              <circle cx="25" cy="55" r="2" fill="currentColor" opacity="0.4" />
+              <circle cx="95" cy="55" r="2" fill="currentColor" opacity="0.4" />
+              <circle cx="30" cy="85" r="2" fill="currentColor" opacity="0.3" />
+              <circle cx="90" cy="85" r="2" fill="currentColor" opacity="0.3" />
+              <circle cx="60" cy="95" r="1.5" fill="currentColor" opacity="0.25" />
+              <line x1="30" y1="85" x2="90" y2="85" stroke="currentColor" stroke-width="0.75" opacity="0.15" />
+              <line x1="30" y1="85" x2="60" y2="95" stroke="currentColor" stroke-width="0.5" opacity="0.1" />
+              <line x1="90" y1="85" x2="60" y2="95" stroke="currentColor" stroke-width="0.5" opacity="0.1" />
+            </svg>
           </div>
         </div>
 

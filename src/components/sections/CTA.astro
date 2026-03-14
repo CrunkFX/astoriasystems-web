@@ -3,7 +3,6 @@ import type { Locale } from '../../i18n/config';
 import { routeMap } from '../../i18n/config';
 import { t } from '../../i18n/utils';
 import Container from '../ui/Container.astro';
-import ParticleNetwork from '../visuals/ParticleNetwork.astro';
 
 interface Props {
   locale: Locale;
@@ -15,13 +14,10 @@ const routes = routeMap[locale];
 
 <section class="relative py-32 lg:py-40 overflow-hidden" data-reveal>
   <!-- Background with pattern -->
-  <ParticleNetwork density="low" />
   <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-dark)]/85 via-[var(--color-accent)]/80 to-blue-600/75"></div>
   <div class="absolute inset-0 grid-pattern opacity-15"></div>
-  <!-- Animated orbs -->
-  <div class="absolute -top-32 -right-32 w-[500px] h-[500px] bg-white/10 rounded-full blur-[80px] animate-float" aria-hidden="true"></div>
-  <div class="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-blue-300/10 rounded-full blur-[80px] animate-float" style="animation-delay: -4s;" aria-hidden="true"></div>
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-400/8 rounded-full blur-[100px] animate-spin-slow" aria-hidden="true"></div>
+  <!-- Subtle orb -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px]" aria-hidden="true"></div>
 
   <Container class="relative z-10 text-center">
     <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-text-reveal>

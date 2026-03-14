@@ -66,7 +66,12 @@
       "Bash(unzip -j /tmp/kenney-tower.zip \"Models/GLB format/tower-round-crystals.glb\" \"Models/GLB format/detail-crystal-large.glb\" -d public/models/)",
       "Bash(pnpm dev:*)",
       "WebFetch(domain:undraw.co)",
-      "WebFetch(domain:storyset.com)"
+      "WebFetch(domain:storyset.com)",
+      "Bash(wc -l /Users/mergimmavraj/Github/astoriasystems-web/.claude/worktrees/kind-mclean/src/i18n/translations/*.json)",
+      "Bash(find /Users/mergimmavraj/Github/astoriasystems-web/.claude/worktrees/kind-mclean -type d -not -path */node_modules/* -not -path */dist/* -not -path */.astro/* -not -path */.git/*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm run:*)",
+      "Bash(curl -sL -o /Users/mergimmavraj/Github/astoriasystems-web/.claude/worktrees/kind-mclean/public/images/services/development-why.jpg \"https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\" -H \"User-Agent: Mozilla/5.0\")"
     ]
   }
 }

@@ -7,8 +7,21 @@ import Container from '../ui/Container.astro';
 import GlassCard from '../ui/GlassCard.astro';
 import Breadcrumbs from '../seo/Breadcrumbs.astro';
 import CTA from '../sections/CTA.astro';
-import ServiceVisual from '../visuals/ServiceVisual.astro';
-import ServiceHeroCanvas from '../visuals/ServiceHeroCanvas.astro';
+import LowpolyOverlay from '../visuals/LowpolyOverlay.astro';
+
+const serviceImages: Record<string, string> = {
+  communication: '/images/services/communication.jpg',
+  security: '/images/services/security.jpg',
+  infrastructure: '/images/services/infrastructure.jpg',
+  development: '/images/services/development.jpg',
+};
+
+const whyImages: Record<string, string> = {
+  communication: '/images/services/communication-why.jpg',
+  security: '/images/services/security-why.jpg',
+  infrastructure: '/images/services/infrastructure-why.jpg',
+  development: '/images/services/development-why.jpg',
+};
 
 interface Props {
   locale: Locale;
@@ -31,40 +44,40 @@ const industrySolutions = tRaw(locale, `services.${serviceKey}.industrySolutions
 
 const colorMap = {
   communication: {
-    gradient: 'from-cyan-500 to-blue-500',
-    gradientVia: 'from-cyan-400 via-cyan-500 to-blue-600',
-    text: 'text-cyan-400',
-    textLight: 'text-cyan-500',
-    rgb: '6, 182, 212',
-    rgbEnd: '59, 130, 246',
-    border: 'border-cyan-500/20',
+    gradient: 'from-[#00e5ff] to-[#3fe0d0]',
+    gradientVia: 'from-[#00e5ff] via-[#1ed6d6] to-[#3fe0d0]',
+    text: 'text-[var(--color-accent)]',
+    textLight: 'text-[var(--color-accent-dark)]',
+    rgb: '0, 229, 255',
+    rgbEnd: '63, 224, 208',
+    border: 'border-[var(--color-accent)]/20',
   },
   security: {
-    gradient: 'from-green-500 to-emerald-500',
-    gradientVia: 'from-green-400 via-emerald-500 to-emerald-600',
-    text: 'text-green-400',
-    textLight: 'text-green-500',
-    rgb: '34, 197, 94',
-    rgbEnd: '16, 185, 129',
-    border: 'border-green-500/20',
+    gradient: 'from-[#00e5ff] to-[#2e9aa0]',
+    gradientVia: 'from-[#00e5ff] via-[#1ed6d6] to-[#2e9aa0]',
+    text: 'text-[var(--color-accent)]',
+    textLight: 'text-[var(--color-accent-dark)]',
+    rgb: '0, 229, 255',
+    rgbEnd: '46, 154, 160',
+    border: 'border-[var(--color-accent)]/20',
   },
   infrastructure: {
-    gradient: 'from-violet-500 to-purple-500',
-    gradientVia: 'from-violet-400 via-purple-500 to-purple-600',
-    text: 'text-violet-400',
-    textLight: 'text-violet-500',
-    rgb: '139, 92, 246',
-    rgbEnd: '168, 85, 247',
-    border: 'border-violet-500/20',
+    gradient: 'from-[#3fe0d0] to-[#1ed6d6]',
+    gradientVia: 'from-[#3fe0d0] via-[#1ed6d6] to-[#00e5ff]',
+    text: 'text-[var(--color-accent)]',
+    textLight: 'text-[var(--color-accent-dark)]',
+    rgb: '63, 224, 208',
+    rgbEnd: '30, 214, 214',
+    border: 'border-[var(--color-accent)]/20',
   },
   development: {
-    gradient: 'from-orange-500 to-red-500',
-    gradientVia: 'from-orange-400 via-orange-500 to-red-500',
-    text: 'text-orange-400',
-    textLight: 'text-orange-500',
-    rgb: '249, 115, 22',
-    rgbEnd: '239, 68, 68',
-    border: 'border-orange-500/20',
+    gradient: 'from-[#1ed6d6] to-[#00e5ff]',
+    gradientVia: 'from-[#1ed6d6] via-[#00e5ff] to-[#3fe0d0]',
+    text: 'text-[var(--color-accent)]',
+    textLight: 'text-[var(--color-accent-dark)]',
+    rgb: '30, 214, 214',
+    rgbEnd: '0, 229, 255',
+    border: 'border-[var(--color-accent)]/20',
   },
 };
 const colors = colorMap[serviceKey];
@@ -185,12 +198,8 @@ const breadcrumbsJsonLd = [
   jsonLdType="service"
   breadcrumbs={breadcrumbsJsonLd}
 >
-  <!-- Hero with themed interactive canvas -->
-  <section class={`relative pt-28 lg:pt-36 pb-24 lg:pb-32 overflow-hidden`}>
-    <ServiceHeroCanvas type={serviceKey} />
-    <div class="absolute inset-0 bg-[var(--color-surface-primary)]/40 dark:bg-[var(--color-dark-bg)]/40"></div>
-    <!-- Animated gradient line across top -->
-    <div class="absolute top-0 left-0 right-0 h-[2px] sd-gradient-line" style={`--line-from: rgb(${colors.rgb}); --line-to: rgb(${colors.rgbEnd});`}></div>
+  <!-- Hero text (no image background) -->
+  <section class="relative pt-24 lg:pt-28 pb-6 lg:pb-8 overflow-hidden">
     <Container class="relative z-10">
       <Breadcrumbs locale={locale} items={breadcrumbItems} />
       <div class="max-w-4xl">
@@ -203,49 +212,57 @@ const breadcrumbsJsonLd = [
           </span>
         </div>
         <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 animate-fade-in-up animate-delay-1" data-text-reveal>{serviceTitle}</h1>
-        <p class="text-xl lg:text-2xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] max-w-2xl leading-relaxed mb-10 animate-fade-in-up animate-delay-2">
+        <p class="text-xl lg:text-2xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] max-w-2xl leading-relaxed mb-4 animate-fade-in-up animate-delay-2">
           {serviceDescription}
         </p>
-        <!-- Feature pills -->
-        <div class="flex flex-wrap gap-2.5 animate-fade-in-up animate-delay-3">
-          {features.map((feature, i) => (
-            <span class="sd-pill group inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl border transition-all duration-300" style={`background: rgba(${colors.rgb}, 0.06); border-color: rgba(${colors.rgb}, 0.15); --pill-color: ${colors.rgb};`}>
-              <span class="h-1.5 w-1.5 rounded-full" style={`background: rgb(${colors.rgb});`}></span>
-              {feature}
-            </span>
-          ))}
-        </div>
       </div>
     </Container>
   </section>
 
-  <!-- Intro section -->
-  <section class="py-20 lg:py-28 relative overflow-hidden">
-    <div class="absolute inset-0 animated-bg-gradients opacity-40"></div>
+  <LowpolyOverlay />
+
+  <!-- Intro section with image -->
+  <section class="py-6 lg:py-12 relative overflow-hidden">
     <Container class="relative z-10">
-      <div class="max-w-4xl mx-auto" data-reveal>
-        <div class="sd-intro-card relative rounded-3xl overflow-hidden" style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
-          <!-- Animated gradient border -->
-          <div class="sd-animated-border absolute inset-0 rounded-3xl"></div>
-          <div class="relative glass rounded-3xl p-8 lg:p-12 m-[2px]">
-            <div class="flex items-center gap-3 mb-6">
-              <div class={`h-10 w-10 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center sd-icon-float`}>
-                <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                </svg>
-              </div>
-              <span class={`text-sm font-semibold uppercase tracking-widest ${colors.textLight}`}>
-                {locale === 'de' ? 'Über diesen Service' : 'About this Service'}
-              </span>
+      <div class="sd-intro-block relative rounded-2xl overflow-hidden backdrop-blur-md bg-[var(--color-surface-primary)]/30 dark:bg-[var(--color-dark-surface)]/30 border border-white/10 dark:border-white/5 shadow-lg" data-reveal>
+        <!-- Image (full width on mobile, left side on desktop) -->
+        <div class="sd-intro-img relative aspect-[4/3] md:aspect-auto md:absolute md:inset-0 md:w-[55%]">
+          <img
+            src={serviceImages[serviceKey]}
+            alt={serviceTitle}
+            class="w-full h-full object-cover grayscale"
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-[#0e7490]/50 mix-blend-color"></div>
+          <canvas class="lowpoly-overlay-canvas absolute inset-0 w-full h-full mix-blend-overlay"></canvas>
+          <!-- Gradient for text readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent md:hidden"></div>
+          <!-- Benefit chips overlaid on image -->
+          <!-- Mobile: chips on image -->
+          <div class="absolute bottom-0 left-0 right-0 z-10 p-5 md:hidden">
+            <div class="flex flex-wrap gap-2">
+              {benefits.map((benefit) => (
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/90 bg-white/10 backdrop-blur-sm border border-white/10">
+                  <svg class="h-3 w-3 text-[#00e5ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  {benefit}
+                </span>
+              ))}
             </div>
-            <p class="text-lg lg:text-xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-8">
+          </div>
+        </div>
+
+        <!-- Tablet/Desktop content -->
+        <div class="hidden md:block relative z-10 md:ml-auto md:w-[50%] md:p-8 lg:p-12 xl:p-16">
+            <p class="text-base lg:text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-6">
               {intro}
             </p>
-            <div class="flex flex-wrap gap-3">
-              {benefits.map((benefit, i) => (
-                <span class="sd-benefit-chip group inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-semibold glass transition-all duration-500 hover:scale-105 cursor-default" style={`--chip-rgb: ${colors.rgb}; animation-delay: ${i * 0.1}s;`}>
-                  <span class={`flex-shrink-0 h-6 w-6 rounded-lg bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md sd-check-pop`} style={`box-shadow: 0 4px 12px rgba(${colors.rgb}, 0.3);`}>
-                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <div class="flex flex-wrap gap-2">
+              {benefits.map((benefit) => (
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium glass border border-white/10 dark:border-white/5">
+                  <span class="flex-shrink-0 h-5 w-5 rounded-md bg-gradient-to-br from-[#0e7490] to-[#2dd4bf] flex items-center justify-center">
+                    <svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                   </span>
@@ -254,7 +271,6 @@ const breadcrumbsJsonLd = [
               ))}
             </div>
           </div>
-        </div>
       </div>
     </Container>
   </section>
@@ -291,14 +307,12 @@ const breadcrumbsJsonLd = [
                 <div class="sd-shimmer absolute inset-0 opacity-0 group-hover:opacity-100"></div>
                 <!-- Corner accent -->
                 <div class="absolute top-0 right-0 w-24 h-24 opacity-[0.03] dark:opacity-[0.06]" style={`background: radial-gradient(circle at top right, rgb(${colors.rgb}), transparent 70%);`}></div>
-                <!-- Number watermark -->
-                <div class="absolute top-4 right-6 text-6xl font-black opacity-[0.03] dark:opacity-[0.05] select-none transition-all duration-500 group-hover:opacity-[0.08]">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
+                <!-- Lowpoly card overlay -->
+                <div class="sd-card-lowpoly absolute inset-0 pointer-events-none"></div>
                 <!-- Icon with animated glow -->
                 <div class="relative mb-6">
                   <div class="sd-icon-glow absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" style={`background: rgb(${colors.rgb});`}></div>
-                  <div class={`relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`} style={`box-shadow: 0 8px 24px rgba(${colors.rgb}, 0.25);`}>
+                  <div class={`icon-lowpoly relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`} style={`box-shadow: 0 8px 24px rgba(${colors.rgb}, 0.25);`}>
                     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <Fragment set:html={iconSvgs[section.icon] || iconSvgs.api} />
                     </svg>
@@ -341,7 +355,7 @@ const breadcrumbsJsonLd = [
               <div class="sd-portfolio-item group" data-reveal data-reveal-delay={String(Math.min(Math.floor(index / 3) + 1, 5))} style={`--item-rgb: ${colors.rgb};`}>
                 <div class="relative glass rounded-xl p-4 flex items-center gap-4 border border-white/10 dark:border-white/5 transition-all duration-400 group-hover:border-transparent overflow-hidden h-full">
                   <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={`background: linear-gradient(135deg, rgba(${colors.rgb}, 0.05), transparent);`}></div>
-                  <div class={`relative flex-shrink-0 h-10 w-10 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`} style={`box-shadow: 0 4px 12px rgba(${colors.rgb}, 0.2);`}>
+                  <div class={`icon-lowpoly relative flex-shrink-0 h-10 w-10 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`} style={`box-shadow: 0 4px 12px rgba(${colors.rgb}, 0.2);`}>
                     <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <Fragment set:html={filledIcons[getPortfolioIcon(item)]} />
                     </svg>
@@ -400,7 +414,7 @@ const breadcrumbsJsonLd = [
                 <div class="relative glass rounded-2xl p-6 h-full overflow-hidden transition-all duration-500 group-hover:shadow-2xl border border-white/10 dark:border-white/5">
                   <div class="sd-shimmer absolute inset-0 opacity-0 group-hover:opacity-100"></div>
                   <div class="relative mb-4">
-                    <div class={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-md transition-all duration-500 group-hover:scale-110`} style={`box-shadow: 0 6px 16px rgba(${colors.rgb}, 0.2);`}>
+                    <div class={`icon-lowpoly inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colors.gradientVia} text-white shadow-md transition-all duration-500 group-hover:scale-110`} style={`box-shadow: 0 6px 16px rgba(${colors.rgb}, 0.2);`}>
                       <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <Fragment set:html={iconSvgs[category.icon] || iconSvgs.industry} />
                       </svg>
@@ -426,18 +440,23 @@ const breadcrumbsJsonLd = [
   <!-- Benefits / Why choose us -->
   <section class="py-20 lg:py-28">
     <Container>
-      <div class="relative overflow-hidden rounded-3xl sd-why-section" data-reveal style={`--why-rgb: ${colors.rgb};`}>
-        <!-- Background visual -->
+      <div class="sd-why-block relative overflow-hidden rounded-3xl" data-reveal style={`--card-rgb: ${colors.rgb}; --card-rgb-end: ${colors.rgbEnd};`}>
+        <!-- Image background with filters + lowpoly -->
         <div class="absolute inset-0 z-0">
-          <ServiceVisual type={serviceKey} class="!rounded-none !aspect-auto w-full h-full" />
+          <img
+            src={whyImages[serviceKey]}
+            alt=""
+            class="w-full h-full object-cover grayscale"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-[#0e7490]/50 mix-blend-color"></div>
+          <canvas class="lowpoly-overlay-canvas absolute inset-0 w-full h-full mix-blend-overlay"></canvas>
         </div>
-        <div class="absolute inset-0 z-[1] bg-gradient-to-br from-white/92 via-white/80 to-white/40 dark:from-[#0a0e1a]/95 dark:via-[#0a0e1a]/85 dark:to-[#0a0e1a]/40 backdrop-blur-sm"></div>
-        <!-- Animated accent particles -->
-        <div class="sd-why-particles absolute inset-0 z-[1] overflow-hidden">
-          <div class="sd-particle sd-particle-1" style={`background: rgb(${colors.rgb});`}></div>
-          <div class="sd-particle sd-particle-2" style={`background: rgb(${colors.rgbEnd});`}></div>
-          <div class="sd-particle sd-particle-3" style={`background: rgb(${colors.rgb});`}></div>
-        </div>
+        <!-- Glass overlay for readability -->
+        <div class="absolute inset-0 z-[1] bg-white/80 dark:bg-[#0a0e1a]/80 backdrop-blur-md"></div>
+        <!-- Lowpoly pattern overlay -->
+        <div class="sd-card-lowpoly absolute inset-0 z-[1] pointer-events-none"></div>
+        <!-- Content -->
         <div class="relative z-[2] p-8 md:p-12 lg:p-16">
           <div class="max-w-2xl">
             <span class={`inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest mb-4 ${colors.textLight}`}>
@@ -447,17 +466,16 @@ const breadcrumbsJsonLd = [
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-10">
               {locale === 'de' ? 'Warum Astoria Systems?' : 'Why Astoria Systems?'}
             </h2>
-            <div class="space-y-4 mb-10">
+            <div class="space-y-3 mb-10">
               {benefits.map((benefit, idx) => (
                 <div class="sd-benefit-row group animate-fade-in-up" style={`animation-delay: ${0.2 + idx * 0.15}s; --row-rgb: ${colors.rgb};`}>
-                  <div class="relative glass rounded-2xl p-5 flex items-center gap-5 border border-white/20 dark:border-white/10 transition-all duration-500 group-hover:shadow-xl overflow-hidden">
+                  <div class="relative glass rounded-xl p-4 flex items-center gap-4 border border-white/20 dark:border-white/10 transition-all duration-500 group-hover:shadow-xl overflow-hidden">
                     <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={`background: linear-gradient(135deg, rgba(${colors.rgb}, 0.05), transparent);`}></div>
-                    <!-- Animated left border -->
                     <div class="absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all duration-500" style={`background: linear-gradient(to bottom, rgb(${colors.rgb}), rgb(${colors.rgbEnd}));`}></div>
-                    <div class={`relative flex-shrink-0 h-12 w-12 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`} style={`box-shadow: 0 4px 16px rgba(${colors.rgb}, 0.3);`}>
-                      <span class="text-white font-bold">{idx + 1}</span>
+                    <div class={`icon-lowpoly relative flex-shrink-0 h-9 w-9 rounded-lg bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-md transition-all duration-500 group-hover:scale-110`} style={`box-shadow: 0 3px 12px rgba(${colors.rgb}, 0.25);`}>
+                      <span class="text-white text-sm font-bold relative z-[1]">{idx + 1}</span>
                     </div>
-                    <span class="relative text-lg font-semibold">{benefit}</span>
+                    <span class="relative text-base font-semibold">{benefit}</span>
                   </div>
                 </div>
               ))}
@@ -482,6 +500,29 @@ const breadcrumbsJsonLd = [
 </BaseLayout>
 
 <style is:global>
+  /* Desktop: fade image right edge into content */
+  @media (min-width: 768px) {
+    .sd-intro-img {
+      -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);
+      mask-image: linear-gradient(to right, black 40%, transparent 100%);
+    }
+  }
+
+  /* Intro block min height */
+  .sd-intro-block {
+    min-height: 320px;
+  }
+  @media (min-width: 768px) {
+    .sd-intro-block {
+      min-height: 360px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .sd-intro-block {
+      min-height: 400px;
+    }
+  }
+
   /* Gradient line across top of hero */
   .sd-gradient-line {
     background: linear-gradient(90deg, transparent, var(--line-from), var(--line-to), transparent);
@@ -518,6 +559,24 @@ const breadcrumbsJsonLd = [
   @keyframes sdBorderSpin {
     0% { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(360deg); }
+  }
+
+  /* Lowpoly pattern on cards */
+  .sd-card-lowpoly {
+    opacity: 0.04;
+    background:
+      linear-gradient(120deg, rgba(var(--card-rgb), 1) 0%, rgba(var(--card-rgb), 1) 20%, transparent 20.3%),
+      linear-gradient(240deg, rgba(var(--card-rgb), 1) 0%, rgba(var(--card-rgb), 1) 15%, transparent 15.3%),
+      linear-gradient(60deg, rgba(var(--card-rgb), 1) 0%, rgba(var(--card-rgb), 1) 30%, transparent 30.3%),
+      linear-gradient(300deg, rgba(var(--card-rgb), 1) 0%, rgba(var(--card-rgb), 1) 12%, transparent 12.3%),
+      linear-gradient(180deg, rgba(var(--card-rgb), 1) 0%, rgba(var(--card-rgb), 1) 18%, transparent 18.3%);
+  }
+  .dark .sd-card-lowpoly {
+    opacity: 0.06;
+  }
+  .sd-card-3d:hover .sd-card-lowpoly {
+    opacity: 0.08;
+    transition: opacity 0.5s ease;
   }
 
   /* Gradient text */
