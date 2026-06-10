@@ -136,28 +136,18 @@ importieren:
 ## 6. Desk im CI (Backend `/app`, Konfigurations-Oberfläche)
 
 **Wichtig:** Das Desk (das interne Backend unter `/app`) nutzt das Website
-Theme **nicht**. Es muss separat über globales CSS gebrandet werden. Es gibt
-zwei Wege:
+Theme **nicht**. Es muss separat über globales CSS gebrandet werden.
 
-### Weg A – Ohne Server-Zugriff (Client Script)
-1. Im Desk nach **Client Script** suchen → *Neu*.
-2. **Enabled** = an, **Script Type** = `App`.
-3. Kompletten Inhalt aus `desk_client_script.js` einfügen.
-4. Speichern, Desk hart neu laden (Strg/Cmd + Shift + R).
+**Hinweis:** In Frappe 16 gibt es dafür **keinen Client Script** mehr (dort
+existieren nur die Typen *Form*/*List* mit DocType). Globales Desk-CSS geht
+nur über den `app_include_css`-Hook einer (Custom-)App.
 
-### Weg B – Sauber für Produktion (eigene App)
-CSS aus `desk_theme.css` in eine App legen und in deren `hooks.py`:
-```python
-app_include_css = ["/assets/<deine_app>/css/desk_theme.css"]
-```
-Danach `bench build && bench clear-cache`. Kein Client Script nötig.
-
-> Das Desk-CSS gleicht **Farben, Inter-Schrift, Akzent-Buttons, Navbar und
-> Fokus-Stil** an die Website an, hält die Oberfläche aber bewusst nutzbar
-> (kein animierter Hintergrund / Glas-Effekt über Formularen). Einzelne
-> CSS-Variablennamen können je Frappe-Version abweichen – im DevTools-
-> Inspector (`:root` → Computed → nach `--primary` / `--bg` filtern) prüfen
-> und bei Bedarf anpassen.
+Das mitgelieferte `desk_theme.css` brandet gezielt **Hintergrund, Header
+(Navbar) und Seitenmenü** im CI – die Oberfläche bleibt nutzbar (kein
+Glas-Effekt über Formularen). Die genaue Einbindung (vorhandene App nutzen
+oder Mini-App `astoria_theme` neu anlegen) ist Schritt für Schritt in
+**`desk_setup.md`** beschrieben. Logo & App-Name im Header gehen zusätzlich
+rein über die UI (**Navbar Settings**).
 
 ---
 
@@ -169,5 +159,5 @@ Danach `bench build && bench clear-cache`. Kein Client Script nötig.
 | `custom_overrides.scss`  | Website-Theme: Feld **Benutzerdefinierte Überschreibungen**    |
 | `custom_scss.scss`       | Website-Theme: Feld **Benutzerdefiniertes SCSS**               |
 | `website_theme.json`     | Komplettes Website-Theme zum direkten Import                   |
-| `desk_theme.css`         | **Desk-Branding** (für eigene App via `app_include_css`)       |
-| `desk_client_script.js`  | **Desk-Branding** ohne Server-Zugriff (Client Script, Typ App) |
+| `desk_theme.css`         | **Desk-Branding**: Hintergrund, Header, Seitenmenü im CI       |
+| `desk_setup.md`          | Anleitung, wie `desk_theme.css` global eingebunden wird        |
