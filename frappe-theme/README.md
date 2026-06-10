@@ -131,11 +131,43 @@ importieren:
 
 ---
 
+---
+
+## 6. Desk im CI (Backend `/app`, Konfigurations-Oberfläche)
+
+**Wichtig:** Das Desk (das interne Backend unter `/app`) nutzt das Website
+Theme **nicht**. Es muss separat über globales CSS gebrandet werden. Es gibt
+zwei Wege:
+
+### Weg A – Ohne Server-Zugriff (Client Script)
+1. Im Desk nach **Client Script** suchen → *Neu*.
+2. **Enabled** = an, **Script Type** = `App`.
+3. Kompletten Inhalt aus `desk_client_script.js` einfügen.
+4. Speichern, Desk hart neu laden (Strg/Cmd + Shift + R).
+
+### Weg B – Sauber für Produktion (eigene App)
+CSS aus `desk_theme.css` in eine App legen und in deren `hooks.py`:
+```python
+app_include_css = ["/assets/<deine_app>/css/desk_theme.css"]
+```
+Danach `bench build && bench clear-cache`. Kein Client Script nötig.
+
+> Das Desk-CSS gleicht **Farben, Inter-Schrift, Akzent-Buttons, Navbar und
+> Fokus-Stil** an die Website an, hält die Oberfläche aber bewusst nutzbar
+> (kein animierter Hintergrund / Glas-Effekt über Formularen). Einzelne
+> CSS-Variablennamen können je Frappe-Version abweichen – im DevTools-
+> Inspector (`:root` → Computed → nach `--primary` / `--bg` filtern) prüfen
+> und bei Bedarf anpassen.
+
+---
+
 ## Dateien in diesem Verzeichnis
 
-| Datei                   | Zweck                                                          |
-| ----------------------- | -------------------------------------------------------------- |
-| `README.md`             | Diese Anleitung                                                |
-| `custom_overrides.scss` | Für Feld **Benutzerdefinierte Überschreibungen** (SCSS-Variablen) |
-| `custom_scss.scss`      | Für Feld **Benutzerdefiniertes SCSS** (Klassen/Utilities)      |
-| `website_theme.json`    | Komplettes Theme zum direkten Import                           |
+| Datei                    | Zweck                                                          |
+| ------------------------ | -------------------------------------------------------------- |
+| `README.md`              | Diese Anleitung                                                |
+| `custom_overrides.scss`  | Website-Theme: Feld **Benutzerdefinierte Überschreibungen**    |
+| `custom_scss.scss`       | Website-Theme: Feld **Benutzerdefiniertes SCSS**               |
+| `website_theme.json`     | Komplettes Website-Theme zum direkten Import                   |
+| `desk_theme.css`         | **Desk-Branding** (für eigene App via `app_include_css`)       |
+| `desk_client_script.js`  | **Desk-Branding** ohne Server-Zugriff (Client Script, Typ App) |

@@ -1,0 +1,127 @@
+/* ============================================================
+   Astoria Systems – Desk Theme (/app Backend)
+   ------------------------------------------------------------
+   Bringt die Corporate Identity der Website ins Frappe-Desk.
+   Das Desk nutzt NICHT das Website Theme, sondern muss per
+   globalem CSS gebrandet werden (siehe README, Abschnitt
+   "Desk im CI").
+
+   Frappe färbt das Desk über CSS-Custom-Properties auf :root.
+   Wir überschreiben die wichtigsten Tokens. Einzelne
+   Variablennamen können je nach Frappe-Version leicht
+   abweichen – bei Bedarf im DevTools-Inspector prüfen
+   (Element auswählen -> Computed -> nach --primary / --bg
+   filtern).
+   ============================================================ */
+
+/* Inter laden (gleiche Schrift wie die Website) */
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800');
+
+:root {
+  /* --- Markenfarben --- */
+  --ci-accent: #00e5ff;
+  --ci-accent-light: #3fe0d0;
+  --ci-accent-dark: #2e9aa0;
+  --ci-text: #4f4f4f;
+  --ci-surface: #ffffff;
+  --ci-surface-2: #f8fafc;
+  --ci-surface-3: #f1f5f9;
+  --ci-border: #e2e8f0;
+  --ci-dark-bg: #030712;
+
+  /* --- Frappe Desk Tokens überschreiben --- */
+  /* Akzent / Primär (Buttons, aktive Elemente, Links) */
+  --primary: var(--ci-accent-dark);
+  --primary-color: var(--ci-accent-dark);
+  --blue-500: var(--ci-accent-dark);
+  --blue-600: var(--ci-accent-dark);
+
+  /* Flächen & Hintergründe */
+  --bg-color: var(--ci-surface-2);
+  --fg-color: var(--ci-surface);
+  --card-bg: var(--ci-surface);
+  --control-bg: var(--ci-surface-3);
+  --subtle-fg: var(--ci-surface-3);
+  --navbar-bg: var(--ci-surface);
+  --modal-bg: var(--ci-surface);
+
+  /* Text */
+  --text-color: var(--ci-text);
+  --text-muted: #6b7280;
+  --heading-color: var(--ci-dark-bg);
+
+  /* Rahmen & Radius */
+  --border-color: var(--ci-border);
+  --dark-border-color: var(--ci-border);
+  --border-radius: 0.5rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+
+  /* Schrift */
+  --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body,
+.desk-page,
+.layout-main {
+  font-family: var(--font-stack) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Navbar im Markenstil --- */
+.navbar {
+  background: var(--ci-surface) !important;
+  border-bottom: 1px solid var(--ci-border) !important;
+  box-shadow: 0 1px 0 rgba(0, 229, 255, 0.06);
+}
+
+/* --- Primär-Buttons: Glow-Gradient wie auf der Website --- */
+.btn-primary {
+  background: linear-gradient(135deg, var(--ci-accent), var(--ci-accent-light)) !important;
+  border: none !important;
+  color: #052b30 !important;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  color: #052b30 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.35) !important;
+}
+
+/* --- Links & aktive Sidebar-Einträge --- */
+a,
+.sidebar-item-label {
+  color: var(--ci-accent-dark);
+}
+.standard-sidebar-item.selected {
+  background: rgba(0, 229, 255, 0.1);
+}
+.standard-sidebar-item.selected .sidebar-item-label {
+  color: var(--ci-accent-dark);
+  font-weight: 600;
+}
+
+/* --- Karten / Widgets leicht abgerundet --- */
+.widget,
+.form-section,
+.frappe-card,
+.dashboard-card {
+  border-radius: var(--border-radius-lg);
+  border-color: var(--ci-border);
+}
+
+/* --- Fokus-Stil im Markenakzent --- */
+.form-control:focus,
+.input-with-feedback:focus {
+  border-color: var(--ci-accent) !important;
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.25) !important;
+}
+
+::selection {
+  background-color: var(--ci-accent);
+  color: #fff;
+}
