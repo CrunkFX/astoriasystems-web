@@ -1,8 +1,9 @@
 {
   "site": {
     "title": "Astoria Systems GmbH",
-    "description": "Innovative Softwarelösungen für Kommunikation, IT-Sicherheit, digitale Infrastruktur und individuelle Softwareentwicklung.",
-    "ogTitle": "Astoria Systems - Innovative Softwarelösungen"
+    "description": "Astoria Systems GmbH aus Bad Kreuznach: maßgeschneiderte IT-Sicherheit, sichere Kommunikation, digitale Infrastruktur und individuelle Softwareentwicklung.",
+    "ogTitle": "Astoria Systems – IT-Sicherheit, Kommunikation & Softwareentwicklung",
+    "keywords": "IT-Sicherheit, Softwareentwicklung, IT-Dienstleister Bad Kreuznach, digitale Infrastruktur, Unternehmenskommunikation, VoIP, Cybersecurity, IT-Beratung"
   },
   "nav": {
     "home": "Home",

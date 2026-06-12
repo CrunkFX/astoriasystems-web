@@ -5,7 +5,6 @@ import { t } from '../../i18n/utils';
 import ThemeToggle from '../interactive/ThemeToggle.tsx';
 import LanguageSwitcher from '../interactive/LanguageSwitcher.tsx';
 import MobileNav from '../interactive/MobileNav.tsx';
-import AuthButton from '../interactive/AuthButton.tsx';
 
 interface Props {
   locale: Locale;
@@ -13,7 +12,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const navItems = getNavItems(locale);
-const loginLabel = t(locale, 'nav.login');
 const currentPath = Astro.url.pathname;
 ---
 
@@ -55,11 +53,8 @@ const currentPath = Astro.url.pathname;
         <ThemeToggle client:load locale={locale} />
         <LanguageSwitcher client:load locale={locale} currentPath={currentPath} />
 
-        <!-- Customer Login / Account (desktop) -->
-        <AuthButton client:load locale={locale} loginLabel={loginLabel} />
-
         <!-- Mobile menu button -->
-        <MobileNav client:media="(max-width: 1023px)" locale={locale} navItems={navItems} loginLabel={loginLabel} currentPath={currentPath} />
+        <MobileNav client:media="(max-width: 1023px)" locale={locale} navItems={navItems} currentPath={currentPath} />
       </div>
     </div>
   </div>
