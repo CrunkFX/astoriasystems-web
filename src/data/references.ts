@@ -42,6 +42,8 @@ export interface CaseStudy {
   bullets: { de: string[]; en: string[] };
   links?: RefLink[];
   gallery?: RefImage[];
+  // Kundenlogo mit Theme-Varianten (light = für hellen Hintergrund)
+  clientLogo?: { light: string; dark: string; alt: string };
   testimonial?: Testimonial;
 }
 
@@ -74,10 +76,21 @@ export const caseStudies: CaseStudy[] = [
       { label: 'Immobilienmesse', href: 'https://immobilienmesse.de/produkte/mkmscan' },
       { label: 'mkmfloor.de', href: 'https://www.mkmfloor.de/' },
     ],
+    clientLogo: {
+      light: '/images/references/mkmfloor-dunkel.webp',
+      dark: '/images/references/mkmfloor-hell.webp',
+      alt: 'mkmFloor',
+    },
     gallery: [
-      { src: '/images/references/mkmscan-1.jpg', alt: 'mkmScan App – 3D-Raumscan mit LiDAR', fit: 'contain' },
-      { src: '/images/references/mkmscan-2.jpg', alt: 'mkmScan App – Wohnflächenauswertung', fit: 'contain' },
-      { src: '/images/references/mkmfloor.jpg', alt: 'mkmFloor', fit: 'cover' },
+      { src: '/images/references/mkmscan-1.webp', alt: 'mkmScan App – Screenshot 1', fit: 'contain' },
+      { src: '/images/references/mkmscan-2.webp', alt: 'mkmScan App – Screenshot 2', fit: 'contain' },
+      { src: '/images/references/mkmscan-3.webp', alt: 'mkmScan App – Screenshot 3', fit: 'contain' },
+      { src: '/images/references/mkmscan-4.webp', alt: 'mkmScan App – Screenshot 4', fit: 'contain' },
+      { src: '/images/references/mkmscan-5.webp', alt: 'mkmScan App – Screenshot 5', fit: 'contain' },
+      { src: '/images/references/mkmscan-6.webp', alt: 'mkmScan App – Screenshot 6', fit: 'contain' },
+      { src: '/images/references/mkmscan-7.webp', alt: 'mkmScan App – Screenshot 7', fit: 'contain' },
+      { src: '/images/references/mkmscan-8.webp', alt: 'mkmScan App – Screenshot 8', fit: 'contain' },
+      { src: '/images/references/mkmscan-9.webp', alt: 'mkmScan App – Screenshot 9', fit: 'contain' },
     ],
     testimonial: {
       person: 'Markus G. Schlegel',
