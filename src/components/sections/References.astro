@@ -66,11 +66,11 @@ const ui = {
             </ul>
 
             {cs.gallery && (
-              <div class="relative mb-6 h-64 sm:h-72 lg:h-auto lg:flex-1 lg:min-h-0" data-slider>
-                <div class="ref-slider-track no-scrollbar absolute inset-0 flex gap-3 overflow-x-auto rounded-xl">
+              <div class="relative mb-6 h-64 sm:h-72 lg:h-auto lg:flex-1 lg:min-h-0 overflow-hidden rounded-xl" data-slider>
+                <div class="ref-slider-track absolute top-0 left-0 h-full flex w-max">
                   {[...cs.gallery, ...cs.gallery].map((img, i) => (
                     <div
-                      class="shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center"
+                      class="mr-3 shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center"
                       {...(i >= cs.gallery.length ? { 'data-clone': true, 'aria-hidden': 'true' } : {})}
                     >
                       <img src={img.src} alt={img.alt} class:list={['ref-img h-full w-auto max-w-none cursor-zoom-in', img.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
@@ -199,21 +199,38 @@ const ui = {
       });
 
       if (reduce) return;
-      var pos = 0;
-      var speed = 0.15; // px pro Frame ~ sehr langsam fließend
-      var paused = false;
-      function frame() {
-        if (!paused) {
-          var half = track.scrollWidth / 2;
-          pos += speed;
-          if (half > 0 && pos >= half) pos -= half;
-          track.scrollLeft = pos;
-        }
-        requestAnimationFrame(frame);
+      // Geschwindigkeit konstant halten: Dauer aus Set-Breite ableiten
+      function applyDuration() {
+        var setWidth = track.scrollWidth / 2; // eine Bildreihe (Inhalt verdoppelt)
+        if (setWidth <= 0) return;
+        var pxPerSec = 14; // langsam, weich
+        track.style.setProperty('--marquee-duration', (setWidth / pxPerSec).toFixed(1) + 's');
       }
-      requestAnimationFrame(frame);
-      ['pointerenter', 'touchstart', 'focusin'].forEach(function (ev) { s.addEventListener(ev, function () { paused = true; }, { passive: true }); });
-      ['pointerleave', 'touchend', 'focusout'].forEach(function (ev) { s.addEventListener(ev, function () { pos = track.scrollLeft; paused = false; }, { passive: true }); });
+      // nach Bild-Load erneut berechnen (Breiten ändern sich)
+      applyDuration();
+      Array.prototype.forEach.call(track.querySelectorAll('img'), function (im) {
+        if (!im.complete) im.addEventListener('load', applyDuration, { once: true });
+      });
+      var rt;
+      window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(applyDuration, 200); });
     });
   })();
 </script>
+
+<style is:global>
+  @keyframes ref-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .ref-slider-track {
+    animation: ref-marquee var(--marquee-duration, 40s) linear infinite;
+    will-change: transform;
+  }
+  [data-slider]:hover .ref-slider-track,
+  [data-slider]:focus-within .ref-slider-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ref-slider-track { animation: none; }
+  }
+</style>
