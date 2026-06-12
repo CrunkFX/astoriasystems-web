@@ -13,11 +13,11 @@ const suffix = numericMatch ? value.slice(numericMatch[1].length) : '';
 ---
 
 <div
-  class="text-center p-6"
+  class="text-center p-4 md:p-6"
   data-reveal
   data-reveal-delay={delay}
 >
-  <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">
+  <div class="text-3xl md:text-4xl font-bold gradient-text mb-2 break-words">
     {numericTarget ? (
       <>
         <span data-count-target={numericTarget}>0</span>{suffix}
@@ -26,7 +26,7 @@ const suffix = numericMatch ? value.slice(numericMatch[1].length) : '';
       <span>{value}</span>
     )}
   </div>
-  <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+  <div class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] break-words hyphens-auto leading-snug">
     {label}
   </div>
 </div>
