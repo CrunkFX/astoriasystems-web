@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
 import Breadcrumbs from '../components/seo/Breadcrumbs.astro';
 import References from '../components/sections/References.astro';
 import Partners from '../components/sections/Partners.astro';
@@ -17,12 +16,9 @@ const locale = 'de';
   keywords="Referenzen, Projekte, Case Studies, Partner, IT-Sicherheit, Softwareentwicklung, Astoria Systems"
   breadcrumbs={[{ name: 'Home', url: '/' }, { name: t(locale, 'nav.references'), url: '/referenzen' }]}
 >
-  <div class="pt-4">
-    <Container>
-      <Breadcrumbs locale={locale} items={[{ label: t(locale, 'nav.references'), href: '/referenzen' }]} />
-    </Container>
-  </div>
-  <References locale={locale} />
+  <References locale={locale}>
+    <Breadcrumbs slot="breadcrumb" locale={locale} items={[{ label: t(locale, 'nav.references'), href: '/referenzen' }]} />
+  </References>
   <Partners locale={locale} />
   <CTA locale={locale} />
 </BaseLayout>
