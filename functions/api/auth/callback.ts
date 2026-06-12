@@ -43,32 +43,57 @@ export const onRequestGet: PagesFunction<AuthEnv> = async (context) => {
   }
 
   // Code -> Token
-  // Token-Endpunkt-Authentifizierungsmethode = "Client Secret Basic":
-  // client_id/secret kommen als HTTP-Basic-Header, nicht im Body.
-  const basic = btoa(`${env.OAUTH_CLIENT_ID}:${env.OAUTH_CLIENT_SECRET}`);
-  const tokenRes = await fetch(
-    frappeEndpoint(env, "/api/method/frappe.integrations.oauth2.get_token"),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${basic}`,
-      },
-      body: new URLSearchParams({
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: getRedirectUri(env, request),
-        client_id: env.OAUTH_CLIENT_ID,
-        code_verifier: flow.verifier,
-      }),
-    }
+  // Robust gegen die OAuth-Client-Einstellung: erst "Client Secret Post"
+  // (Secret im Body), bei Fehlschlag "Client Secret Basic" (Auth-Header).
+  const tokenUrl = frappeEndpoint(
+    env,
+    "/api/method/frappe.integrations.oauth2.get_token"
   );
+  const baseParams = () =>
+    new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: getRedirectUri(env, request),
+      client_id: env.OAUTH_CLIENT_ID,
+      code_verifier: flow.verifier,
+    });
 
-  if (!tokenRes.ok) {
-    console.error("Token exchange failed:", await tokenRes.text());
-    return redirectHome("/?login_error=token_exchange", clearFlow);
+  async function exchange(mode: "post" | "basic"): Promise<{ ok: boolean; raw: string; status: number }> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    const params = baseParams();
+    if (mode === "basic") {
+      headers.Authorization = `Basic ${btoa(`${env.OAUTH_CLIENT_ID}:${env.OAUTH_CLIENT_SECRET}`)}`;
+    } else {
+      params.set("client_secret", env.OAUTH_CLIENT_SECRET);
+    }
+    const res = await fetch(tokenUrl, { method: "POST", headers, body: params });
+    return { ok: res.ok, raw: await res.text(), status: res.status };
   }
-  const token = (await tokenRes.json()) as { access_token?: string };
+
+  let result = await exchange("post");
+  if (!result.ok) {
+    const basicResult = await exchange("basic");
+    if (basicResult.ok) result = basicResult;
+    else {
+      const reason =
+        extractError(result.raw, result.status) ||
+        extractError(basicResult.raw, basicResult.status);
+      console.error("Token exchange failed:", result.status, result.raw, basicResult.raw);
+      return redirectHome(
+        `/?login_error=token_exchange&detail=${encodeURIComponent(reason)}`,
+        clearFlow
+      );
+    }
+  }
+
+  let token: { access_token?: string };
+  try {
+    token = JSON.parse(result.raw);
+  } catch {
+    return redirectHome("/?login_error=token_parse", clearFlow);
+  }
   if (!token.access_token) {
     return redirectHome("/?login_error=no_token", clearFlow);
   }
@@ -118,4 +143,18 @@ function redirectHome(location: string, clearCookie: string): Response {
     status: 302,
     headers: { Location: location, "Set-Cookie": clearCookie, "Cache-Control": "no-store" },
   });
+}
+
+// Zieht eine kurze Fehlerursache aus der Frappe-Antwort (OAuth-JSON
+// oder HTML-Fehlerseite) für die Diagnose in der Redirect-URL.
+function extractError(raw: string, status: number): string {
+  try {
+    const j = JSON.parse(raw) as { error?: string; error_description?: string; message?: string };
+    const code = j.error || j.message;
+    if (code) return j.error_description ? `${code}: ${j.error_description}` : code;
+  } catch {
+    /* keine JSON-Antwort */
+  }
+  const text = raw.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return text ? `http_${status}: ${text.slice(0, 120)}` : `http_${status}`;
 }
