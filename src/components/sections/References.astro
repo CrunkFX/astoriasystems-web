@@ -66,8 +66,8 @@ const ui = {
             </ul>
 
             {cs.gallery && (
-              <div class="relative mb-6 h-72 lg:h-auto lg:flex-1 lg:min-h-[16rem]" data-slider>
-                <div class="ref-slider-track flex h-full gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth rounded-xl">
+              <div class="relative mb-6 h-64 sm:h-72 lg:h-auto lg:flex-1 lg:min-h-0" data-slider>
+                <div class="ref-slider-track no-scrollbar absolute inset-0 flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth rounded-xl">
                   {cs.gallery.map((img) => (
                     <div class="snap-center shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center">
                       <img src={img.src} alt={img.alt} class:list={['h-full w-auto max-w-none', img.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
@@ -154,5 +154,21 @@ const ui = {
     var next = s.querySelector('.ref-slider-next');
     if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
     if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+
+    // Autoscroll (pausiert bei Interaktion, respektiert reduced motion)
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var timer = null;
+    function tick() {
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: step(), behavior: 'smooth' });
+      }
+    }
+    function start() { if (reduce) return; stop(); timer = setInterval(tick, 3500); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    start();
+    ['pointerenter', 'focusin', 'touchstart'].forEach(function (ev) { s.addEventListener(ev, stop, { passive: true }); });
+    ['pointerleave', 'focusout', 'touchend'].forEach(function (ev) { s.addEventListener(ev, start, { passive: true }); });
   });
 </script>
