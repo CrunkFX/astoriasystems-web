@@ -37,7 +37,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS) {
       console.error("SMTP not configured (SMTP_HOST/SMTP_USER/SMTP_PASS missing)");
-      return json({ error: "Mail service not configured" }, 500);
+      return json(
+        {
+          error: "Mail service not configured",
+          detail: `missing env: ${[
+            !env.SMTP_HOST && "SMTP_HOST",
+            !env.SMTP_USER && "SMTP_USER",
+            !env.SMTP_PASS && "SMTP_PASS",
+          ]
+            .filter(Boolean)
+            .join(", ")}`,
+        },
+        500
+      );
     }
 
     const to = env.CONTACT_EMAIL || "service@astoria.systems";
@@ -67,8 +79,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     return json({ success: true }, 200);
   } catch (error) {
-    console.error("Contact form error:", error instanceof Error ? error.message : error);
-    return json({ error: "Failed to send message" }, 500);
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error("Contact form error:", detail);
+    return json({ error: "Failed to send message", detail }, 500);
   }
 };
 
