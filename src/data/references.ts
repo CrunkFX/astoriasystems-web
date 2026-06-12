@@ -53,11 +53,11 @@ export const caseStudies: CaseStudy[] = [
     tag: { de: 'Case Study · iOS · LiDAR', en: 'Case study · iOS · LiDAR' },
     title: {
       de: 'mkmScan – Wohnflächenberechnung per LiDAR',
-      en: 'mkmScan – living-space measurement via LiDAR',
+      en: 'mkmScan – floor area calculation via LiDAR',
     },
     lead: {
       de: 'Für die mkm International GmbH haben wir mkmScan entwickelt – eine iOS-App, die mit dem Apple-LiDAR-Scanner direkt aus dem Raum heraus die Wohnfläche berechnet. Durch die Kombination aus 3D-Scan und Texturerfassung erreicht die App eine Genauigkeit und Auswertungstiefe, die es in dieser Form am Markt bislang nicht gab.',
-      en: 'For mkm International GmbH we built mkmScan – an iOS app that uses the Apple LiDAR scanner to calculate living space directly from the room. By combining 3D scanning with texture capture, the app achieves a level of accuracy and analysis that did not exist in this form on the market.',
+      en: 'For mkm International GmbH we built mkmScan – an iOS app that uses the Apple LiDAR scanner to calculate floor area directly from the room. By combining 3D scanning with texture capture, the app achieves a level of accuracy and analysis that did not exist in this form on the market.',
     },
     bullets: {
       de: [
@@ -66,7 +66,7 @@ export const caseStudies: CaseStudy[] = [
         'Auswertung und Aufmaß direkt in der App',
       ],
       en: [
-        'Direct living-space measurement on iPhone – no tape measure or extra hardware',
+        'Direct floor area calculation on iPhone – no tape measure or extra hardware',
         'Apple LiDAR combined with texture capture for high accuracy',
         'Analysis and measurement right inside the app',
       ],
@@ -98,14 +98,14 @@ export const caseStudies: CaseStudy[] = [
       photo: '/images/references/markus-schlegel.jpg',
       quote: {
         de: '„Das Team von Astoria Systems hat mit mkmScan etwas umgesetzt, das es so am Markt nicht gibt: eine direkte, verlässliche Wohnflächenberechnung allein per Smartphone. Die Verbindung aus Apple-LiDAR und Texturerfassung hebt Genauigkeit und Auswertung auf ein völlig neues Niveau – technologisch ein echter Sprung und in der Umsetzung herausragend."',
-        en: '“With mkmScan, the team at Astoria Systems delivered something the market simply didn’t have: reliable living-space measurement from a smartphone alone. Combining Apple LiDAR with texture capture takes accuracy and analysis to a whole new level – a real technological leap, brilliantly executed.”',
+        en: '“With mkmScan, the team at Astoria Systems delivered something the market simply didn’t have: reliable floor area calculation from a smartphone alone. Combining Apple LiDAR with texture capture takes accuracy and analysis to a whole new level – a real technological leap, brilliantly executed.”',
       },
       interview: [
         {
           q: { de: 'Was macht mkmScan besonders?', en: 'What makes mkmScan special?' },
           a: {
             de: '„Wir vermessen Wohnflächen heute direkt mit dem iPhone – ohne Maßband, ohne Zusatzgeräte. Dass das in dieser Präzision funktioniert, war noch vor Kurzem undenkbar."',
-            en: '“We now measure living space directly with an iPhone – no tape measure, no extra devices. That this works at such precision was unthinkable not long ago.”',
+            en: '“We now measure floor areas directly with an iPhone – no tape measure, no extra devices. That this works at such precision was unthinkable not long ago.”',
           },
         },
         {
