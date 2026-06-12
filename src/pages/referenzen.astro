@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Breadcrumbs from '../components/seo/Breadcrumbs.astro';
+import References from '../components/sections/References.astro';
+import Partners from '../components/sections/Partners.astro';
+import CTA from '../components/sections/CTA.astro';
+import { t } from '../i18n/utils';
+
+const locale = 'de';
+---
+
+<BaseLayout
+  title="Referenzen – Projekte & Partner | Astoria Systems"
+  description="Referenzen von Astoria Systems: Projekte aus Kommunikation, IT-Sicherheit, digitaler Infrastruktur und individueller Softwareentwicklung sowie unser Partnernetzwerk."
+  locale={locale}
+  keywords="Referenzen, Projekte, Case Studies, Partner, IT-Sicherheit, Softwareentwicklung, Astoria Systems"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: t(locale, 'nav.references'), url: '/referenzen' }]}
+>
+  <div class="pt-4">
+    <Container>
+      <Breadcrumbs locale={locale} items={[{ label: t(locale, 'nav.references'), href: '/referenzen' }]} />
+    </Container>
+  </div>
+  <References locale={locale} />
+  <Partners locale={locale} />
+  <CTA locale={locale} />
+</BaseLayout>
