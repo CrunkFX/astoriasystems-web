@@ -67,19 +67,16 @@ const ui = {
 
             {cs.gallery && (
               <div class="relative mb-6 h-64 sm:h-72 lg:h-auto lg:flex-1 lg:min-h-0" data-slider>
-                <div class="ref-slider-track no-scrollbar absolute inset-0 flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth rounded-xl">
-                  {cs.gallery.map((img) => (
-                    <div class="snap-center shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center">
-                      <img src={img.src} alt={img.alt} class:list={['h-full w-auto max-w-none', img.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
+                <div class="ref-slider-track no-scrollbar absolute inset-0 flex gap-3 overflow-x-auto rounded-xl">
+                  {[...cs.gallery, ...cs.gallery].map((img, i) => (
+                    <div
+                      class="shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center"
+                      {...(i >= cs.gallery.length ? { 'data-clone': true, 'aria-hidden': 'true' } : {})}
+                    >
+                      <img src={img.src} alt={img.alt} class:list={['ref-img h-full w-auto max-w-none cursor-zoom-in', img.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
                     </div>
                   ))}
                 </div>
-                <button type="button" class="ref-slider-prev absolute left-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 dark:bg-[#030712]/80 border border-[var(--color-border)] dark:border-white/15 shadow flex items-center justify-center hover:text-[var(--color-accent)] transition-colors" aria-label="Zurück">
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                </button>
-                <button type="button" class="ref-slider-next absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 dark:bg-[#030712]/80 border border-[var(--color-border)] dark:border-white/15 shadow flex items-center justify-center hover:text-[var(--color-accent)] transition-colors" aria-label="Weiter">
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                </button>
               </div>
             )}
 
@@ -142,33 +139,81 @@ const ui = {
   </Container>
 </Section>
 
-<script is:inline>
-  document.querySelectorAll('[data-slider]').forEach(function (s) {
-    var track = s.querySelector('.ref-slider-track');
-    if (!track) return;
-    function step() {
-      var first = track.querySelector('div');
-      return first ? first.offsetWidth + 12 : track.clientWidth * 0.8;
-    }
-    var prev = s.querySelector('.ref-slider-prev');
-    var next = s.querySelector('.ref-slider-next');
-    if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
-    if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+<!-- Lightbox / Bild-Popup -->
+<div id="ref-lightbox" class="hidden fixed inset-0 z-[100] items-center justify-center bg-black/90 p-4">
+  <button class="ref-lb-close absolute top-4 right-4 h-10 w-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Schließen">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+  </button>
+  <button class="ref-lb-prev absolute left-3 sm:left-6 h-11 w-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Zurück">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+  </button>
+  <img class="ref-lb-img max-h-[88vh] max-w-[92vw] object-contain rounded-xl shadow-2xl" alt="" />
+  <button class="ref-lb-next absolute right-3 sm:right-6 h-11 w-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Weiter">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+  </button>
+</div>
 
-    // Autoscroll (pausiert bei Interaktion, respektiert reduced motion)
+<script is:inline>
+  (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var timer = null;
-    function tick() {
-      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) {
-        track.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        track.scrollBy({ left: step(), behavior: 'smooth' });
-      }
+
+    // ---- Lightbox ----
+    var lb = document.getElementById('ref-lightbox');
+    var lbImg = lb && lb.querySelector('.ref-lb-img');
+    var list = [];
+    var idx = 0;
+    function renderLb() { var it = list[idx]; if (it && lbImg) { lbImg.src = it.src; lbImg.alt = it.alt || ''; } }
+    function openLb(items, i) { list = items; idx = i; renderLb(); lb.classList.remove('hidden'); lb.classList.add('flex'); document.body.style.overflow = 'hidden'; }
+    function closeLb() { lb.classList.add('hidden'); lb.classList.remove('flex'); document.body.style.overflow = ''; }
+    function navLb(d) { if (!list.length) return; idx = (idx + d + list.length) % list.length; renderLb(); }
+    if (lb) {
+      lb.querySelector('.ref-lb-close').addEventListener('click', closeLb);
+      lb.querySelector('.ref-lb-prev').addEventListener('click', function (e) { e.stopPropagation(); navLb(-1); });
+      lb.querySelector('.ref-lb-next').addEventListener('click', function (e) { e.stopPropagation(); navLb(1); });
+      lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+      document.addEventListener('keydown', function (e) {
+        if (lb.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeLb();
+        else if (e.key === 'ArrowLeft') navLb(-1);
+        else if (e.key === 'ArrowRight') navLb(1);
+      });
     }
-    function start() { if (reduce) return; stop(); timer = setInterval(tick, 3500); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    start();
-    ['pointerenter', 'focusin', 'touchstart'].forEach(function (ev) { s.addEventListener(ev, stop, { passive: true }); });
-    ['pointerleave', 'focusout', 'touchend'].forEach(function (ev) { s.addEventListener(ev, start, { passive: true }); });
-  });
+
+    // ---- Slider: fließendes Endlos-Autoscroll + Klick zum Vergrößern ----
+    document.querySelectorAll('[data-slider]').forEach(function (s) {
+      var track = s.querySelector('.ref-slider-track');
+      if (!track) return;
+
+      // Bildliste (nur Originale, ohne Klone) für die Lightbox
+      var originals = [];
+      Array.prototype.forEach.call(track.querySelectorAll('div:not([data-clone]) img'), function (im) {
+        originals.push({ src: im.getAttribute('src'), alt: im.getAttribute('alt') });
+      });
+      Array.prototype.forEach.call(track.querySelectorAll('img'), function (im) {
+        im.addEventListener('click', function () {
+          var src = im.getAttribute('src');
+          var i = 0;
+          for (var k = 0; k < originals.length; k++) { if (originals[k].src === src) { i = k; break; } }
+          openLb(originals, i);
+        });
+      });
+
+      if (reduce) return;
+      var pos = 0;
+      var speed = 0.5; // px pro Frame ~ langsam fließend
+      var paused = false;
+      function frame() {
+        if (!paused) {
+          var half = track.scrollWidth / 2;
+          pos += speed;
+          if (half > 0 && pos >= half) pos -= half;
+          track.scrollLeft = pos;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      ['pointerenter', 'touchstart', 'focusin'].forEach(function (ev) { s.addEventListener(ev, function () { paused = true; }, { passive: true }); });
+      ['pointerleave', 'touchend', 'focusout'].forEach(function (ev) { s.addEventListener(ev, function () { pos = track.scrollLeft; paused = false; }, { passive: true }); });
+    });
+  })();
 </script>
