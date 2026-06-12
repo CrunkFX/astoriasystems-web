@@ -1,5 +1,47 @@
 # Frappe 16 Login-Seite im Website-Look
 
+## Empfohlen: Eigene Login-Seite als Web Page (`login-webpage.html`)
+Komplett eigenständige, gebrandete Anmeldeseite – kein Patchen von Frappes
+Standard-Login. Voll unter eigener Kontrolle.
+
+**Anlegen:** Desk → **Webseite** (Web Page) → *Neu*:
+| Feld (DE) | Wert |
+| --- | --- |
+| Titel | `Anmelden` |
+| Pfad | `anmelden`  *(NICHT `login` – das ist von Frappe belegt)* |
+| Veröffentlicht | ✓ |
+| Inhaltstyp | `HTML` |
+| Dynamische Vorlage | ☐ aus |
+| Hauptteil (HTML) | kompletten Inhalt von `login-webpage.html` einfügen |
+
+Speichern → Seite ist unter `https://works.astoria.systems/anmelden` erreichbar.
+
+**Funktion:** meldet via `POST /api/method/login` an (Standard-Passwort-Login),
+zeigt Fehler inline, „Passwort vergessen" löst eine Reset-Mail aus, und leitet
+nach Erfolg auf `?redirect-to=…` bzw. die Home-Page weiter. Triangle-Hintergrund
++ Glas-Card + CI sind eingebaut; Frappes Navbar/Footer werden auf der Seite
+ausgeblendet.
+
+**Als Login verdrahten:** den „Login"-Button der Website auf
+`https://works.astoria.systems/anmelden?redirect-to=/helpdesk` zeigen lassen.
+Wer zusätzlich die Website-Session (Header „Hallo {Name}") behalten will, kann
+nach erfolgreichem Login stattdessen auf den OAuth-Flow zurückleiten.
+
+**Grenzen / Hinweise:**
+- Abgedeckt ist der **Standard-Passwort-Login**. **LDAP**, **E-Mail-Link** und
+  **2FA** haben eigene Endpunkte – sag Bescheid, wenn ihr die (z. B. LDAP)
+  primär nutzt, dann ergänze ich die Buttons mit dem passenden Aufruf.
+- CSRF-Token wird mitgesendet, falls vorhanden (`frappe.csrf_token`).
+
+---
+
+## Variante: Frappes Standard-Login nur stylen (CSS)
+Wenn du lieber Frappes eingebaute Login-Seite behalten und nur umfärben willst,
+nutze die folgenden Dateien (`login.scss`, `login-background.js`). Achtung:
+CSS-Patches können je nach Frappe-Version am Layout zerren.
+
+
+
 Stylt die Anmeldeseite (`/login`) im CI der Website (Glas-Card, Inter,
 Cyan-Akzent, Glow-Button).
 
