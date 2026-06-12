@@ -13,6 +13,28 @@ Theme** gestylt. Zwei Wege:
 2. **Sauber:** `login.scss` in eine App legen und via `app_include_css`
    einbinden (siehe `../desk_setup.md`, gleiche Methode).
 
+## Animierter Triangle-Hintergrund (wie auf der Website)
+`login-background.js` portiert den Trianglify-/Low-Poly-Mesh-Effekt der
+Website (animiertes Dreiecks-Mesh im Markenverlauf, ohne externe Libs).
+
+**Einbinden:**
+1. Inhalt von `login-background.js` in das Feld **JavaScript** des Website
+   Themes einfügen (läuft auf den Website-Seiten inkl. `/login`).
+   Alternativ via `app_include_js`.
+2. `login.scss` muss eingebunden sein – sobald der Canvas läuft, setzt das
+   Skript die Klasse `has-trianglify` auf `<body>`, wodurch der statische
+   Verlauf entfernt und das Mesh hinter der Glas-Login-Card sichtbar wird.
+
+**Optionen (oben im Skript):**
+- `RUN_EVERYWHERE = false` → nur Login-Seite. Auf `true` setzen, um das Mesh
+  auf **allen** Website-Seiten zu zeigen.
+- Reagiert auf Hell/Dunkel-Modus und `prefers-reduced-motion` (zeichnet dann
+  statisch, ohne Animation).
+
+> Performance-Hinweis: Der Effekt ist leichtgewichtig (Canvas, ein
+> `requestAnimationFrame`), bremst aber Eingabe-lastige Portalseiten unnötig –
+> daher standardmäßig nur auf der Login-Seite.
+
 ## Logo auf der Login-Seite
 Das Logo zieht Frappe aus den **Navbar Settings** (App Logo / Brand) bzw.
 **Website Settings**. Dort das Astoria-Logo setzen, dann erscheint es auch
