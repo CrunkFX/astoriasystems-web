@@ -1,8 +1,8 @@
 // Zentrale Konfiguration der Frappe-Portal-Anbindung.
 // PORTAL_URL = öffentliche Basis-URL der Frappe-Instanz, auf die
 // Helpdesk/Wiki/Konto direkt verlinken. In der Dev-Umgebung anpassen,
-// sobald Frappe erreichbar ist (z. B. https://erp.astoria.systems).
-export const PORTAL_URL = 'https://erp.astoria.systems';
+// sobald Frappe erreichbar ist (z. B. https://works.astoria.systems).
+export const PORTAL_URL = 'https://works.astoria.systems';
 
 export interface PortalLink {
   label: string;
