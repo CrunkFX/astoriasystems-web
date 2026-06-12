@@ -1,0 +1,19 @@
+{
+  "doctype": "Website Theme",
+  "theme": "Astoria Systems",
+  "module": "Website",
+  "google_font": "Inter",
+  "font_properties": "wght@300;400;500;600;700;800;900",
+  "font_size": "16px",
+  "button_rounded_corners": 1,
+  "button_shadows": 0,
+  "button_gradients": 1,
+  "primary_color": "#00e5ff",
+  "text_color": "#4f4f4f",
+  "light_color": "#f8fafc",
+  "dark_color": "#030712",
+  "background_color": "#ffffff",
+  "custom_overrides": "$ci-accent: #00e5ff;\n$ci-accent-dark: #2e9aa0;\n$primary: $ci-accent;\n$secondary: $ci-accent-dark;\n$body-color: #4f4f4f;\n$body-bg: #ffffff;\n$light: #f8fafc;\n$dark: #030712;\n$border-color: #e2e8f0;\n$link-color: $ci-accent-dark;\n$link-hover-color: darken($ci-accent-dark, 8%);\n$font-family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n$headings-font-weight: 700;\n$headings-color: #030712;\n$border-radius: 0.5rem;\n$border-radius-lg: 0.75rem;\n$input-btn-focus-color: rgba(0, 229, 255, 0.35);",
+  "custom_scss": ":root{--ci-accent:#00e5ff;--ci-accent-light:#3fe0d0;--ci-accent-dark:#2e9aa0;--ci-accent-glow:rgba(0,229,255,.4);--ci-border:#e2e8f0;}body{-webkit-font-smoothing:antialiased;}::selection{background-color:var(--ci-accent);color:#fff;}.btn-primary{background:linear-gradient(135deg,var(--ci-accent),#3fe0d0);border:none;color:#052b30;font-weight:600;transition:all .25s ease;}.btn-primary:hover,.btn-primary:focus{color:#052b30;transform:translateY(-1px);box-shadow:0 4px 20px var(--ci-accent-glow);}.glass{background:rgba(255,255,255,.75);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border:1px solid rgba(226,232,240,.5);border-radius:.75rem;box-shadow:0 4px 16px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.5);}.gradient-text{background:linear-gradient(135deg,#00e5ff,#3fe0d0,#1ed6d6,#2e9aa0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}.card,.web-card{border-radius:.75rem;border-color:var(--ci-border);}",
+  "js": ""
+}

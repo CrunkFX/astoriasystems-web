@@ -1,0 +1,93 @@
+/* ============================================================
+   Astoria Systems – Portal CI (Helpdesk / Wiki / Drive / Raven)
+   On-Brand: Farben, Inter-Font, Akzent, Buttons, Links.
+   Global einbinden via app_include_css (siehe
+   frappe-theme/desk_setup.md, gleiche Methode mit dieser Datei).
+   Variablennamen/Selektoren je App-Version ggf. im DevTools
+   prüfen und anpassen.
+   ============================================================ */
+
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800');
+
+:root {
+  --ci-accent: #00e5ff;
+  --ci-accent-light: #3fe0d0;
+  --ci-accent-dark: #2e9aa0;
+  --ci-text: #4f4f4f;
+  --ci-surface: #ffffff;
+  --ci-surface-2: #f8fafc;
+  --ci-surface-3: #f1f5f9;
+  --ci-border: #e2e8f0;
+  --ci-dark-bg: #030712;
+
+  /* frappe-ui / Portal-Tokens überschreiben */
+  --primary: var(--ci-accent-dark);
+  --primary-color: var(--ci-accent-dark);
+  --blue-500: var(--ci-accent-dark);
+  --blue-600: var(--ci-accent-dark);
+  --text-color: var(--ci-text);
+  --text-color-heading: var(--ci-dark-bg);
+  --bg-color: var(--ci-surface-2);
+  --card-bg: var(--ci-surface);
+  --border-color: var(--ci-border);
+  --border-radius: 0.5rem;
+  --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body,
+#app,
+.app-content {
+  font-family: var(--font-stack) !important;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ci-text);
+}
+
+/* Kopfzeile / Navigation der Portal-Apps */
+.navbar,
+header.header,
+.app-header,
+.standard-navbar {
+  background: var(--ci-surface) !important;
+  border-bottom: 1px solid var(--ci-border) !important;
+}
+
+/* Primär-Buttons im Glow-Gradient der Website */
+button.btn-primary,
+.btn-primary,
+.button.is-primary {
+  background: linear-gradient(135deg, var(--ci-accent), var(--ci-accent-light)) !important;
+  border: none !important;
+  color: #052b30 !important;
+  font-weight: 600 !important;
+}
+button.btn-primary:hover,
+.btn-primary:hover {
+  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.35) !important;
+}
+
+/* Links & aktive Elemente im Markenakzent */
+a {
+  color: var(--ci-accent-dark);
+}
+.active,
+[aria-selected="true"] {
+  color: var(--ci-accent-dark) !important;
+}
+
+/* Karten / Panels dezent angleichen */
+.card,
+.panel,
+.frappe-card {
+  border-radius: 0.75rem;
+  border-color: var(--ci-border);
+}
+
+/* Fokus + Auswahl im CI */
+:focus-visible {
+  outline: 2px solid var(--ci-accent);
+  outline-offset: 2px;
+}
+::selection {
+  background-color: var(--ci-accent);
+  color: #fff;
+}

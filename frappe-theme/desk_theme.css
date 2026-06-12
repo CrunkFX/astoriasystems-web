@@ -1,0 +1,123 @@
+/* ============================================================
+   Astoria Systems – Desk Theme (/app Backend)
+   Fokus: Hintergrund + Header (Navbar) + Seitenmenü
+   ------------------------------------------------------------
+   Das Desk nutzt NICHT das Website Theme. Dieses CSS global
+   einbinden – siehe README "Desk im CI".
+
+   Globales Desk-CSS geht in Frappe 16 NICHT mehr über einen
+   Client Script (dort gibt es nur Form/List mit DocType).
+   Korrekter Weg: eigene App + hooks.py:
+     app_include_css = ["/assets/<deine_app>/css/desk_theme.css"]
+
+   Selektoren können je Frappe-Version minimal abweichen –
+   im DevTools-Inspector prüfen und ggf. anpassen.
+   ============================================================ */
+
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800');
+
+:root {
+  --ci-accent: #00e5ff;
+  --ci-accent-light: #3fe0d0;
+  --ci-accent-dark: #2e9aa0;
+  --ci-surface: #ffffff;
+  --ci-surface-2: #f8fafc;
+  --ci-surface-3: #f1f5f9;
+  --ci-border: #e2e8f0;
+  --ci-text: #4f4f4f;
+  --ci-dark-bg: #030712;
+
+  --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ============================================================
+   1) HINTERGRUND
+   ============================================================ */
+/* Flache Variante (Standard) */
+body,
+.layout-main-section,
+.page-body,
+.main-section {
+  background-color: var(--ci-surface-2) !important;
+  font-family: var(--font-stack) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Optional: dezenter CI-Verlauf wie auf der Website.
+   Zum Aktivieren die untenstehende Regel einkommentieren
+   (und ggf. die flache background-color oben weglassen). */
+/*
+body {
+  background-color: var(--ci-surface-2) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(0,229,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(63,224,208,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(30,214,214,0.05) 0%, transparent 50%) !important;
+  background-attachment: fixed !important;
+}
+*/
+
+/* ============================================================
+   2) HEADER / NAVBAR
+   ============================================================ */
+.navbar,
+.navbar.navbar-default {
+  background: var(--ci-surface) !important;
+  border-bottom: 1px solid var(--ci-border) !important;
+  box-shadow: 0 1px 0 rgba(0, 229, 255, 0.08);
+}
+
+/* Akzent-Linie unter der Navbar (optional, im CI-Look) */
+.navbar.navbar-default {
+  border-image: linear-gradient(90deg,
+    transparent, rgba(0, 229, 255, 0.5), transparent) 1;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link {
+  color: var(--ci-text) !important;
+}
+.navbar .navbar-nav .nav-link:hover {
+  color: var(--ci-accent-dark) !important;
+}
+
+/* ============================================================
+   3) SEITENMENÜ (Workspace-Sidebar + Listen-Sidebar)
+   ============================================================ */
+.body-sidebar,
+.desk-sidebar,
+.standard-sidebar,
+.layout-side-section {
+  background: var(--ci-surface) !important;
+  border-right: 1px solid var(--ci-border) !important;
+}
+
+/* Einträge */
+.standard-sidebar-item,
+.sidebar-item-label {
+  color: var(--ci-text);
+}
+.standard-sidebar-item:hover {
+  background: var(--ci-surface-3);
+  border-radius: 0.5rem;
+}
+
+/* Aktiver/ausgewählter Eintrag im Markenakzent */
+.standard-sidebar-item.selected {
+  background: rgba(0, 229, 255, 0.12) !important;
+  border-radius: 0.5rem;
+}
+.standard-sidebar-item.selected .sidebar-item-label,
+.standard-sidebar-item.selected .sidebar-item-icon use {
+  color: var(--ci-accent-dark) !important;
+  fill: var(--ci-accent-dark) !important;
+  font-weight: 600;
+}
+
+::selection {
+  background-color: var(--ci-accent);
+  color: #fff;
+}
