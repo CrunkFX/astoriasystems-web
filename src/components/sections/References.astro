@@ -1,0 +1,109 @@
+---
+import type { Locale } from '../../i18n/config';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import GlassCard from '../ui/GlassCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const content = {
+  de: {
+    eyebrow: 'Referenzen',
+    title: 'Projekte & Partner, die auf uns setzen',
+    subtitle:
+      'Von Kommunikation über IT-Sicherheit bis zu individueller Software – ein Einblick in unsere Arbeit und unser Partnernetzwerk.',
+    highlights: 'Projekt-Highlights',
+    projects: [
+      {
+        tag: 'Kommunikation',
+        title: 'Unternehmensweite Kommunikationsplattform',
+        desc: 'VoIP-Telefonie, Team- und Kundenchat sowie KI-gestützte Bots – interne und externe Kommunikation aus einer Hand.',
+      },
+      {
+        tag: 'IT-Sicherheit',
+        title: 'Sichere, DSGVO-konforme Infrastruktur',
+        desc: 'Härtung, Verschlüsselung und kontinuierliches Monitoring für ausfallsichere Systeme mit Hosting in der EU.',
+      },
+      {
+        tag: 'Infrastruktur',
+        title: 'Skalierbare Cloud- & Server-Landschaften',
+        desc: 'Planung, Migration und Betrieb performanter Infrastruktur – flexibel mitwachsend mit dem Unternehmen.',
+      },
+      {
+        tag: 'Software',
+        title: 'Individuelle Software, Web- & Mobile-Apps',
+        desc: 'Maßgeschneiderte ERP-/CRM-Systeme und Anwendungen, exakt auf bestehende Prozesse zugeschnitten.',
+      },
+    ],
+  },
+  en: {
+    eyebrow: 'References',
+    title: 'Projects & partners who rely on us',
+    subtitle:
+      'From communication and IT security to custom software – a look at our work and our partner network.',
+    highlights: 'Project highlights',
+    projects: [
+      {
+        tag: 'Communication',
+        title: 'Company-wide communication platform',
+        desc: 'VoIP telephony, team and customer chat plus AI-powered bots – internal and external communication from a single source.',
+      },
+      {
+        tag: 'IT security',
+        title: 'Secure, GDPR-compliant infrastructure',
+        desc: 'Hardening, encryption and continuous monitoring for resilient systems hosted in the EU.',
+      },
+      {
+        tag: 'Infrastructure',
+        title: 'Scalable cloud & server landscapes',
+        desc: 'Planning, migration and operation of high-performance infrastructure that grows with your business.',
+      },
+      {
+        tag: 'Software',
+        title: 'Custom software, web & mobile apps',
+        desc: 'Tailored ERP/CRM systems and applications, built precisely around your existing processes.',
+      },
+    ],
+  },
+}[locale];
+---
+
+<Section class="!pt-28 lg:!pt-32 !pb-16 lg:!pb-24 overflow-hidden">
+  <Container>
+    <div class="max-w-3xl" data-reveal>
+      <span class="inline-block text-sm font-medium text-[var(--color-accent)] uppercase tracking-widest mb-4">
+        {content.eyebrow}
+      </span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 break-words hyphens-auto" data-text-reveal>
+        {content.title}
+      </h1>
+      <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
+        {content.subtitle}
+      </p>
+    </div>
+
+    <!--
+      Projekt-Highlights: derzeit als repräsentative Beispiele aus unseren
+      Leistungsbereichen. Bei Bedarf durch konkrete Kundenprojekte / Case
+      Studies ersetzen (Titel, Branche, Ergebnis).
+    -->
+    <h2 class="text-2xl md:text-3xl font-bold mt-16 mb-8" data-reveal>{content.highlights}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {content.projects.map((p) => (
+        <GlassCard class="p-6 glass-hover">
+          <span class="inline-block text-xs font-semibold text-[var(--color-accent)] uppercase tracking-widest mb-3">
+            {p.tag}
+          </span>
+          <h3 class="text-xl font-bold mb-2 break-words hyphens-auto">{p.title}</h3>
+          <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed break-words">
+            {p.desc}
+          </p>
+        </GlassCard>
+      ))}
+    </div>
+  </Container>
+</Section>
