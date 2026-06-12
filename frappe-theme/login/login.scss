@@ -1,0 +1,102 @@
+// ============================================================
+// Astoria Systems – Frappe Login-Seite im Website-Look
+// ------------------------------------------------------------
+// Die Frappe-Login-Seite (/login) läuft über die Website-Schicht
+// und wird vom Website Theme gestylt. Diesen Code an das Feld
+// "Benutzerdefiniertes SCSS" des Website Themes ANHÄNGEN
+// (zusätzlich zu custom_scss.scss) – oder via app_include_css.
+//
+// Selektoren sind auf die Login-Karte beschränkt, damit andere
+// Portal-Seiten nicht beeinträchtigt werden.
+// ============================================================
+
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800');
+
+// CI-Verlaufshintergrund wie auf der Website – nur auf der Login-Seite
+.login-content,
+.login-content.container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(63, 224, 208, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(30, 214, 214, 0.06) 0%, transparent 50%);
+}
+
+// Login-Karte als Glas-Card im CI
+.login-content .page-card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 0.9rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  padding: 2rem 1.75rem;
+}
+
+// Kopf der Karte (Logo + Titel)
+.login-content .page-card-head {
+  border-bottom: none;
+  text-align: center;
+}
+.login-content .page-card-head .indicator,
+.login-content .page-card-head h4 {
+  color: #030712;
+  font-weight: 700;
+}
+
+// Akzent-Linie über der Karte
+.login-content .page-card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 56px;
+  margin: 0 auto 1.25rem auto;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #00e5ff, #3fe0d0);
+}
+
+// Eingabefelder
+.login-content .form-control {
+  border-radius: 0.5rem;
+  border-color: #e2e8f0;
+}
+.login-content .form-control:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.25);
+}
+
+// Primär-Button (Anmelden) im Glow-Gradient
+.login-content .btn-primary,
+.login-content .btn-login {
+  background: linear-gradient(135deg, #00e5ff, #3fe0d0) !important;
+  border: none !important;
+  color: #052b30 !important;
+  font-weight: 600 !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease;
+}
+.login-content .btn-primary:hover,
+.login-content .btn-login:hover {
+  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+// Links (Passwort vergessen / Registrieren) im Markenakzent
+.login-content a {
+  color: #2e9aa0;
+}
+.login-content a:hover {
+  color: #1e7a80;
+}
+
+// "Login mit"-Trenner & Social-Buttons dezent
+.login-content .social-logins .btn,
+.login-content .login-with-email {
+  border-radius: 0.5rem;
+}
