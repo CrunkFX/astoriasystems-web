@@ -43,17 +43,22 @@ export const onRequestGet: PagesFunction<AuthEnv> = async (context) => {
   }
 
   // Code -> Token
+  // Token-Endpunkt-Authentifizierungsmethode = "Client Secret Basic":
+  // client_id/secret kommen als HTTP-Basic-Header, nicht im Body.
+  const basic = btoa(`${env.OAUTH_CLIENT_ID}:${env.OAUTH_CLIENT_SECRET}`);
   const tokenRes = await fetch(
     frappeEndpoint(env, "/api/method/frappe.integrations.oauth2.get_token"),
     {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${basic}`,
+      },
       body: new URLSearchParams({
         grant_type: "authorization_code",
         code,
         redirect_uri: getRedirectUri(env, request),
         client_id: env.OAUTH_CLIENT_ID,
-        client_secret: env.OAUTH_CLIENT_SECRET,
         code_verifier: flow.verifier,
       }),
     }

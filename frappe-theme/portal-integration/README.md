@@ -28,19 +28,28 @@ bereits authentifizierte Portal-App, ohne zweites Login.
 ## 1. Frappe-Seite einrichten (Identity-Provider)
 
 ### a) OAuth Client anlegen
-Im Desk nach **OAuth Client** → *Neu*:
+Im Desk nach **OAuth Client** → *Neu* (deutsche Maske):
 
-| Feld | Wert |
+| Feld (DE) | Wert |
 | --- | --- |
-| App Name | `Astoria Website` |
-| Redirect URIs | `https://astoria.systems/api/auth/callback` |
-| Default Redirect URI | `https://astoria.systems/api/auth/callback` |
-| Grant Type | `Authorization Code` |
-| Response Type | `Code` |
-| Scopes | `openid all` |
-| Skip Authorization | ✓ (kein Zustimmungs-Dialog bei jedem Login) |
+| App-Name (Client-Name) | `Astoria Website` |
+| Geltungsbereiche | `all openid` |
+| Standard Weiterleitungs URI | `https://astoria.systems/api/auth/callback` |
+| Weiterleitungs-URIs | `https://astoria.systems/api/auth/callback` |
+| Autorisierung überspringen | ✓ |
+| Erlaubte Rollen | leer (oder gezielt eine Kundenrolle) |
+| Grant Typ | `Autorisierungscode` |
+| Antworttyp | `Code` |
+| Token-Endpunkt-Authentifizierungsmethode | `Client Secret Basic` |
 
 Nach dem Speichern erhältst du **Client ID** und **Client Secret**.
+
+> **Token-Auth-Methode muss zum Code passen:** `callback.ts` sendet das Secret
+> als HTTP-Basic-Header → Einstellung **`Client Secret Basic`** verwenden.
+> Wählst du stattdessen `Client Secret Post`, muss das Secret im Body stehen
+> (dann in `callback.ts` `client_secret` ins `URLSearchParams` statt in den
+> `Authorization`-Header). Bei `None` (public client) entfällt das Secret und
+> es zählt nur PKCE.
 
 ### b) OpenID/Token aktivieren
 - Sicherstellen, dass **Social Login Key**/OpenID in Frappe aktiv ist
