@@ -20,6 +20,23 @@ interface ContactForm {
   message: string;
 }
 
+// Temporärer Diagnose-Endpunkt: GET /api/contact?debug=env
+// Zeigt nur, WELCHE Variablennamen die Funktion sieht (keine Werte).
+export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+  const url = new URL(request.url);
+  if (url.searchParams.get("debug") !== "env") {
+    return new Response("Not found", { status: 404 });
+  }
+  const e = env as unknown as Record<string, unknown>;
+  const allKeys = Object.keys(e);
+  const relevantKeys = allKeys.filter((k) => /smtp|mail|contact/i.test(k));
+  const seen: Record<string, string> = {};
+  for (const k of ["SMTP_HOST", "SMTP_USER", "SMTP_PASS", "SMTP_PORT", "SMTP_SECURE", "MAIL_FROM", "CONTACT_EMAIL"]) {
+    seen[k] = typeof e[k]; // "string" = vorhanden, "undefined" = fehlt
+  }
+  return json({ host: url.host, relevantKeys, seen }, 200);
+};
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
