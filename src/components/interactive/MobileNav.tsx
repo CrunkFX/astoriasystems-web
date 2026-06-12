@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
+import { createPortal } from 'preact/compat';
 
 interface NavItem {
   label: string;
@@ -57,11 +58,11 @@ export default function MobileNav({ locale, navItems, currentPath }: Props) {
         )}
       </button>
 
-      {isOpen && (
+      {isOpen && typeof document !== 'undefined' && createPortal(
         <>
           {/* Backdrop */}
           <div
-            class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+            class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm lg:hidden"
             onClick={() => setIsOpen(false)}
           />
           {/* Panel */}
@@ -70,7 +71,7 @@ export default function MobileNav({ locale, navItems, currentPath }: Props) {
             id="mobile-nav"
             role="dialog"
             aria-modal="true"
-            class="fixed top-0 right-0 bottom-0 z-50 w-72 bg-[var(--color-surface-primary)] dark:bg-[var(--color-dark-surface)] shadow-2xl lg:hidden overflow-y-auto"
+            class="fixed top-0 right-0 bottom-0 z-[70] w-72 max-w-[85vw] bg-[var(--color-surface-primary)] dark:bg-[var(--color-dark-surface)] shadow-2xl lg:hidden overflow-y-auto"
           >
             <div class="flex items-center justify-between p-4 border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
               <img src="/logo-light.svg" alt="Astoria Systems" class="h-8 w-auto dark:hidden" />
@@ -103,7 +104,8 @@ export default function MobileNav({ locale, navItems, currentPath }: Props) {
               })}
             </nav>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </>
   );

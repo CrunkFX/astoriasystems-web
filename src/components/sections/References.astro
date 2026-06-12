@@ -49,8 +49,8 @@ const ui = {
           )}
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-          <div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+          <div class="flex flex-col">
             <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-5 break-words">
               {cs.lead[locale]}
             </p>
@@ -64,8 +64,27 @@ const ui = {
                 </li>
               ))}
             </ul>
+
+            {cs.gallery && (
+              <div class="relative mb-6 h-72 lg:h-auto lg:flex-1 lg:min-h-[16rem]" data-slider>
+                <div class="ref-slider-track flex h-full gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth rounded-xl">
+                  {cs.gallery.map((img) => (
+                    <div class="snap-center shrink-0 h-full rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] flex items-center justify-center">
+                      <img src={img.src} alt={img.alt} class:list={['h-full w-auto max-w-none', img.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
+                    </div>
+                  ))}
+                </div>
+                <button type="button" class="ref-slider-prev absolute left-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 dark:bg-[#030712]/80 border border-[var(--color-border)] dark:border-white/15 shadow flex items-center justify-center hover:text-[var(--color-accent)] transition-colors" aria-label="Zurück">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                </button>
+                <button type="button" class="ref-slider-next absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/90 dark:bg-[#030712]/80 border border-[var(--color-border)] dark:border-white/15 shadow flex items-center justify-center hover:text-[var(--color-accent)] transition-colors" aria-label="Weiter">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                </button>
+              </div>
+            )}
+
             {cs.links && (
-              <div class="flex flex-wrap gap-3">
+              <div class="flex flex-wrap gap-3 mt-auto">
                 {cs.links.map((l) => (
                   <a href={l.href} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-[var(--color-border)] dark:border-white/15 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors">
                     {l.label}
@@ -106,16 +125,6 @@ const ui = {
             </GlassCard>
           )}
         </div>
-
-        {cs.gallery && (
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
-            {cs.gallery.map((img) => (
-              <div class="rounded-xl overflow-hidden border border-[var(--color-border)] dark:border-white/10 bg-[var(--color-surface-tertiary)] dark:bg-[var(--color-dark-surface-secondary)] aspect-[3/4] flex items-center justify-center">
-                <img src={img.src} alt={img.alt} class:list={['h-full w-full', img.fit === 'contain' ? 'object-contain p-3' : 'object-cover']} loading="lazy" onerror="this.closest('div').remove()" />
-              </div>
-            ))}
-          </div>
-        )}
       </article>
     ))}
 
@@ -132,3 +141,18 @@ const ui = {
     </div>
   </Container>
 </Section>
+
+<script is:inline>
+  document.querySelectorAll('[data-slider]').forEach(function (s) {
+    var track = s.querySelector('.ref-slider-track');
+    if (!track) return;
+    function step() {
+      var first = track.querySelector('div');
+      return first ? first.offsetWidth + 12 : track.clientWidth * 0.8;
+    }
+    var prev = s.querySelector('.ref-slider-prev');
+    var next = s.querySelector('.ref-slider-next');
+    if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  });
+</script>
