@@ -84,8 +84,8 @@ export const caseStudies: CaseStudy[] = [
       role: { de: 'CSO, mkm International GmbH', en: 'CSO, mkm International GmbH' },
       photo: '/images/references/markus-schlegel.jpg',
       quote: {
-        de: '„Astoria Systems hat mit mkmScan etwas umgesetzt, das es so am Markt nicht gibt: eine direkte, verlässliche Wohnflächenberechnung allein per Smartphone. Die Verbindung aus Apple-LiDAR und Texturerfassung hebt Genauigkeit und Auswertung auf ein völlig neues Niveau – technologisch ein echter Sprung und in der Umsetzung herausragend."',
-        en: '“With mkmScan, Astoria Systems delivered something the market simply didn’t have: reliable living-space measurement from a smartphone alone. Combining Apple LiDAR with texture capture takes accuracy and analysis to a whole new level – a real technological leap, brilliantly executed.”',
+        de: '„Das Team von Astoria Systems hat mit mkmScan etwas umgesetzt, das es so am Markt nicht gibt: eine direkte, verlässliche Wohnflächenberechnung allein per Smartphone. Die Verbindung aus Apple-LiDAR und Texturerfassung hebt Genauigkeit und Auswertung auf ein völlig neues Niveau – technologisch ein echter Sprung und in der Umsetzung herausragend."',
+        en: '“With mkmScan, the team at Astoria Systems delivered something the market simply didn’t have: reliable living-space measurement from a smartphone alone. Combining Apple LiDAR with texture capture takes accuracy and analysis to a whole new level – a real technological leap, brilliantly executed.”',
       },
       interview: [
         {
