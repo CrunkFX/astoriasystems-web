@@ -118,30 +118,45 @@ const pins = [
     width: 100%;
     height: auto;
     display: block;
-    filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.18));
   }
+  /* Hell: dunkleres Teal für gute Sichtbarkeit auf hellem Grund */
   .de-map #Bundesrepublik_Deutschland path {
-    fill: rgba(0, 229, 255, 0.12) !important;
-    stroke: rgba(0, 229, 255, 0.40) !important;
-    stroke-width: 0.5 !important;
+    fill: rgba(46, 154, 160, 0.20) !important;
+    stroke: rgba(46, 154, 160, 0.55) !important;
+    stroke-width: 0.55 !important;
   }
   .de-map #Bundesrepublik_Deutschland #path3789 {
     fill: none !important;
+    stroke: #2e9aa0 !important;
+    stroke-width: 1.5 !important;
+    filter: drop-shadow(0 0 2px rgba(46, 154, 160, 0.45));
+  }
+  /* Dunkel: helles Cyan + Glow */
+  .dark .de-map > svg#Bundesrepublik_Deutschland {
+    filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.18));
+  }
+  .dark .de-map #Bundesrepublik_Deutschland path {
+    fill: rgba(0, 229, 255, 0.13) !important;
+    stroke: rgba(0, 229, 255, 0.42) !important;
+  }
+  .dark .de-map #Bundesrepublik_Deutschland #path3789 {
     stroke: rgba(0, 229, 255, 0.85) !important;
-    stroke-width: 1.3 !important;
     filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.55));
   }
+
+  /* Labels: starker Halo in Hintergrundfarbe → in beiden Themes lesbar */
   .de-pin-label {
     font-size: 15px;
-    font-weight: 600;
-    fill: var(--color-text-primary);
+    font-weight: 700;
+    fill: #064e52;
     paint-order: stroke;
-    stroke: var(--color-surface-primary);
-    stroke-width: 3px;
+    stroke: #f8fafc;
+    stroke-width: 4.5px;
     stroke-linejoin: round;
   }
-  :global(.dark) .de-pin-label {
-    fill: #ffffff;
-    stroke: rgba(3, 7, 18, 0.7);
+  .dark .de-pin-label {
+    fill: #eafdff;
+    stroke: #030712;
+    stroke-width: 4.5px;
   }
 </style>
