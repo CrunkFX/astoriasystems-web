@@ -111,17 +111,25 @@ const pins = [
 </Section>
 
 <style is:global>
-  /* Eingebettete offizielle Karte responsiv + im CI umfärben */
-  .de-map > svg { width: 100%; height: auto; display: block; }
-  .de-map > svg path {
-    fill: rgba(0, 229, 255, 0.10) !important;
-    stroke: rgba(0, 229, 255, 0.45) !important;
-    stroke-width: 0.6 !important;
+  /* Eingebettete offizielle Karte responsiv + im CI umfärben.
+     Gezielt auf die Karten-SVG (#Bundesrepublik_Deutschland), damit die
+     Pin-Overlay-SVG nicht mitgefärbt wird. */
+  .de-map > svg#Bundesrepublik_Deutschland {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.18));
   }
-  .de-map > svg #path3789 {
+  .de-map #Bundesrepublik_Deutschland path {
+    fill: rgba(0, 229, 255, 0.12) !important;
+    stroke: rgba(0, 229, 255, 0.40) !important;
+    stroke-width: 0.5 !important;
+  }
+  .de-map #Bundesrepublik_Deutschland #path3789 {
     fill: none !important;
-    stroke: rgba(0, 229, 255, 0.75) !important;
-    stroke-width: 1.2 !important;
+    stroke: rgba(0, 229, 255, 0.85) !important;
+    stroke-width: 1.3 !important;
+    filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.55));
   }
   .de-pin-label {
     font-size: 15px;
