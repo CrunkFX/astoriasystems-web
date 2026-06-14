@@ -29,12 +29,12 @@ const locations = [
   {
     name: 'Kleve',
     badge: { de: 'Standort', en: 'Office' },
-    lines: ['c/o mkm International GmbH', 'Boschstraße 16', 'Kleve'],
+    lines: ['c/o mkm International GmbH', 'Boschstraße 16', '47533 Kleve'],
     note: { de: 'Standort', en: 'Office' },
     lat: 51.788,
     lon: 6.138,
     labelDir: 'right' as const,
-    maps: 'https://www.google.com/maps/search/?api=1&query=Boschstra%C3%9Fe%2016%2C%20Kleve',
+    maps: 'https://www.google.com/maps/search/?api=1&query=Boschstra%C3%9Fe%2016%2C%2047533%20Kleve',
   },
 ];
 
@@ -88,6 +88,14 @@ const pins = locations.map((l) => ({ name: l.name, x: px(l.lon), y: py(l.lat), d
               <circle cx="2" cy="2" r="1" fill="#00e5ff" fill-opacity="0.18" />
             </pattern>
             <clipPath id="locClip"><path d={outlinePath} /></clipPath>
+            <radialGradient id="pin3d" cx="35%" cy="28%" r="80%">
+              <stop offset="0%" stop-color="#9af4ff" />
+              <stop offset="42%" stop-color="#00e5ff" />
+              <stop offset="100%" stop-color="#0b6f7a" />
+            </radialGradient>
+            <filter id="pinShadow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="1.6" />
+            </filter>
           </defs>
 
           <!-- Fläche + Textur -->
@@ -96,13 +104,14 @@ const pins = locations.map((l) => ({ name: l.name, x: px(l.lon), y: py(l.lat), d
           <!-- Umriss -->
           <path d={outlinePath} fill="none" stroke="#00e5ff" stroke-opacity="0.55" stroke-width="1.6" stroke-linejoin="round" filter="url(#locGlow)" />
 
-          <!-- Pins -->
+          <!-- 3D-Pins -->
           {pins.map((p) => (
-            <g class="loc-pin-g">
-              <circle cx={p.x} cy={p.y} r="6" fill="#00e5ff" class="loc-pin-pulse" />
-              <circle cx={p.x} cy={p.y} r="6" fill="#00e5ff" />
-              <circle cx={p.x} cy={p.y} r="2.2" fill="#03121a" />
-              <text x={p.x + 12} y={p.y + 4} class="loc-pin-label" fill="currentColor">{p.name}</text>
+            <g transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`}>
+              <ellipse cx="0" cy="2" rx="7.5" ry="2.6" fill="#000" opacity="0.35" filter="url(#pinShadow)" />
+              <path d="M0 0 C -5 -9 -11 -13 -11 -19 A 11 11 0 1 1 11 -19 C 11 -13 5 -9 0 0 Z" fill="url(#pin3d)" stroke="#0a6b75" stroke-width="0.6" />
+              <circle cx="0" cy="-19" r="4.6" fill="#06141b" />
+              <circle cx="-3.2" cy="-23" r="1.7" fill="#ffffff" opacity="0.7" />
+              <text x="15" y="-15" class="loc-pin-label" fill="currentColor">{p.name}</text>
             </g>
           ))}
         </svg>
@@ -143,10 +152,4 @@ const pins = locations.map((l) => ({ name: l.name, x: px(l.lon), y: py(l.lat), d
   .loc-map { color: var(--color-text-primary); }
   :global(.dark) .loc-map { color: var(--color-dark-text-primary); }
   .loc-pin-label { font-size: 16px; font-weight: 600; }
-  .loc-pin-pulse { transform-box: fill-box; transform-origin: center; animation: locPulse 2.2s ease-out infinite; }
-  @keyframes locPulse {
-    0% { transform: scale(1); opacity: 0.7; }
-    100% { transform: scale(3.2); opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) { .loc-pin-pulse { animation: none; opacity: 0; } }
 </style>
