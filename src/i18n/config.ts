@@ -16,6 +16,7 @@ export const routeMap: Record<Locale, Record<string, string>> = {
     'products.infrastructure': '/produkte/infrastruktur',
     'products.development': '/produkte/entwicklung',
     references: '/referenzen',
+    expertise: '/expertise',
     pricing: '/preise',
     about: '/ueber-uns',
     contact: '/kontakt',
@@ -32,6 +33,7 @@ export const routeMap: Record<Locale, Record<string, string>> = {
     'products.infrastructure': '/en/products/infrastructure',
     'products.development': '/en/products/development',
     references: '/en/references',
+    expertise: '/en/expertise',
     pricing: '/en/pricing',
     about: '/en/about',
     contact: '/en/contact',
@@ -65,6 +67,7 @@ export function getNavItems(locale: Locale) {
     ? {
         home: 'Home',
         products: 'Produkte',
+        expertise: 'Expertise',
         references: 'Referenzen',
         pricing: 'Preise',
         about: 'Über uns',
@@ -73,6 +76,7 @@ export function getNavItems(locale: Locale) {
     : {
         home: 'Home',
         products: 'Products',
+        expertise: 'Expertise',
         references: 'References',
         pricing: 'Pricing',
         about: 'About',

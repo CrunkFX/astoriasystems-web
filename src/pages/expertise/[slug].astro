@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/seo/Breadcrumbs.astro';
+import ExpertiseArticle from '../../components/sections/ExpertiseArticle.astro';
+import CTA from '../../components/sections/CTA.astro';
+import { t } from '../../i18n/utils';
+import { expertiseAreas } from '../../data/expertise';
+
+export function getStaticPaths() {
+  return expertiseAreas.map((area) => ({ params: { slug: area.slug }, props: { area } }));
+}
+
+const locale = 'de';
+const { area } = Astro.props;
+---
+
+<BaseLayout
+  title={`${area.title.de} | Astoria Systems`}
+  description={area.summary.de}
+  locale={locale}
+  keywords={area.tags.join(', ')}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: t(locale, 'nav.expertise'), url: '/expertise' },
+    { name: area.title.de, url: `/expertise/${area.slug}` },
+  ]}
+>
+  <ExpertiseArticle area={area} locale={locale}>
+    <Breadcrumbs
+      slot="breadcrumb"
+      locale={locale}
+      items={[
+        { label: t(locale, 'nav.expertise'), href: '/expertise' },
+        { label: area.title.de, href: `/expertise/${area.slug}` },
+      ]}
+    />
+  </ExpertiseArticle>
+  <CTA locale={locale} />
+</BaseLayout>

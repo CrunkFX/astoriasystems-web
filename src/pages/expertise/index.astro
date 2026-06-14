@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/seo/Breadcrumbs.astro';
+import Expertise from '../../components/sections/Expertise.astro';
+import CTA from '../../components/sections/CTA.astro';
+import { t } from '../../i18n/utils';
+
+const locale = 'de';
+---
+
+<BaseLayout
+  title="Expertise & Spezialisierungen | Astoria Systems"
+  description="Tiefe Technik-Expertise: Proxmox-Support & -Rescue (LINSTOR, Ceph), industrielle Infrastruktur & IT-Security sowie Hardware- & IoT-Automation."
+  locale={locale}
+  keywords="Proxmox Support, Proxmox Rescue, Ceph, LINSTOR, OT-Security, Industrie-IT, IoT-Automation, Hardware"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: t(locale, 'nav.expertise'), url: '/expertise' }]}
+>
+  <Expertise locale={locale}>
+    <Breadcrumbs slot="breadcrumb" locale={locale} items={[{ label: t(locale, 'nav.expertise'), href: '/expertise' }]} />
+  </Expertise>
+  <CTA locale={locale} />
+</BaseLayout>
