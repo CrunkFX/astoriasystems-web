@@ -26,6 +26,7 @@ const year = new Date().getFullYear();
         </p>
         <div class="text-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-dark-text-tertiary)] space-y-1">
           <p>{t(locale, 'contact.info.address')}</p>
+          <p class="pt-1">{locale === 'de' ? 'Standort Kleve' : 'Kleve office'}: Boschstraße 16 (c/o mkm International GmbH)</p>
           <p>
             <a href="tel:+4928213986​20" class="hover:text-[var(--color-accent)] transition-colors">
               {t(locale, 'contact.info.phone')}

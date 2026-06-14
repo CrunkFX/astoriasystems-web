@@ -4,6 +4,7 @@ import Container from '../../components/ui/Container.astro';
 import GlassCard from '../../components/ui/GlassCard.astro';
 import Breadcrumbs from '../../components/seo/Breadcrumbs.astro';
 import ContactFormHandler from '../../components/interactive/ContactFormHandler.tsx';
+import Locations from '../../components/sections/Locations.astro';
 import { t } from '../../i18n/utils';
 
 const locale = 'en';
@@ -83,4 +84,6 @@ const labels = {
       </div>
     </Container>
   </section>
+
+  <Locations locale={locale} />
 </BaseLayout>
