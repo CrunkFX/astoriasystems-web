@@ -1,18 +1,17 @@
 /* ============================================================
-   ASTORIA – Komplett-Theme für Dolibarr 23 (Basis: eldy)
+   ASTORIA DARK – Komplett-Theme für Dolibarr 23 (Basis: eldy)
    ------------------------------------------------------------
-   Ein vollständiger Reskin: Menüs, Tabs, Karten, Tabellen,
-   Formulare, Buttons, Dialoge, Dashboard, Login.
+   Dunkle Variante im Look der Website astoria.systems:
+   Navy-Flächen, Cyan-Akzente, weiche Karten, wenig Kontrast-
+   flimmern – angenehm für die Augen bei langer Arbeit.
 
-   Ziel: augenschonend wie Lexoffice (weiße Karten auf hellem
-   Grund, feine Linien, viel Luft, flache Buttons) – in den
-   CI-Farben von astoria.systems.
-
-   Einsatz – eine der beiden Varianten:
-   A) Komplett einfügen unter Einstellungen → Benutzeroberfläche
-      → Tab "CSS-Style" → SPEICHERN (kein Serverzugriff nötig).
-   B) Als eigenes Theme "astoria" installieren:
-      siehe server-theme/install.sh
+   Einrichtung (empfohlen):
+   1) Einstellungen → Benutzeroberfläche → Oberfläche und Farben:
+      - alle Farbfelder LEEREN (Standard), damit nichts kollidiert
+      - Dark Theme-Modus: "Immer aktiviert"
+        (damit auch Diagramme/Native-Elemente dunkel rendern)
+   2) Tab "CSS-Style": diese Datei komplett einfügen → SPEICHERN
+   3) Browser hart neu laden (Strg+F5)
 
    Selektoren können je Dolibarr-Version minimal abweichen –
    im DevTools-Inspector prüfen und ggf. anpassen.
@@ -21,31 +20,47 @@
 @import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700');
 
 :root {
-  --as-accent: #00e5ff;          /* helles Cyan: nur Glow & Linien   */
+  /* Website-Dark-Palette */
+  --as-bg: #030712;              /* Seitenhintergrund               */
+  --as-surface: #0a0e1a;         /* Menüs                           */
+  --as-card: #111827;            /* Karten, Tabellen, Dialoge       */
+  --as-card-2: #0f172a;          /* Eingabefelder                   */
+  --as-raised: #1e293b;          /* Hover-Flächen, Chips            */
+  --as-border: rgba(255, 255, 255, 0.08);
+  --as-border-strong: rgba(255, 255, 255, 0.14);
+  --as-text: #e2e8f0;
+  --as-text-soft: #94a3b8;
+  --as-text-mute: #64748b;
+  --as-heading: #f1f5f9;
+
+  --as-accent: #00e5ff;          /* auf Dunkel voll einsetzbar      */
+  --as-accent-light: #3fe0d0;    /* Links                           */
   --as-accent-mid: #1ed6d6;
-  --as-accent-dark: #2e9aa0;     /* Links, Buttons (Kontrast)        */
-  --as-accent-darker: #257e83;   /* Hover                            */
-  --as-navy: #0a0e1a;            /* Hauptmenü, Login                 */
-  --as-navy-2: #111827;
-  --as-page: #f2f7f9;            /* eisblauer Seitenhintergrund      */
-  --as-card: #ffffff;            /* Karten                           */
-  --as-border: #e2e8f0;
-  --as-border-soft: #eef1f5;
-  --as-text: #374151;
-  --as-text-soft: #6b7280;
-  --as-heading: #0f172a;
+  --as-accent-dark: #2e9aa0;     /* Buttons                         */
+
   --as-radius: 8px;
-  --as-shadow: 0 1px 3px rgba(3, 7, 18, 0.06), 0 1px 2px rgba(3, 7, 18, 0.04);
-  --as-shadow-lg: 0 8px 24px rgba(3, 7, 18, 0.10);
-  --as-focus: 0 0 0 3px rgba(0, 229, 255, 0.16);
+  --as-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --as-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --as-focus: 0 0 0 3px rgba(0, 229, 255, 0.22);
+
+  /* eldy-CSS-Variablen direkt mit übersteuern (v17+) */
+  --colorbackbody: #030712;
+  --colortext: #e2e8f0;
+  --colortextlink: #3fe0d0;
+  --colorbackhmenu1: #0a0e1a;
+  --colorbackvmenu1: #0a0e1a;
+  --colorbacktitle1: #111827;
+  --colorbacklineimpair1: #111827;
+  --colorbacklinepair1: #111827;
+  --colorbacklinepairhover: #16213a;
 }
 
 /* ============================================================
    1) GRUNDLAGEN
    ============================================================ */
 body {
-  background-color: var(--as-page) !important;
-  color: var(--as-text);
+  background-color: var(--as-bg) !important;
+  color: var(--as-text) !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
@@ -54,59 +69,50 @@ input, select, textarea, button, table, .tmenu, .vmenu {
   font-family: inherit !important;
 }
 
-a { color: var(--as-accent-dark); }
-a:hover { color: var(--as-accent-darker); }
+a { color: var(--as-accent-light); }
+a:hover { color: var(--as-accent); }
 
-::selection { background: rgba(0, 229, 255, 0.35); }
+::selection { background: rgba(0, 229, 255, 0.35); color: #ffffff; }
 
-/* Dezente, schmale Scrollbalken */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* Seiten-/Kartentitel */
-.titre, div.titre, span.titre,
-.title-text, h1.titre {
+.titre, div.titre, span.titre, .title-text, h1.titre {
   color: var(--as-heading) !important;
   font-weight: 600 !important;
 }
+/* allgemeine Textklassen von eldy aufhellen */
+.opacitymedium { color: var(--as-text-soft) !important; opacity: 1 !important; }
+.small, .info-box-title, .fieldrequired { color: var(--as-text) !important; }
 
 /* ============================================================
    2) HAUPTMENÜ (oben)
    ============================================================ */
-div.tmenudiv,
-div#tmenu_tmenu,
-.side-nav-vert {
-  background: var(--as-navy) !important;
+div.tmenudiv, div#tmenu_tmenu, .side-nav-vert {
+  background: var(--as-surface) !important;
   border-bottom: 1px solid transparent;
   border-image: linear-gradient(90deg,
     transparent 5%, rgba(0, 229, 255, 0.55) 50%, transparent 95%) 1;
-  box-shadow: 0 1px 8px rgba(3, 7, 18, 0.35);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
 }
-
 ul.tmenu li.tmenu a, ul.tmenu li.tmenusel a,
-a.tmenu, a.tmenusel,
-.tmenu span.mainmenuaspan {
-  color: rgba(241, 245, 249, 0.82) !important;
+a.tmenu, a.tmenusel, .tmenu span.mainmenuaspan {
+  color: rgba(241, 245, 249, 0.8) !important;
   font-weight: 500;
 }
-ul.tmenu li.tmenu:hover,
-li.tmenu a:hover {
+ul.tmenu li.tmenu:hover, li.tmenu a:hover {
   background: rgba(255, 255, 255, 0.06) !important;
 }
-/* aktiver Menüpunkt: Cyan-Akzent */
 li.tmenusel, ul.tmenu li.tmenusel {
   background: rgba(0, 229, 255, 0.12) !important;
   border-bottom: 2px solid var(--as-accent) !important;
 }
-li.tmenusel a, li.tmenusel span.mainmenuaspan {
-  color: #ffffff !important;
-}
-/* Icons oben rechts (Suche, Zahnrad, Benutzer …) */
+li.tmenusel a, li.tmenusel span.mainmenuaspan { color: #ffffff !important; }
 .login_block a, .login_block span.fa,
 #topmenu-login-dropdown a, .toprightmenu span.fa {
-  color: rgba(241, 245, 249, 0.75) !important;
+  color: rgba(241, 245, 249, 0.7) !important;
 }
 .login_block a:hover span.fa { color: var(--as-accent) !important; }
 
@@ -114,29 +120,32 @@ li.tmenusel a, li.tmenusel span.mainmenuaspan {
    3) LINKES MENÜ
    ============================================================ */
 div.vmenu, #id-left {
-  background: #f8fafc !important;
+  background: var(--as-surface) !important;
   border-right: 1px solid var(--as-border);
 }
-/* Blocktitel: klein, grau, Versalien */
 div.menu_titre, div.menu_titre a.vmenu, a.vmenu {
-  color: var(--as-text-soft) !important;
+  color: var(--as-text-mute) !important;
   font-size: 0.8em;
   font-weight: 600 !important;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-/* Einträge */
 a.vsmenu, font.vsmenudisabled {
-  color: var(--as-text) !important;
+  color: #cbd5e1 !important;
   border-radius: 6px;
 }
 a.vsmenu:hover {
-  color: var(--as-accent-darker) !important;
+  color: var(--as-accent-light) !important;
   background: rgba(0, 229, 255, 0.08);
 }
 .blockvmenupair, .blockvmenuimpair {
   border: none !important;
   background: transparent !important;
+}
+/* Suchfeld im Menü */
+.vmenu input, #id-left input {
+  background: var(--as-card-2) !important;
+  color: var(--as-text) !important;
 }
 
 /* ============================================================
@@ -148,13 +157,13 @@ div.div-table-responsive,
 div.div-table-responsive-no-min,
 table.noborder, table.liste,
 div.tabBar,
-.box, .boxtable, .box-flex-item {
+.box, .boxtable {
   background: var(--as-card) !important;
   border: 1px solid var(--as-border) !important;
   border-radius: var(--as-radius) !important;
   box-shadow: var(--as-shadow);
+  color: var(--as-text);
 }
-/* keine doppelten Rahmen, wenn Tabelle bereits im Karten-Container liegt */
 div.div-table-responsive > table.noborder,
 div.div-table-responsive > table.liste,
 div.div-table-responsive-no-min > table.noborder,
@@ -164,32 +173,42 @@ div.div-table-responsive-no-min > table.liste {
   border-radius: 0 !important;
 }
 
-/* Dashboard-Kacheln (offene Objekte) – Filler-Elemente unsichtbar lassen */
-.box-flex-item { padding: 6px 10px; }
+/* Dashboard-Kacheln – Filler-Elemente unsichtbar lassen */
+.box-flex-item {
+  background: var(--as-card) !important;
+  border: 1px solid var(--as-border) !important;
+  border-radius: var(--as-radius) !important;
+  box-shadow: var(--as-shadow);
+  padding: 6px 10px;
+}
 .box-flex-item.filler, .box-flex-item:empty {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
 }
 .boxstats, .boxstats130 {
-  border-radius: var(--as-radius) !important;
+  background: var(--as-card) !important;
   border: 1px solid var(--as-border) !important;
+  border-radius: var(--as-radius) !important;
+  color: var(--as-text) !important;
 }
+.box-flex-item a, .boxstats a { color: var(--as-accent-light) !important; }
 
 /* ============================================================
-   5) TABELLEN: Linien statt Zebra, Luft, ruhige Header
+   5) TABELLEN
    ============================================================ */
 table.liste td, table.noborder td,
 table.liste th, table.noborder th {
   padding-top: 9px !important;
   padding-bottom: 9px !important;
+  color: var(--as-text);
 }
 tr.oddeven td, table.noborder tr td {
-  border-bottom: 1px solid var(--as-border-soft);
+  background: var(--as-card) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
-tr.oddeven:hover td { background: #e6f7f9 !important; }
+tr.oddeven:hover td { background: #16213a !important; }
 
-/* Titelzeile: klein, grau, Versalien */
 tr.liste_titre, tr.liste_titre_sel, .liste_titre {
   background: var(--as-card) !important;
 }
@@ -201,19 +220,20 @@ tr.liste_titre a, .liste_titre a {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--as-text-soft) !important;
-  border-bottom: 1px solid var(--as-border) !important;
+  background: var(--as-card) !important;
+  border-bottom: 1px solid var(--as-border-strong) !important;
 }
-tr.liste_titre a:hover { color: var(--as-accent-dark) !important; }
+tr.liste_titre a:hover { color: var(--as-accent-light) !important; }
 
-/* Summenzeile */
 tr.liste_total td {
   font-weight: 600;
   color: var(--as-heading) !important;
-  border-top: 1px solid var(--as-border) !important;
+  background: var(--as-card) !important;
+  border-top: 1px solid var(--as-border-strong) !important;
 }
 
 /* ============================================================
-   6) TABS (Karteireiter auf Objektseiten)
+   6) TABS
    ============================================================ */
 div.tabs { border-bottom: none !important; }
 div.tabs a.tab, a.tab {
@@ -226,9 +246,9 @@ div.tabs a.tab, a.tab {
   padding: 8px 14px !important;
   box-shadow: none !important;
 }
-div.tabs a.tab:hover { color: var(--as-accent-darker) !important; }
+div.tabs a.tab:hover { color: var(--as-accent-light) !important; }
 div.tabs a.tabactive, a.tabactive {
-  color: var(--as-accent-dark) !important;
+  color: var(--as-accent-light) !important;
   font-weight: 600 !important;
   border-bottom: 2px solid var(--as-accent) !important;
 }
@@ -238,11 +258,11 @@ div.tabBar {
 }
 
 /* ============================================================
-   7) BUTTONS: flach, Vollton, Versalien
+   7) BUTTONS: Glow-Look der Website
    ============================================================ */
 .butAction, a.butAction, span.butAction,
 input[type="submit"].button, .button:not(.bordertransp) {
-  background: var(--as-accent-dark) !important;
+  background: linear-gradient(135deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 6px !important;
@@ -250,32 +270,27 @@ input[type="submit"].button, .button:not(.bordertransp) {
   font-weight: 600 !important;
   letter-spacing: 0.03em;
   box-shadow: none !important;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 .butAction:hover, a.butAction:hover,
 input[type="submit"].button:hover {
-  background: var(--as-accent-darker) !important;
-  box-shadow: 0 2px 10px rgba(0, 229, 255, 0.25) !important;
+  box-shadow: 0 4px 20px rgba(0, 229, 255, 0.35) !important;
+  transform: translateY(-1px);
 }
-/* Sekundär (Abbrechen) */
 .button.button-cancel, .butActionRefused {
   background: transparent !important;
   color: var(--as-text-soft) !important;
-  border: 1px solid var(--as-border) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 6px !important;
   text-transform: uppercase;
   font-weight: 600;
 }
-/* Löschen: Warnfarbe behalten, Form angleichen */
 .butActionDelete, a.butActionDelete {
   border-radius: 6px !important;
   text-transform: uppercase;
   font-weight: 600 !important;
 }
-/* "+"-Schnellbuttons in Listentiteln */
-a.butActionNew, span.butActionNew {
-  color: var(--as-accent-dark) !important;
-}
+a.butActionNew, span.butActionNew { color: var(--as-accent-light) !important; }
 
 /* ============================================================
    8) FORMULARE
@@ -283,62 +298,74 @@ a.butActionNew, span.butActionNew {
 input.flat, select.flat, textarea.flat,
 input[type="text"], input[type="password"],
 input[type="email"], input[type="number"], textarea, select {
-  background: var(--as-card);
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card-2) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 6px !important;
   padding: 6px 10px;
-  color: var(--as-text);
+  color: var(--as-text) !important;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+input::placeholder, textarea::placeholder { color: var(--as-text-mute); }
 input:focus, select:focus, textarea:focus {
   outline: none !important;
   border-color: var(--as-accent-dark) !important;
   box-shadow: var(--as-focus) !important;
 }
-/* Select2-Auswahlfelder angleichen */
+
+/* Select2 dunkel + LESBARE Hervorhebung */
 .select2-container .select2-selection {
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card-2) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 6px !important;
-  background: var(--as-card) !important;
 }
+.select2-selection__rendered { color: var(--as-text) !important; }
+.select2-selection__placeholder { color: var(--as-text-mute) !important; }
 .select2-container--focus .select2-selection,
 .select2-container--open .select2-selection {
   border-color: var(--as-accent-dark) !important;
   box-shadow: var(--as-focus) !important;
 }
 .select2-dropdown {
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 8px !important;
   box-shadow: var(--as-shadow-lg) !important;
 }
 .select2-search--dropdown .select2-search__field {
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card-2) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 6px !important;
   color: var(--as-text) !important;
 }
 .select2-results__option { color: var(--as-text) !important; }
 .select2-results__option--highlighted,
 .select2-results__option--highlighted[aria-selected] {
-  background: rgba(0, 229, 255, 0.14) !important;
-  color: var(--as-accent-darker) !important;
+  background: rgba(0, 229, 255, 0.16) !important;
+  color: #7ef4ff !important;
 }
 
 /* ============================================================
-   9) BADGES, DROPDOWNS, DIALOGE, PAGINATION
+   9) BADGES, DROPDOWNS, DIALOGE, PAGINATION, HINWEISE
    ============================================================ */
 .badge, span.badge { border-radius: 999px !important; font-weight: 600; }
 
 .dropdown-menu {
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 10px !important;
   box-shadow: var(--as-shadow-lg) !important;
+  color: var(--as-text) !important;
 }
+.dropdown-menu a, .dropdown-menu span { color: var(--as-text) !important; }
+.dropdown-menu a:hover { background: var(--as-raised) !important; }
 
 .ui-dialog {
-  border: 1px solid var(--as-border) !important;
+  background: var(--as-card) !important;
+  border: 1px solid var(--as-border-strong) !important;
   border-radius: 12px !important;
   box-shadow: var(--as-shadow-lg) !important;
   overflow: hidden;
+  color: var(--as-text) !important;
 }
 .ui-dialog .ui-dialog-titlebar {
   background: var(--as-card) !important;
@@ -347,44 +374,57 @@ input:focus, select:focus, textarea:focus {
   color: var(--as-heading) !important;
   font-weight: 600;
 }
+.ui-dialog .ui-dialog-content { background: var(--as-card) !important; color: var(--as-text) !important; }
 
 .pagination a, .pagination span {
   border-radius: 6px !important;
-  color: var(--as-accent-dark);
+  color: var(--as-accent-light);
 }
 .pagination .active a, .pagination .active span {
   background: var(--as-accent-dark) !important;
   color: #ffffff !important;
 }
 
-/* Fortschrittsbalken im Markenverlauf */
 .progress-bar, div.progressBar > div {
   background: linear-gradient(90deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
 }
 
-/* Hinweis-/Fehlerboxen weicher */
+/* Hinweisboxen: dunkle Flächen, farbige Kante */
 div.info, div.warning, div.error, div.ok {
   border-radius: var(--as-radius) !important;
   box-shadow: var(--as-shadow);
+  color: var(--as-text) !important;
+}
+div.info    { background: rgba(63, 224, 208, 0.10) !important; border: 1px solid rgba(63, 224, 208, 0.35) !important; }
+div.warning { background: rgba(250, 204, 21, 0.10) !important; border: 1px solid rgba(250, 204, 21, 0.35) !important; }
+div.error   { background: rgba(248, 113, 113, 0.12) !important; border: 1px solid rgba(248, 113, 113, 0.4) !important; }
+
+/* Tooltips */
+.mytooltip, .ui-tooltip {
+  background: var(--as-raised) !important;
+  color: var(--as-text) !important;
+  border: 1px solid var(--as-border-strong) !important;
+  border-radius: 8px !important;
 }
 
 /* ============================================================
-   10) LOGIN-SEITE: Navy mit Cyan-Glows (wie Website-Hero)
+   10) LOGIN-SEITE
    ============================================================ */
 body.bodylogin {
-  background: var(--as-navy) !important;
+  background: var(--as-bg) !important;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.14) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(63, 224, 208, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.16) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(63, 224, 208, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 100%, rgba(30, 214, 214, 0.08) 0%, transparent 50%) !important;
 }
 .bodylogin .login_table, .bodylogin #login,
 .bodylogin .div-login, .bodylogin .center.login {
-  background: var(--as-card) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 24, 39, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45),
-              0 0 40px rgba(0, 229, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+              0 0 40px rgba(0, 229, 255, 0.1);
+  color: var(--as-text) !important;
 }
 .bodylogin input[type="submit"], .bodylogin .button {
   background: linear-gradient(135deg, var(--as-accent-dark), var(--as-accent-mid)) !important;

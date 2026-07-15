@@ -20,6 +20,29 @@ Links, Überschriften und Buttons nutzen das kontrastsichere `#2e9aa0`.
 
 ---
 
+Es gibt **zwei Varianten des Themes**:
+
+- [`astoria-dark.css`](./astoria-dark.css) – **Dark Mode** (empfohlen):
+  Navy-Flächen, Cyan-Akzente, wie die Website im Dark Mode.
+- [`astoria-theme.css`](./astoria-theme.css) – helle Variante
+  (weiße Karten auf Eisblau, Lexoffice-Stil).
+
+## Dark Mode einrichten (empfohlen)
+
+1. **Einstellungen → Benutzeroberfläche → Oberfläche und Farben**:
+   - Theme **eldy**
+   - **alle Farbfelder leeren** (auf Standard zurück), damit keine
+     hellen Einzelwerte mit dem Dark-CSS kollidieren
+   - **Dark Theme-Modus: „Immer aktiviert“** – wichtig, damit auch
+     Diagramme und native Elemente (Canvas-Charts, Kalender) dunkel
+     rendern; das CSS kann diese nicht erreichen
+2. **Tab „CSS-Style“**: Inhalt von [`astoria-dark.css`](./astoria-dark.css)
+   einfügen → SPEICHERN
+3. Browser hart neu laden (Strg+F5)
+
+Die Abschnitte unten (Farbfeld-Tabelle) gelten nur für die **helle**
+Variante.
+
 ## Installation – Variante A: CSS-Style-Tab (ohne Serverzugriff)
 
 1. **Einstellungen → Benutzeroberfläche → Oberfläche und Farben**:
