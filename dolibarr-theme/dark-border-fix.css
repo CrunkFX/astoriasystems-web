@@ -1,0 +1,48 @@
+/* ============================================================
+   Minimal-Fix: helle/weiße Rahmen im Dolibarr Dark Mode
+   ------------------------------------------------------------
+   Für alle, die Dolibarrs NATIVEN Dark Mode (Dark Theme-Modus:
+   "Immer aktiviert") behalten wollen und nur die hellen Linien
+   stören. Als EINZIGEN Inhalt in den Tab "CSS-Style" einfügen
+   (vorheriges Theme-CSS entfernen) → SPEICHERN → Strg+F5.
+   ============================================================ */
+
+:root { --as-dark-border: rgba(255, 255, 255, 0.08); }
+
+/* Linkes Menü: rechte Kante + Trennlinien zwischen den Blöcken */
+div.vmenu, #id-left {
+  border-right: 1px solid var(--as-dark-border) !important;
+}
+.blockvmenu, .blockvmenupair, .blockvmenuimpair,
+div.blockvmenuend, .menu_end {
+  border: none !important;
+}
+
+/* Rahmen um Karten, Tabellen, Boxen */
+div.div-table-responsive, div.div-table-responsive-no-min,
+table.noborder, table.liste, div.tabBar, div.fiche fieldset,
+.box, .boxtable, .box-flex-item, .boxstats, .boxstats130 {
+  border-color: var(--as-dark-border) !important;
+}
+
+/* Innenlinien von Tabellen */
+tr.liste_titre th, tr.liste_titre td,
+th.liste_titre, td.liste_titre {
+  border-bottom-color: var(--as-dark-border) !important;
+}
+tr.oddeven td, table.noborder tr td {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+tr.liste_total td {
+  border-top-color: var(--as-dark-border) !important;
+}
+
+/* Eingabe- und Suchfelder */
+input.flat, select.flat, textarea.flat,
+input[type="text"], input[type="password"],
+input[type="email"], input[type="number"], select, textarea,
+.select2-container .select2-selection {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+hr { border-color: var(--as-dark-border) !important; }
