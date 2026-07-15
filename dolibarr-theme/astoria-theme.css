@@ -1,0 +1,385 @@
+/* ============================================================
+   ASTORIA – Komplett-Theme für Dolibarr 23 (Basis: eldy)
+   ------------------------------------------------------------
+   Ein vollständiger Reskin: Menüs, Tabs, Karten, Tabellen,
+   Formulare, Buttons, Dialoge, Dashboard, Login.
+
+   Ziel: augenschonend wie Lexoffice (weiße Karten auf hellem
+   Grund, feine Linien, viel Luft, flache Buttons) – in den
+   CI-Farben von astoria.systems.
+
+   Einsatz – eine der beiden Varianten:
+   A) Komplett einfügen unter Einstellungen → Benutzeroberfläche
+      → Tab "CSS-Style" → SPEICHERN (kein Serverzugriff nötig).
+   B) Als eigenes Theme "astoria" installieren:
+      siehe server-theme/install.sh
+
+   Selektoren können je Dolibarr-Version minimal abweichen –
+   im DevTools-Inspector prüfen und ggf. anpassen.
+   ============================================================ */
+
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700');
+
+:root {
+  --as-accent: #00e5ff;          /* helles Cyan: nur Glow & Linien   */
+  --as-accent-mid: #1ed6d6;
+  --as-accent-dark: #2e9aa0;     /* Links, Buttons (Kontrast)        */
+  --as-accent-darker: #257e83;   /* Hover                            */
+  --as-navy: #0a0e1a;            /* Hauptmenü, Login                 */
+  --as-navy-2: #111827;
+  --as-page: #f2f7f9;            /* eisblauer Seitenhintergrund      */
+  --as-card: #ffffff;            /* Karten                           */
+  --as-border: #e2e8f0;
+  --as-border-soft: #eef1f5;
+  --as-text: #374151;
+  --as-text-soft: #6b7280;
+  --as-heading: #0f172a;
+  --as-radius: 8px;
+  --as-shadow: 0 1px 3px rgba(3, 7, 18, 0.06), 0 1px 2px rgba(3, 7, 18, 0.04);
+  --as-shadow-lg: 0 8px 24px rgba(3, 7, 18, 0.10);
+  --as-focus: 0 0 0 3px rgba(0, 229, 255, 0.16);
+}
+
+/* ============================================================
+   1) GRUNDLAGEN
+   ============================================================ */
+body {
+  background-color: var(--as-page) !important;
+  color: var(--as-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+input, select, textarea, button, table, .tmenu, .vmenu {
+  font-family: inherit !important;
+}
+
+a { color: var(--as-accent-dark); }
+a:hover { color: var(--as-accent-darker); }
+
+::selection { background: rgba(0, 229, 255, 0.35); }
+
+/* Dezente, schmale Scrollbalken */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Seiten-/Kartentitel */
+.titre, div.titre, span.titre,
+.title-text, h1.titre {
+  color: var(--as-heading) !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   2) HAUPTMENÜ (oben)
+   ============================================================ */
+div.tmenudiv,
+div#tmenu_tmenu,
+.side-nav-vert {
+  background: var(--as-navy) !important;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg,
+    transparent 5%, rgba(0, 229, 255, 0.55) 50%, transparent 95%) 1;
+  box-shadow: 0 1px 8px rgba(3, 7, 18, 0.35);
+}
+
+ul.tmenu li.tmenu a, ul.tmenu li.tmenusel a,
+a.tmenu, a.tmenusel,
+.tmenu span.mainmenuaspan {
+  color: rgba(241, 245, 249, 0.82) !important;
+  font-weight: 500;
+}
+ul.tmenu li.tmenu:hover,
+li.tmenu a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+/* aktiver Menüpunkt: Cyan-Akzent */
+li.tmenusel, ul.tmenu li.tmenusel {
+  background: rgba(0, 229, 255, 0.12) !important;
+  border-bottom: 2px solid var(--as-accent) !important;
+}
+li.tmenusel a, li.tmenusel span.mainmenuaspan {
+  color: #ffffff !important;
+}
+/* Icons oben rechts (Suche, Zahnrad, Benutzer …) */
+.login_block a, .login_block span.fa,
+#topmenu-login-dropdown a, .toprightmenu span.fa {
+  color: rgba(241, 245, 249, 0.75) !important;
+}
+.login_block a:hover span.fa { color: var(--as-accent) !important; }
+
+/* ============================================================
+   3) LINKES MENÜ
+   ============================================================ */
+div.vmenu, #id-left {
+  background: #f8fafc !important;
+  border-right: 1px solid var(--as-border);
+}
+/* Blocktitel: klein, grau, Versalien */
+div.menu_titre, div.menu_titre a.vmenu, a.vmenu {
+  color: var(--as-text-soft) !important;
+  font-size: 0.8em;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+/* Einträge */
+a.vsmenu, font.vsmenudisabled {
+  color: var(--as-text) !important;
+  border-radius: 6px;
+}
+a.vsmenu:hover {
+  color: var(--as-accent-darker) !important;
+  background: rgba(0, 229, 255, 0.08);
+}
+.blockvmenupair, .blockvmenuimpair {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   4) KARTEN: Fichen, Tabellen, Dashboard-Widgets
+   ============================================================ */
+div.fiche { background: transparent; }
+
+div.div-table-responsive,
+div.div-table-responsive-no-min,
+table.noborder, table.liste,
+div.tabBar,
+.box, .boxtable, .box-flex-item {
+  background: var(--as-card) !important;
+  border: 1px solid var(--as-border) !important;
+  border-radius: var(--as-radius) !important;
+  box-shadow: var(--as-shadow);
+}
+/* keine doppelten Rahmen, wenn Tabelle bereits im Karten-Container liegt */
+div.div-table-responsive > table.noborder,
+div.div-table-responsive > table.liste,
+div.div-table-responsive-no-min > table.noborder,
+div.div-table-responsive-no-min > table.liste {
+  border: none !important;
+  box-shadow: none;
+  border-radius: 0 !important;
+}
+
+/* Dashboard-Kacheln (offene Objekte) */
+.box-flex-item { padding: 6px 10px; }
+.boxstats, .boxstats130 {
+  border-radius: var(--as-radius) !important;
+  border: 1px solid var(--as-border) !important;
+}
+
+/* ============================================================
+   5) TABELLEN: Linien statt Zebra, Luft, ruhige Header
+   ============================================================ */
+table.liste td, table.noborder td,
+table.liste th, table.noborder th {
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+}
+tr.oddeven td, table.noborder tr td {
+  border-bottom: 1px solid var(--as-border-soft);
+}
+tr.oddeven:hover td { background: #e6f7f9 !important; }
+
+/* Titelzeile: klein, grau, Versalien */
+tr.liste_titre, tr.liste_titre_sel, .liste_titre {
+  background: var(--as-card) !important;
+}
+tr.liste_titre th, tr.liste_titre td,
+th.liste_titre, td.liste_titre,
+tr.liste_titre a, .liste_titre a {
+  font-size: 0.78em !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--as-text-soft) !important;
+  border-bottom: 1px solid var(--as-border) !important;
+}
+tr.liste_titre a:hover { color: var(--as-accent-dark) !important; }
+
+/* Summenzeile */
+tr.liste_total td {
+  font-weight: 600;
+  color: var(--as-heading) !important;
+  border-top: 1px solid var(--as-border) !important;
+}
+
+/* ============================================================
+   6) TABS (Karteireiter auf Objektseiten)
+   ============================================================ */
+div.tabs { border-bottom: none !important; }
+div.tabs a.tab, a.tab {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  color: var(--as-text-soft) !important;
+  font-weight: 500;
+  padding: 8px 14px !important;
+  box-shadow: none !important;
+}
+div.tabs a.tab:hover { color: var(--as-accent-darker) !important; }
+div.tabs a.tabactive, a.tabactive {
+  color: var(--as-accent-dark) !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--as-accent) !important;
+}
+div.tabBar {
+  border-top-left-radius: 0 !important;
+  padding: 14px !important;
+}
+
+/* ============================================================
+   7) BUTTONS: flach, Vollton, Versalien
+   ============================================================ */
+.butAction, a.butAction, span.butAction,
+input[type="submit"].button, .button:not(.bordertransp) {
+  background: var(--as-accent-dark) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  text-transform: uppercase;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em;
+  box-shadow: none !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.butAction:hover, a.butAction:hover,
+input[type="submit"].button:hover {
+  background: var(--as-accent-darker) !important;
+  box-shadow: 0 2px 10px rgba(0, 229, 255, 0.25) !important;
+}
+/* Sekundär (Abbrechen) */
+.button.button-cancel, .butActionRefused {
+  background: transparent !important;
+  color: var(--as-text-soft) !important;
+  border: 1px solid var(--as-border) !important;
+  border-radius: 6px !important;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+/* Löschen: Warnfarbe behalten, Form angleichen */
+.butActionDelete, a.butActionDelete {
+  border-radius: 6px !important;
+  text-transform: uppercase;
+  font-weight: 600 !important;
+}
+/* "+"-Schnellbuttons in Listentiteln */
+a.butActionNew, span.butActionNew {
+  color: var(--as-accent-dark) !important;
+}
+
+/* ============================================================
+   8) FORMULARE
+   ============================================================ */
+input.flat, select.flat, textarea.flat,
+input[type="text"], input[type="password"],
+input[type="email"], input[type="number"], textarea, select {
+  background: var(--as-card);
+  border: 1px solid var(--as-border) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px;
+  color: var(--as-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: var(--as-accent-dark) !important;
+  box-shadow: var(--as-focus) !important;
+}
+/* Select2-Auswahlfelder angleichen */
+.select2-container .select2-selection {
+  border: 1px solid var(--as-border) !important;
+  border-radius: 6px !important;
+  background: var(--as-card) !important;
+}
+.select2-container--focus .select2-selection,
+.select2-container--open .select2-selection {
+  border-color: var(--as-accent-dark) !important;
+  box-shadow: var(--as-focus) !important;
+}
+.select2-dropdown {
+  border: 1px solid var(--as-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--as-shadow-lg) !important;
+}
+.select2-results__option--highlighted {
+  background: rgba(0, 229, 255, 0.12) !important;
+  color: var(--as-accent-darker) !important;
+}
+
+/* ============================================================
+   9) BADGES, DROPDOWNS, DIALOGE, PAGINATION
+   ============================================================ */
+.badge, span.badge { border-radius: 999px !important; font-weight: 600; }
+
+.dropdown-menu {
+  border: 1px solid var(--as-border) !important;
+  border-radius: 10px !important;
+  box-shadow: var(--as-shadow-lg) !important;
+}
+
+.ui-dialog {
+  border: 1px solid var(--as-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--as-shadow-lg) !important;
+  overflow: hidden;
+}
+.ui-dialog .ui-dialog-titlebar {
+  background: var(--as-card) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--as-border) !important;
+  color: var(--as-heading) !important;
+  font-weight: 600;
+}
+
+.pagination a, .pagination span {
+  border-radius: 6px !important;
+  color: var(--as-accent-dark);
+}
+.pagination .active a, .pagination .active span {
+  background: var(--as-accent-dark) !important;
+  color: #ffffff !important;
+}
+
+/* Fortschrittsbalken im Markenverlauf */
+.progress-bar, div.progressBar > div {
+  background: linear-gradient(90deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
+}
+
+/* Hinweis-/Fehlerboxen weicher */
+div.info, div.warning, div.error, div.ok {
+  border-radius: var(--as-radius) !important;
+  box-shadow: var(--as-shadow);
+}
+
+/* ============================================================
+   10) LOGIN-SEITE: Navy mit Cyan-Glows (wie Website-Hero)
+   ============================================================ */
+body.bodylogin {
+  background: var(--as-navy) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(63, 224, 208, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(30, 214, 214, 0.08) 0%, transparent 50%) !important;
+}
+.bodylogin .login_table, .bodylogin #login,
+.bodylogin .div-login, .bodylogin .center.login {
+  background: var(--as-card) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45),
+              0 0 40px rgba(0, 229, 255, 0.08);
+}
+.bodylogin input[type="submit"], .bodylogin .button {
+  background: linear-gradient(135deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  text-transform: uppercase;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em;
+}

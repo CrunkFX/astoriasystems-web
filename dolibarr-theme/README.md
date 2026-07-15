@@ -1,63 +1,75 @@
-# Dolibarr Theme (v23, eldy) – Astoria Systems
+# Dolibarr Komplett-Theme „astoria“ (v23)
 
-Dieses Verzeichnis überträgt die Corporate Identity der Website
-[astoria.systems](https://www.astoria.systems) auf **Dolibarr 23**
-(Standard-Theme **eldy**) – analog zu [`frappe-theme/`](../frappe-theme/)
-für Frappe/ERPNext.
+Ein vollständiger Reskin für **Dolibarr 23.0.x** im Stil der Website
+[astoria.systems](https://www.astoria.systems) – analog zu
+[`frappe-theme/`](../frappe-theme/) für Frappe/ERPNext.
 
-Alle Werte stammen aus dem Website-Quellcode (`src/styles/global.css`).
+Vorbild für den Augenkomfort ist Lexoffice:
 
-**Designprinzip** (Vorbild für Augenkomfort: Lexoffice):
+- heller, leicht eisblauer Seitenhintergrund (`#f2f7f9`), darauf
+  **weiße Karten** mit weichem Schatten,
+- **kein Zebra-Muster** – Zeilen trennen sich durch feine Linien,
+  Hover und mehr Padding,
+- Tabellenüberschriften klein, grau, Versalien,
+- **flache Buttons** in Vollton-Teal mit Versalien,
+- dunkles Navy-Hauptmenü mit feiner Cyan-Akzentlinie,
+- Login-Seite im Look der Website-Hero-Sektion (Navy + Cyan-Glows).
 
-- Heller, leicht eisblauer Seitenhintergrund (`#f2f7f9`, wie der
-  Website-Hintergrund), darauf **weiße Karten** mit weichem Schatten.
-- **Kein Zebra-Muster** – Zeilen werden durch feine Linien und Hover
-  getrennt, nicht durch Flächenwechsel.
-- Tabellenüberschriften klein, grau, Versalien statt fetter dunkler Header.
-- Das helle Cyan `#00e5ff` ist auf hellen Flächen kaum lesbar – es wird
-  nur für Glow-Effekte und Akzentlinien verwendet. Für Links,
-  Überschriften und Buttons kommt das dunklere `#2e9aa0` zum Einsatz
-  (gleiche Entscheidung wie im Frappe-Theme).
-
----
-
-## 1. Corporate Identity (Referenz)
-
-| Element              | Wert                                              |
-| -------------------- | ------------------------------------------------- |
-| **Schrift**          | Inter (von fonts.bunny.net)                       |
-| **Primär / Akzent**  | `#00e5ff` (Cyan – nur Glow/Linien)                |
-| Akzent mittel        | `#1ed6d6`                                         |
-| Akzent dunkel        | `#2e9aa0` (Links, Buttons – besserer Kontrast)    |
-| **Textfarbe**        | `#4f4f4f` (dunkel `#1e293b`)                      |
-| **Hintergrund**      | `#ffffff` / `#f8fafc` / `#f1f5f9`                 |
-| Rahmen               | `#e2e8f0`                                         |
-| **Dunkel (Navy)**    | `#0a0e1a` (Website-Dark-Surface)                  |
-| Radius               | 6–8 px                                            |
+Das helle CI-Cyan `#00e5ff` wird nur für Glows und Linien verwendet;
+Links, Überschriften und Buttons nutzen das kontrastsichere `#2e9aa0`.
 
 ---
 
-## 2. Tab „Oberfläche und Farben“
+## Installation – Variante A: CSS-Style-Tab (ohne Serverzugriff)
+
+1. **Einstellungen → Benutzeroberfläche → Oberfläche und Farben**:
+   Theme **eldy** wählen und die Werte aus der Tabelle unten eintragen.
+2. **Tab „CSS-Style“**: kompletten Inhalt von
+   [`astoria-theme.css`](./astoria-theme.css) einfügen → **SPEICHERN**.
+3. Browser hart neu laden (Strg+F5).
+
+## Installation – Variante B: eigenes Theme „astoria“ (mit Serverzugriff)
+
+Das Skript [`server-theme/install.sh`](./server-theme/install.sh) kopiert
+das eldy-Theme nach `htdocs/theme/astoria` und hängt `astoria-theme.css`
+an dessen `style.css.php` an. Dadurch erbt „astoria“ alle Icons und
+Layout-Dateien von eldy und erscheint als **eigene Theme-Auswahl**:
+
+```sh
+sh server-theme/install.sh /pfad/zu/dolibarr/htdocs
+```
+
+Danach: **Einstellungen → Benutzeroberfläche → Standardvorlage
+grafische Oberfläche → astoria** → SPEICHERN → Strg+F5.
+Die Farbfelder unten gelten weiter (das kopierte Theme liest dieselben
+`THEME_ELDY_*`-Konstanten).
+
+> Hinweis: Bei einem Dolibarr-Update wird `theme/astoria` nicht
+> automatisch aktualisiert – nach größeren Updates das Skript einfach
+> erneut ausführen.
+
+---
+
+## Farbfelder: Tab „Oberfläche und Farben“
 
 Pfad: **Start → Einstellungen → Benutzeroberfläche → Oberfläche und Farben**
 
-> Dolibarr erwartet Hex-Werte **ohne** `#`.
-> Diese Seite setzt die *globalen* Vorgaben; einzelne Benutzer können sie
-> in ihren persönlichen Einstellungen überschreiben.
+> Hex-Werte **ohne** `#` eintragen. Diese Seite setzt die globalen
+> Vorgaben; Benutzer können sie persönlich überschreiben.
 
 ### Schalter / Auswahl
 
-| Einstellung                             | Wert                                                        |
-| --------------------------------------- | ----------------------------------------------------------- |
-| Standardvorlage grafische Oberfläche    | **eldy** (beibehalten)                                       |
-| Dark Theme-Modus                        | **Immer deaktiviert** – eigene Farbwerte bekommen keine Dark-Variante, gemischtes Ergebnis |
-| Icon oder Text im oberen Menü           | **Icon und Text**                                            |
-| Firmenlogos im Menü anzeigen            | **An** (sofern Logo unter Unternehmen/Institution hinterlegt) |
-| Bilder im Hauptmenü in Farbe anzeigen   | **Aus** – monochrome Icons wirken auf dem dunklen Navy ruhiger |
-| Linken und rechten Tabellenrand anzeigen | **An**, **Eckradius 6**                                     |
-| Eingabefelder mit Rahmen anzeigen       | **An**                                                       |
+| Einstellung                              | Wert                                                        |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| Standardvorlage grafische Oberfläche     | **eldy** (Variante A) bzw. **astoria** (Variante B)          |
+| Dark Theme-Modus                         | **Immer deaktiviert** – eigene Farbwerte bekommen keine Dark-Variante |
+| Icon oder Text im oberen Menü            | **Icon und Text**                                            |
+| Firmenlogos im Menü anzeigen             | **An** (Logo unter Unternehmen/Institution hinterlegen)      |
+| Bilder im Hauptmenü in Farbe anzeigen    | **Aus** – monochrome Icons wirken auf dem dunklen Navy ruhiger |
+| Linken und rechten Tabellenrand anzeigen | **An**, **Eckradius 6**                                      |
+| Eingabefelder mit Rahmen anzeigen        | **An**                                                       |
 
-### Farbfelder
+### Farbwerte
 
 | Feld                                                    | Wert     | Ergebnis                              |
 | ------------------------------------------------------- | -------- | ------------------------------------- |
@@ -73,48 +85,38 @@ Pfad: **Start → Einstellungen → Benutzeroberfläche → Oberfläche und Farb
 | Farbe für Hyperlinks                                     | `2e9aa0` | Markenakzent                          |
 | Farbe zum Hervorheben der Zeile (Maus darüber)           | `e6f7f9` | sehr helles Cyan                      |
 | Farbe zum Hervorheben der Zeile (ausgewählt)             | `d7f1f5` | etwas kräftiger als Hover             |
-| Hintergrundfarbe der Aktionsschaltfläche                 | `2e9aa0` | flacher Vollton wie Lexoffice         |
+| Hintergrundfarbe der Aktionsschaltfläche                 | `2e9aa0` | flacher Vollton                       |
 | Textfarbe der Aktionsschaltfläche                        | `ffffff` | weiß                                  |
 
-→ **SPEICHERN**.
+---
+
+## Was das Theme umstylt
+
+[`astoria-theme.css`](./astoria-theme.css) deckt ab:
+
+- Grundlagen: Inter-Schrift, eisblauer Hintergrund, Links, Scrollbalken
+- Hauptmenü oben (Navy, Cyan-Akzentlinie, aktiver Punkt mit Cyan-Unterstreichung)
+- linkes Menü (Blocktitel als Versalien, Hover-Zustände)
+- Karten-Look für Fichen, Tabellen, Dashboard-Widgets (Radius + Schatten)
+- Tabellen (Linien statt Zebra, Padding, graue Versalien-Header, Summenzeilen)
+- Tabs auf Objektseiten (Unterstreichungs-Stil statt Reiter-Kästen)
+- Buttons (flach, Versalien; Abbrechen als Ghost-Button; Löschen behält Warnfarbe)
+- Formulare inkl. Select2 (Radius, Fokus-Ring in Markenfarbe)
+- Badges, Dropdowns, Dialoge, Pagination, Fortschrittsbalken, Hinweisboxen
+- Login-Seite (Navy mit Cyan-Glows, weiße Login-Karte, Gradient-Button)
+
+Selektoren sind auf Dolibarr 23 / eldy abgestimmt; einzelne Stellen können
+je Minor-Version abweichen → im DevTools-Inspector prüfen und anpassen.
 
 ---
 
-## 3. Tab „CSS-Style“
+## Sonstiges
 
-Inhalt von [`custom_css.css`](./custom_css.css) in den Editor einfügen
-und speichern. Das ergänzt den Lexoffice-Look:
-
-- **Inter** als Schrift überall (wie Website),
-- eisblauer Seitenhintergrund, Tabellen/Karten als **weiße Karten**
-  mit 8 px Radius und weichem Schatten,
-- Zeilentrennung über **feine Linien** + mehr Padding statt Zebra,
-- Tabellenüberschriften klein/grau/**Versalien**,
-- Aktionsbuttons **flach** in `#2e9aa0`, Versalien, dezenter Hover-Glow,
-- Cyan-**Akzentlinie** unter dem Hauptmenü (wie die Section-Divider der Website),
-- **Fokus-Ring** in Markenfarbe für Eingabefelder, Textmarkierung in Cyan.
-
----
-
-## 4. Tab „Anmeldeseite“
-
-- **Hintergrundbild (png,jpg):** [`login-background.png`](./login-background.png)
-  hochladen – dunkles Navy mit den Cyan-Glows der Website-Hero-Sektion
-  (1920×1080, generiert aus den CI-Farbwerten).
-- **Nachricht auf der Anmeldeseite:** optional, z. B. kurzer Willkommenstext.
-  Sparsam einsetzen – die Seite wirkt aufgeräumter ohne.
-
-## 5. Tab „Startseite“
-
-- **Nachricht des Tages:** leer lassen oder nur für echte Ankündigungen
-  nutzen (jedes Dauer-Banner kostet Aufmerksamkeit).
-- Nicht benötigte Dashboard-Kacheln deaktivieren – weniger Kacheln =
-  ruhigeres, professionelleres Dashboard.
-
----
-
-## 6. Firmenlogo
-
-Damit das Logo im Menü und auf PDFs erscheint:
-**Start → Einstellungen → Unternehmen/Institution → Logo** hochladen
-(idealerweise die helle Logovariante für das dunkle Hauptmenü).
+- **Anmeldeseite:** Das Theme stylt den Login per CSS. Falls das
+  CSS auf der Login-Seite eurer Installation nicht greift (Variante A),
+  alternativ [`login-background.png`](./login-background.png) unter
+  **Benutzeroberfläche → Anmeldeseite → Hintergrundbild** hochladen.
+- **Startseite:** Nachricht des Tages leer lassen; ungenutzte
+  Dashboard-Kacheln unter dem Tab „Startseite“ deaktivieren.
+- **Logo:** helle Logovariante unter **Einstellungen →
+  Unternehmen/Institution** hochladen (sitzt im dunklen Hauptmenü).
