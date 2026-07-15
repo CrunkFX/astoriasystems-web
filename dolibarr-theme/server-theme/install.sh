@@ -8,18 +8,49 @@
 # eigene Auswahl "astoria" unter:
 #   Einstellungen → Benutzeroberfläche → Standardvorlage
 #
-# Aufruf auf dem Dolibarr-Server:
-#   sh install.sh /pfad/zu/dolibarr/htdocs
+# Aufruf:
+#   sh install.sh [/pfad/zu/dolibarr/htdocs]
+#
+# Cloudron: im Dashboard der Dolibarr-App das Terminal öffnen,
+# astoria-theme.css und install.sh vorher per File Manager nach
+# /app/data hochladen, dann:
+#   sh /app/data/install.sh
+# (htdocs wird automatisch unter /app/code/htdocs gefunden.)
 # ============================================================
 set -e
 
-DOLI_HTDOCS="${1:?Aufruf: sh install.sh /pfad/zu/dolibarr/htdocs}"
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
-CSS_FILE="$SRC_DIR/../astoria-theme.css"
+
+# CSS neben dem Skript oder eine Ebene höher suchen
+CSS_FILE=""
+for c in "$SRC_DIR/astoria-theme.css" "$SRC_DIR/../astoria-theme.css"; do
+  [ -f "$c" ] && CSS_FILE="$c" && break
+done
+[ -n "$CSS_FILE" ] || { echo "FEHLER: astoria-theme.css nicht gefunden (erwartet neben install.sh)."; exit 1; }
+
+# htdocs finden (Argument oder bekannte Pfade, Cloudron zuerst)
+DOLI_HTDOCS="$1"
+if [ -z "$DOLI_HTDOCS" ]; then
+  for d in /app/code/htdocs /var/www/dolibarr/htdocs /var/www/html/htdocs /usr/share/dolibarr/htdocs; do
+    [ -d "$d/theme/eldy" ] && DOLI_HTDOCS="$d" && break
+  done
+fi
+[ -n "$DOLI_HTDOCS" ] && [ -d "$DOLI_HTDOCS/theme/eldy" ] || {
+  echo "FEHLER: Dolibarr htdocs nicht gefunden. Aufruf: sh install.sh /pfad/zu/htdocs"; exit 1; }
+
 THEME_DIR="$DOLI_HTDOCS/theme"
 
-[ -f "$CSS_FILE" ] || { echo "FEHLER: $CSS_FILE nicht gefunden."; exit 1; }
-[ -d "$THEME_DIR/eldy" ] || { echo "FEHLER: $THEME_DIR/eldy nicht gefunden."; exit 1; }
+# Schreibbarkeit prüfen (Cloudron: htdocs/theme muss auf /app/data zeigen)
+if [ ! -w "$THEME_DIR" ]; then
+  echo "FEHLER: $THEME_DIR ist nicht beschreibbar."
+  if [ -d /app/code ]; then
+    echo "Cloudron: In diesem Paketstand ist htdocs/theme noch nicht nach"
+    echo "/app/data verlinkt (pruefen mit: ls -ld $THEME_DIR)."
+    echo "Optionen: Cloudron-App aktualisieren – oder Variante A nutzen"
+    echo "(astoria-theme.css in den Tab 'CSS-Style' einfuegen, siehe README)."
+  fi
+  exit 1
+fi
 
 rm -rf "$THEME_DIR/astoria"
 cp -r "$THEME_DIR/eldy" "$THEME_DIR/astoria"
@@ -40,7 +71,7 @@ fi
 printf '\n/* === ASTORIA SYSTEMS THEME OVERRIDES === */\n' >> "$STYLE"
 cat "$CSS_FILE" >> "$STYLE"
 
-echo "OK: Theme 'astoria' installiert."
+echo "OK: Theme 'astoria' installiert nach $THEME_DIR/astoria"
 echo "In Dolibarr auswählen: Einstellungen → Benutzeroberfläche →"
 echo "Standardvorlage grafische Oberfläche → astoria → SPEICHERN."
 echo "Danach im Browser hart neu laden (Strg+F5)."

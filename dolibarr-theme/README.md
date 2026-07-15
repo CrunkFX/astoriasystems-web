@@ -28,25 +28,41 @@ Links, Überschriften und Buttons nutzen das kontrastsichere `#2e9aa0`.
    [`astoria-theme.css`](./astoria-theme.css) einfügen → **SPEICHERN**.
 3. Browser hart neu laden (Strg+F5).
 
-## Installation – Variante B: eigenes Theme „astoria“ (mit Serverzugriff)
+## Installation – Variante B: eigenes Theme „astoria“ (mit Dateizugriff)
 
 Das Skript [`server-theme/install.sh`](./server-theme/install.sh) kopiert
 das eldy-Theme nach `htdocs/theme/astoria` und hängt `astoria-theme.css`
 an dessen `style.css.php` an. Dadurch erbt „astoria“ alle Icons und
-Layout-Dateien von eldy und erscheint als **eigene Theme-Auswahl**:
+Layout-Dateien von eldy und erscheint als **eigene Theme-Auswahl**.
+
+### Cloudron
+
+1. Im Cloudron-Dashboard → Dolibarr-App → **File Manager**:
+   `astoria-theme.css` und `server-theme/install.sh` nach `/app/data`
+   hochladen (beide in denselben Ordner).
+2. App → **Terminal** öffnen und ausführen:
+
+   ```sh
+   sh /app/data/install.sh
+   ```
+
+   Das Skript findet htdocs automatisch (`/app/code/htdocs`).
+3. Meldet das Skript, dass `htdocs/theme` **nicht beschreibbar** ist,
+   ist der Paketstand zu alt (das Theme-Verzeichnis wird erst in
+   neueren Cloudron-Paketen nach `/app/data` verlinkt) → Cloudron-App
+   aktualisieren oder einfach Variante A nutzen.
+4. Nach einem **App-Update** das Skript ggf. erneut ausführen.
+
+### Andere Server
 
 ```sh
 sh server-theme/install.sh /pfad/zu/dolibarr/htdocs
 ```
 
-Danach: **Einstellungen → Benutzeroberfläche → Standardvorlage
+Danach (beide Fälle): **Einstellungen → Benutzeroberfläche → Standardvorlage
 grafische Oberfläche → astoria** → SPEICHERN → Strg+F5.
 Die Farbfelder unten gelten weiter (das kopierte Theme liest dieselben
 `THEME_ELDY_*`-Konstanten).
-
-> Hinweis: Bei einem Dolibarr-Update wird `theme/astoria` nicht
-> automatisch aktualisiert – nach größeren Updates das Skript einfach
-> erneut ausführen.
 
 ---
 
