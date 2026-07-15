@@ -1,0 +1,98 @@
+/* ============================================================
+   Astoria Systems – Dolibarr Custom CSS (Theme: eldy, v23)
+   ------------------------------------------------------------
+   Einfügen unter:
+   Start → Einstellungen → Benutzeroberfläche → Tab "CSS-Style"
+   → SPEICHERN.
+
+   Ergänzt die Farbfelder aus dem Tab "Oberfläche und Farben"
+   (Werte siehe README.md) um Schrift, Radien und Akzente
+   im CI der Website astoria.systems.
+
+   Selektoren können je Dolibarr-Version minimal abweichen –
+   im DevTools-Inspector prüfen und ggf. anpassen.
+   ============================================================ */
+
+@import url('https://fonts.bunny.net/css?family=inter:300,400,500,600,700');
+
+:root {
+  --as-accent: #00e5ff;        /* nur für Glow/Linien, nie für Text  */
+  --as-accent-mid: #1ed6d6;
+  --as-accent-dark: #2e9aa0;   /* Links, Buttons – besserer Kontrast */
+  --as-navy: #0a0e1a;
+  --as-surface-2: #f8fafc;
+  --as-surface-3: #f1f5f9;
+  --as-border: #e2e8f0;
+  --as-text: #4f4f4f;
+}
+
+/* ---------- Schrift: Inter wie auf der Website ---------- */
+body,
+input, select, textarea, button,
+.tmenu, .vmenu, table.liste {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Feine Akzentlinie unter dem Hauptmenü ---------- */
+div.tmenudiv {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg,
+    transparent 5%, rgba(0, 229, 255, 0.55) 50%, transparent 95%) 1;
+}
+
+/* ---------- Aktionsbuttons: Glow-Look der Website ---------- */
+.butAction,
+a.butAction,
+span.butAction {
+  background: linear-gradient(135deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(3, 7, 18, 0.12);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.butAction:hover,
+a.butAction:hover {
+  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.35);
+  transform: translateY(-1px);
+}
+/* Lösch-/Ablehnen-Buttons behalten ihre Warnfarbe, nur abrunden */
+.butActionDelete,
+.butActionRefused {
+  border-radius: 8px !important;
+}
+
+/* ---------- Eingabefelder: Fokus im Markenakzent ---------- */
+input.flat:focus,
+select.flat:focus,
+textarea.flat:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--as-accent-dark) !important;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.18) !important;
+}
+
+/* ---------- Karten/Tabellen: weiche Kanten, dezente Tiefe ---------- */
+div.fiche,
+div.div-table-responsive,
+div.div-table-responsive-no-min {
+  border-radius: 8px;
+}
+table.liste,
+table.noborder {
+  border-color: var(--as-border) !important;
+}
+
+/* ---------- Textmarkierung wie auf der Website ---------- */
+::selection {
+  background: rgba(0, 229, 255, 0.35);
+}
+
+/* ---------- Badges/Status: Radius angleichen ---------- */
+.badge,
+span.badge {
+  border-radius: 6px;
+}
