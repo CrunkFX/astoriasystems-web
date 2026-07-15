@@ -7,11 +7,17 @@ für Frappe/ERPNext.
 
 Alle Werte stammen aus dem Website-Quellcode (`src/styles/global.css`).
 
-**Designprinzip:** Das helle Cyan `#00e5ff` ist auf weißen Flächen kaum
-lesbar – es wird daher nur für Glow-Effekte und Akzentlinien verwendet.
-Für Links, Überschriften und Buttons kommt das dunklere `#2e9aa0` zum
-Einsatz (gleiche Entscheidung wie im Frappe-Theme). Große Flächen bleiben
-ruhig (Weiß / `#f8fafc`), damit das ERP im Alltag angenehm für die Augen ist.
+**Designprinzip** (Vorbild für Augenkomfort: Lexoffice):
+
+- Heller, leicht eisblauer Seitenhintergrund (`#f2f7f9`, wie der
+  Website-Hintergrund), darauf **weiße Karten** mit weichem Schatten.
+- **Kein Zebra-Muster** – Zeilen werden durch feine Linien und Hover
+  getrennt, nicht durch Flächenwechsel.
+- Tabellenüberschriften klein, grau, Versalien statt fetter dunkler Header.
+- Das helle Cyan `#00e5ff` ist auf hellen Flächen kaum lesbar – es wird
+  nur für Glow-Effekte und Akzentlinien verwendet. Für Links,
+  Überschriften und Buttons kommt das dunklere `#2e9aa0` zum Einsatz
+  (gleiche Entscheidung wie im Frappe-Theme).
 
 ---
 
@@ -57,17 +63,17 @@ Pfad: **Start → Einstellungen → Benutzeroberfläche → Oberfläche und Farb
 | ------------------------------------------------------- | -------- | ------------------------------------- |
 | Hintergrundfarbe für Hauptmenü                           | `0a0e1a` | dunkles Navy wie Website-Header       |
 | Hintergrundfarbe für Menü Links                          | `f8fafc` | ruhige helle Sidebar                  |
-| Hintergrundfarbe                                         | `ffffff` | weiße Arbeitsfläche                   |
+| Hintergrundfarbe                                         | `f2f7f9` | eisblauer Grund, weiße Karten heben sich ab |
 | Textfarbe der Seitenüberschrift                          | `2e9aa0` | Markenakzent, lesbar                  |
-| Hintergrundfarbe für Titelzeilen in Tabellen             | `f1f5f9` | helle Titelzeile, augenschonend       |
-| Textfarbe der Tabellenüberschrift                        | `1e293b` | dunkles Slate                         |
+| Hintergrundfarbe für Titelzeilen in Tabellen             | `ffffff` | Titelzeile Teil der weißen Karte      |
+| Textfarbe der Tabellenüberschrift                        | `6b7280` | grau, ruhig (Versalien via CSS)       |
 | Textfarbe für die Tabellentitel-Linkzeile                | `2e9aa0` | Markenakzent                          |
-| Hintergrundfarbe für ungerade Tabellenzeilen             | `ffffff` | Zebra-Effekt dezent …                 |
-| Hintergrundfarbe für gerade Tabellenzeilen               | `f8fafc` | … statt hartem Kontrast               |
+| Hintergrundfarbe für ungerade Tabellenzeilen             | `ffffff` | kein Zebra – Trennung über feine …    |
+| Hintergrundfarbe für gerade Tabellenzeilen               | `ffffff` | … Linien und Hover (via CSS)          |
 | Farbe für Hyperlinks                                     | `2e9aa0` | Markenakzent                          |
 | Farbe zum Hervorheben der Zeile (Maus darüber)           | `e6f7f9` | sehr helles Cyan                      |
 | Farbe zum Hervorheben der Zeile (ausgewählt)             | `d7f1f5` | etwas kräftiger als Hover             |
-| Hintergrundfarbe der Aktionsschaltfläche                 | `2e9aa0` | wird vom Custom-CSS zum Gradient      |
+| Hintergrundfarbe der Aktionsschaltfläche                 | `2e9aa0` | flacher Vollton wie Lexoffice         |
 | Textfarbe der Aktionsschaltfläche                        | `ffffff` | weiß                                  |
 
 → **SPEICHERN**.
@@ -77,13 +83,16 @@ Pfad: **Start → Einstellungen → Benutzeroberfläche → Oberfläche und Farb
 ## 3. Tab „CSS-Style“
 
 Inhalt von [`custom_css.css`](./custom_css.css) in den Editor einfügen
-und speichern. Das ergänzt:
+und speichern. Das ergänzt den Lexoffice-Look:
 
 - **Inter** als Schrift überall (wie Website),
+- eisblauer Seitenhintergrund, Tabellen/Karten als **weiße Karten**
+  mit 8 px Radius und weichem Schatten,
+- Zeilentrennung über **feine Linien** + mehr Padding statt Zebra,
+- Tabellenüberschriften klein/grau/**Versalien**,
+- Aktionsbuttons **flach** in `#2e9aa0`, Versalien, dezenter Hover-Glow,
 - Cyan-**Akzentlinie** unter dem Hauptmenü (wie die Section-Divider der Website),
-- Aktionsbuttons mit **Glow-Gradient** `#2e9aa0 → #1ed6d6` und 8 px Radius,
-- **Fokus-Ring** in Markenfarbe für Eingabefelder,
-- weiche Kanten für Karten/Tabellen, Textmarkierung in Cyan.
+- **Fokus-Ring** in Markenfarbe für Eingabefelder, Textmarkierung in Cyan.
 
 ---
 

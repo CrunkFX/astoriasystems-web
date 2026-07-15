@@ -5,9 +5,13 @@
    Start → Einstellungen → Benutzeroberfläche → Tab "CSS-Style"
    → SPEICHERN.
 
+   Look: ruhig und augenschonend im Stil von Lexoffice –
+   grauer Seitenhintergrund, weiße Karten mit weichem Schatten,
+   flache Buttons, feine Linien statt Zebra – aber in den
+   CI-Farben von astoria.systems.
+
    Ergänzt die Farbfelder aus dem Tab "Oberfläche und Farben"
-   (Werte siehe README.md) um Schrift, Radien und Akzente
-   im CI der Website astoria.systems.
+   (Werte siehe README.md).
 
    Selektoren können je Dolibarr-Version minimal abweichen –
    im DevTools-Inspector prüfen und ggf. anpassen.
@@ -20,10 +24,12 @@
   --as-accent-mid: #1ed6d6;
   --as-accent-dark: #2e9aa0;   /* Links, Buttons – besserer Kontrast */
   --as-navy: #0a0e1a;
-  --as-surface-2: #f8fafc;
-  --as-surface-3: #f1f5f9;
+  --as-page-bg: #f2f7f9;       /* eisblauer Seitenhintergrund (wie Website) */
+  --as-card: #ffffff;          /* weiße Karten                       */
   --as-border: #e2e8f0;
   --as-text: #4f4f4f;
+  --as-text-muted: #6b7280;
+  --as-shadow: 0 1px 3px rgba(3, 7, 18, 0.06), 0 1px 2px rgba(3, 7, 18, 0.04);
 }
 
 /* ---------- Schrift: Inter wie auf der Website ---------- */
@@ -35,6 +41,13 @@ input, select, textarea, button,
   -webkit-font-smoothing: antialiased;
 }
 
+/* ---------- Seitenhintergrund: helles Eisblau, Karten heben sich ab ---------- */
+body,
+div.fichecenter,
+.pagecontent {
+  background-color: var(--as-page-bg) !important;
+}
+
 /* ---------- Feine Akzentlinie unter dem Hauptmenü ---------- */
 div.tmenudiv {
   border-bottom: 1px solid transparent;
@@ -42,26 +55,69 @@ div.tmenudiv {
     transparent 5%, rgba(0, 229, 255, 0.55) 50%, transparent 95%) 1;
 }
 
-/* ---------- Aktionsbuttons: Glow-Look der Website ---------- */
+/* ---------- Karten-Look: weiße Flächen auf grauem Grund ---------- */
+div.fiche,
+div.fichecenter .div-table-responsive,
+div.fichecenter .div-table-responsive-no-min,
+div.div-table-responsive,
+div.div-table-responsive-no-min,
+table.noborder,
+table.liste {
+  background: var(--as-card);
+  border: 1px solid var(--as-border) !important;
+  border-radius: 8px;
+  box-shadow: var(--as-shadow);
+}
+
+/* ---------- Tabellen: Linien statt Zebra, mehr Luft ---------- */
+table.liste td,
+table.noborder td,
+table.liste th,
+table.noborder th {
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+}
+table.liste tr.oddeven td,
+table.noborder tr.oddeven td {
+  border-bottom: 1px solid #eef1f5;
+}
+
+/* Tabellenüberschriften: klein, grau, Versalien (wie Lexoffice) */
+.liste_titre th,
+.liste_titre td,
+tr.liste_titre {
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--as-text-muted) !important;
+}
+
+/* ---------- Aktionsbuttons: flach, Vollton, Versalien ---------- */
 .butAction,
 a.butAction,
 span.butAction {
-  background: linear-gradient(135deg, var(--as-accent-dark), var(--as-accent-mid)) !important;
+  background: var(--as-accent-dark) !important;
   color: #ffffff !important;
   border: none !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 2px rgba(3, 7, 18, 0.12);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: 6px !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  box-shadow: none;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 .butAction:hover,
 a.butAction:hover {
-  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.35);
-  transform: translateY(-1px);
+  background: #257e83 !important;
+  box-shadow: 0 2px 10px rgba(0, 229, 255, 0.25);
 }
-/* Lösch-/Ablehnen-Buttons behalten ihre Warnfarbe, nur abrunden */
+/* Lösch-/Ablehnen-Buttons behalten ihre Warnfarbe, nur angleichen */
 .butActionDelete,
 .butActionRefused {
-  border-radius: 8px !important;
+  border-radius: 6px !important;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 /* ---------- Eingabefelder: Fokus im Markenakzent ---------- */
@@ -72,18 +128,7 @@ input[type="text"]:focus,
 input[type="password"]:focus {
   outline: none;
   border-color: var(--as-accent-dark) !important;
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.18) !important;
-}
-
-/* ---------- Karten/Tabellen: weiche Kanten, dezente Tiefe ---------- */
-div.fiche,
-div.div-table-responsive,
-div.div-table-responsive-no-min {
-  border-radius: 8px;
-}
-table.liste,
-table.noborder {
-  border-color: var(--as-border) !important;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15) !important;
 }
 
 /* ---------- Textmarkierung wie auf der Website ---------- */
