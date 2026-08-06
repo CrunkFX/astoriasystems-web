@@ -10,9 +10,12 @@ interface Props {
   locale: string;
   navItems: NavItem[];
   currentPath: string;
+  /** Kundencenter auf cp.astoria.systems — anderer Host, daher absolute Adresse. */
+  portalHref?: string;
+  portalLabel?: string;
 }
 
-export default function MobileNav({ locale, navItems, currentPath }: Props) {
+export default function MobileNav({ locale, navItems, currentPath, portalHref, portalLabel }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -102,6 +105,15 @@ export default function MobileNav({ locale, navItems, currentPath }: Props) {
                   </a>
                 );
               })}
+
+              {portalHref && (
+                <a
+                  href={portalHref}
+                  class="mt-3 block rounded-lg border border-[#0f7d87]/40 dark:border-[var(--color-accent)]/30 px-3 py-2.5 text-center text-sm font-medium text-[#0f7d87] dark:text-[var(--color-accent)] hover:bg-[#0f7d87]/10 dark:hover:bg-[var(--color-accent)]/10 transition-colors"
+                >
+                  {portalLabel}
+                </a>
+              )}
             </nav>
           </div>
         </>,

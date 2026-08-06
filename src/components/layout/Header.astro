@@ -13,6 +13,9 @@ interface Props {
 const { locale } = Astro.props;
 const navItems = getNavItems(locale);
 const currentPath = Astro.url.pathname;
+
+const portalHref = 'https://cp.astoria.systems';
+const portalLabel = locale === 'de' ? 'Kundencenter' : 'Customer Portal';
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="site-header">
@@ -53,8 +56,31 @@ const currentPath = Astro.url.pathname;
         <ThemeToggle client:load locale={locale} />
         <LanguageSwitcher client:load locale={locale} currentPath={currentPath} />
 
+        <!--
+          Zugang zum Kundencenter. Es läuft auf cp.astoria.systems und damit auf
+          einem anderen Host — deshalb eine absolute Adresse.
+
+          Die Schriftfarbe ist im hellen Modus bewusst NICHT das Marken-Cyan:
+          #00e5ff hat gegen Weiß nur 1,6:1 Kontrast und wäre als Beschriftung
+          kaum lesbar. Im dunklen Modus, wo es gegen #030712 leuchtet, kommt das
+          Original zum Zug. Dieselbe Abstufung benutzt das Kundencenter.
+        -->
+        <a
+          href={portalHref}
+          class="hidden lg:inline-flex items-center rounded-lg border border-[#0f7d87]/40 dark:border-[var(--color-accent)]/30 px-4 py-2 text-sm font-medium text-[#0f7d87] dark:text-[var(--color-accent)] hover:bg-[#0f7d87]/10 dark:hover:bg-[var(--color-accent)]/10 transition-colors"
+        >
+          {portalLabel}
+        </a>
+
         <!-- Mobile menu button -->
-        <MobileNav client:media="(max-width: 1023px)" locale={locale} navItems={navItems} currentPath={currentPath} />
+        <MobileNav
+          client:media="(max-width: 1023px)"
+          locale={locale}
+          navItems={navItems}
+          currentPath={currentPath}
+          portalHref={portalHref}
+          portalLabel={portalLabel}
+        />
       </div>
     </div>
   </div>
