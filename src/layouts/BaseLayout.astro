@@ -66,6 +66,17 @@ const {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const isDark = stored === 'dark' || (!stored && prefersDark);
         document.documentElement.classList.toggle('dark', isDark);
+
+        /* Dasselbe Farbschema an das Kundencenter weitergeben.
+           localStorage endet an der Grenze zwischen www.astoria.systems und
+           cp.astoria.systems — ein Cookie auf .astoria.systems gilt für beide.
+           Hier bewusst bei jedem Aufruf, nicht nur beim Umschalten: Sonst
+           erführe das Kundencenter nie etwas von jemandem, der die Website
+           einfach so benutzt, wie sein System eingestellt ist.
+           Der Wert wird in ThemeToggle.tsx und im Kundencenter gelesen. */
+        const sicher = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = 'astoria_theme=' + (isDark ? 'dark' : 'light')
+          + '; Path=/; Domain=.astoria.systems; Max-Age=31536000; SameSite=Lax' + sicher;
       })();
     </script>
   </head>

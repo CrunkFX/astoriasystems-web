@@ -4,6 +4,24 @@ interface Props {
   locale: string;
 }
 
+/**
+ * Farbschema für das Kundencenter hinterlegen.
+ *
+ * localStorage gilt nur für diesen Origin; cp.astoria.systems sieht davon
+ * nichts. Ein Cookie auf der gemeinsamen Domain gilt für beide, und das
+ * Kundencenter liest es beim Laden. Die Gegenrichtung funktioniert genauso —
+ * dort schreibt der Umschalter dasselbe Cookie.
+ *
+ * Gleichlautend im Kopf von BaseLayout.astro; dort kann nichts importiert
+ * werden, weil das Skript vor allem anderen laufen muss.
+ */
+function teileFarbschema(dark: boolean) {
+  const sicher = location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie =
+    'astoria_theme=' + (dark ? 'dark' : 'light')
+    + '; Path=/; Domain=.astoria.systems; Max-Age=31536000; SameSite=Lax' + sicher;
+}
+
 export default function ThemeToggle({ locale }: Props) {
   const [isDark, setIsDark] = useState(true);
 
@@ -16,6 +34,7 @@ export default function ThemeToggle({ locale }: Props) {
       if (!localStorage.getItem('theme')) {
         const dark = e.matches;
         root.classList.toggle('dark', dark);
+        teileFarbschema(dark);
         setIsDark(dark);
       }
     };
@@ -28,6 +47,7 @@ export default function ThemeToggle({ locale }: Props) {
     const newDark = !isDark;
     root.classList.toggle('dark', newDark);
     localStorage.setItem('theme', newDark ? 'dark' : 'light');
+    teileFarbschema(newDark);
     setIsDark(newDark);
   };
 
