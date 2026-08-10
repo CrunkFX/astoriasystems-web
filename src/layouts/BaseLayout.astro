@@ -62,21 +62,28 @@ const {
     <!-- Theme init: prevent flash -->
     <script is:inline>
       (function() {
+        /* Gemeinsames Farbschema von Website und Kundencenter.
+
+           localStorage endet an der Grenze zwischen www.astoria.systems und
+           cp.astoria.systems. Das Cookie auf .astoria.systems gilt für beide und
+           wird von beiden Seiten geschrieben — die Umschaltung im Kundencenter
+           wirkt deshalb auch hier.
+
+           Es steht nur dann, wenn jemand bewusst umgeschaltet hat. Ohne Cookie
+           folgen beide Seiten der Systemeinstellung und stimmen dadurch von
+           selbst überein; ein bei jedem Aufruf abgelegter Wert würde die
+           Systemeinstellung dagegen beim ersten Besuch einfrieren. */
+        const geteilt = (document.cookie.match(/(?:^|;\s*)astoria_theme=(light|dark)/) || [])[1];
         const stored = localStorage.getItem('theme');
+        const wahl = geteilt || stored;
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const isDark = stored === 'dark' || (!stored && prefersDark);
+        const isDark = wahl ? wahl === 'dark' : prefersDark;
         document.documentElement.classList.toggle('dark', isDark);
 
-        /* Dasselbe Farbschema an das Kundencenter weitergeben.
-           localStorage endet an der Grenze zwischen www.astoria.systems und
-           cp.astoria.systems — ein Cookie auf .astoria.systems gilt für beide.
-           Hier bewusst bei jedem Aufruf, nicht nur beim Umschalten: Sonst
-           erführe das Kundencenter nie etwas von jemandem, der die Website
-           einfach so benutzt, wie sein System eingestellt ist.
-           Der Wert wird in ThemeToggle.tsx und im Kundencenter gelesen. */
-        const sicher = location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = 'astoria_theme=' + (isDark ? 'dark' : 'light')
-          + '; Path=/; Domain=.astoria.systems; Max-Age=31536000; SameSite=Lax' + sicher;
+        /* Ein Cookie belegt eine bewusste Wahl — dann gehört sie auch in den
+           localStorage, sonst hielte der Umschalter sie weiter für offen und
+           würde bei der nächsten Systemänderung dazwischenfunken. */
+        if (geteilt && geteilt !== stored) localStorage.setItem('theme', geteilt);
       })();
     </script>
   </head>

@@ -5,14 +5,18 @@ interface Props {
 }
 
 /**
- * Farbschema für das Kundencenter hinterlegen.
+ * Bewusste Wahl des Farbschemas für das Kundencenter hinterlegen.
  *
  * localStorage gilt nur für diesen Origin; cp.astoria.systems sieht davon
  * nichts. Ein Cookie auf der gemeinsamen Domain gilt für beide, und das
  * Kundencenter liest es beim Laden. Die Gegenrichtung funktioniert genauso —
  * dort schreibt der Umschalter dasselbe Cookie.
  *
- * Gleichlautend im Kopf von BaseLayout.astro; dort kann nichts importiert
+ * Nur beim Umschalten, nicht bei einer Änderung der Systemeinstellung: Das
+ * Cookie soll eine Entscheidung festhalten. Wer keine getroffen hat, folgt auf
+ * beiden Seiten dem System und stimmt dadurch ohnehin überein.
+ *
+ * Gelesen wird es im Kopf von BaseLayout.astro; dort kann nichts importiert
  * werden, weil das Skript vor allem anderen laufen muss.
  */
 function teileFarbschema(dark: boolean) {
@@ -34,7 +38,6 @@ export default function ThemeToggle({ locale }: Props) {
       if (!localStorage.getItem('theme')) {
         const dark = e.matches;
         root.classList.toggle('dark', dark);
-        teileFarbschema(dark);
         setIsDark(dark);
       }
     };
