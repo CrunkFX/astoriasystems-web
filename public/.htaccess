@@ -1,0 +1,106 @@
+# Auslieferung auf Apache. Astro uebernimmt diese Datei unveraendert nach dist/.
+#
+# Sie ersetzt public/_headers und public/_redirects. Beide waren
+# Cloudflare-Pages-Dateien und haetten auf einem Webserver stillschweigend
+# nichts getan — die Seite waere ohne Sicherheitskopfzeilen und ohne die
+# Weiterleitungen der Altadressen ausgeliefert worden.
+#
+# Wer hier etwas aendert, prueft danach am laufenden Server, und zwar mit GET:
+#
+#   curl -sS -o /dev/null -D - https://www.astoria.systems/ | grep -i referrer
+#
+# Nicht mit `curl -I`. Das schickt ein HEAD, und bei HEAD beantwortet Apache
+# die Anfrage selbst — die Kopfzeilen kommen dann auch dann an, wenn sie bei
+# einem echten Abruf fehlen.
+
+ErrorDocument 404 /404.html
+
+# _astro/, images/ und en/ haben kein index.html. Mit -Indexes beantwortet
+# Apache sie mit 403; ohne diese Zeile saehe der Besucher Plesks Standardseite.
+ErrorDocument 403 /404.html
+
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+<IfModule mod_dir.c>
+  # astro.config.mjs legt trailingSlash: 'never' fest. Ohne diese Zeile haengt
+  # mod_dir an /produkte den Schraegstrich an, weil dort ein Verzeichnis liegt
+  # — und die Regel weiter unten entfernt ihn wieder. Zwei 301 im Wechsel,
+  # bis der Browser aufgibt.
+  DirectorySlash Off
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Uebernommen aus public/_headers, mit zwei Abweichungen:
+  #
+  # 1. HSTS kommt dazu. Auf Cloudflare fehlte es. **Ohne includeSubDomains**,
+  #    weil mail.astoria.systems, cp.astoria-systems.com und weitere
+  #    Unterdomains auf anderen Maschinen liegen und nicht alle zwingend
+  #    HTTPS sprechen. includeSubDomains wuerde sie fuer ein Jahr erzwingen.
+  #
+  # 2. X-XSS-Protection faellt weg. Der XSS-Filter ist aus allen aktuellen
+  #    Browsern entfernt; die Kopfzeile bewirkt nichts und galt zuletzt selbst
+  #    als Risiko. Was sie einmal leisten sollte, leistet heute eine
+  #    Inhaltsrichtlinie.
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # Zwischenspeicherung: nur _astro/, dort sind die Dateinamen gehasht.
+  #
+  # Nach dem **Pfad**, nicht nach der Dateiendung. Unter /images/ und im Stamm
+  # liegen favicon.svg, logo-full.png und die Social-Card unter ihrem eigenen
+  # Namen; eine Regel ueber alle .png liesse ein ausgetauschtes Logo ein Jahr
+  # lang nicht durch.
+  Header always set Cache-Control "public, max-age=31536000, immutable" env=ASTRO_MITTEL
+
+  <FilesMatch "\.html$">
+    Header always set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteRule ^_astro/ - [E=ASTRO_MITTEL:1]
+
+  # --- Altadressen aus der Odoo-Zeit ------------------------------------
+  #
+  # Uebernommen aus public/_redirects. Beide Schreibweisen in einer Regel, mit
+  # und ohne Schraegstrich, damit daraus kein Doppelsprung wird.
+  #
+  # Nicht uebernommen wurden:
+  #
+  #   /our-services#Dienstleistungen  und die drei weiteren Regeln mit Raute.
+  #   Ein Fragment erreicht den Server nie — der Browser behaelt es fuer sich.
+  #   Diese Zeilen waren auch auf Cloudflare wirkungslos.
+  #
+  #   /hilfe /hilfe 301
+  #   Eine Weiterleitung auf sich selbst, und /hilfe gibt es im Build gar
+  #   nicht. Auf Cloudflare fiel das nicht auf, weil echte Dateien dort
+  #   Vorrang haben; hier waere es eine Schleife gewesen.
+  RewriteRule ^our-services/?$ /produkte [R=301,L]
+  RewriteRule ^about-us/?$     /ueber-uns [R=301,L]
+  RewriteRule ^contactus/?$    /kontakt [R=301,L]
+  RewriteRule ^pricing/?$      /preise [R=301,L]
+  RewriteRule ^privacy/?$      /datenschutz [R=301,L]
+
+  # --- Adressform --------------------------------------------------------
+
+  # /produkte/ -> /produkte. Eine Seite, eine Adresse.
+  # Echte Verzeichnisse sind hier nicht ausgenommen: sie sollen ja gerade ohne
+  # Schraegstrich erreichbar sein, und DirectorySlash Off verhindert, dass
+  # mod_dir dagegenhaelt.
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteRule ^(.+?)/$ /$1 [R=301,L]
+
+  # /produkte liefert produkte/index.html aus, ohne Umleitung. Intern, nicht
+  # als 301 — der Besucher soll den Dateinamen nicht sehen, und das Canonical
+  # im HTML nennt die Adresse ohne ihn.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ /$1/index.html [L]
+</IfModule>

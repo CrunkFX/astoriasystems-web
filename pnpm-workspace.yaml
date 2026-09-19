@@ -1,0 +1,9 @@
+# pnpm 10 fragt seit Neuem nach, bevor es Build-Skripte von Abhaengigkeiten
+# ausfuehrt. Ohne Antwort werden sie uebersprungen — still, mit einem Hinweis,
+# den in einer CI niemand liest.
+#
+# sharp rechnet die Bilder um, esbuild baut sein natives Binaerpaket. Beide
+# werden zum Bauen gebraucht, beide sind uebliche Werkzeuge der Kette.
+allowBuilds:
+  esbuild: true
+  sharp: true
