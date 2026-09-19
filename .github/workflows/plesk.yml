@@ -1,0 +1,67 @@
+# Baut die Seite und legt das Ergebnis auf dem Zweig plesk-build ab.
+#
+# Bis zum 19.09.2026 lief die Seite auf Cloudflare Pages und wurde von dort
+# gebaut. Sie liegt jetzt auf cp.astoria-systems.com im Paket "Webseiten":
+# keine Laufzeit, keine Shell, kein Node auf dem Server. Plesk zieht
+# ausschliesslich fertige Dateien.
+name: Bereitstellung
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Zwei gleichzeitige Laeufe wuerden sich beim Force-Push ueberholen.
+concurrency:
+  group: plesk-build
+  cancel-in-progress: true
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm, nicht npm. Das Repository fuehrt pnpm-lock.yaml; mit npm
+      # aufgeloest kommen andere Versionen heraus, und der Build bricht in
+      # @tailwindcss/vite ab. Einmal nachgestellt am 19.09.2026.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+
+      # Kennung des ausgelieferten Standes, abrufbar unter
+      # /bereitstellung.txt. Beantwortet ohne Umweg, welcher Commit live ist.
+      - name: Kennung des Builds hinterlegen
+        run: |
+          {
+            echo "commit: ${GITHUB_SHA}"
+            echo "gebaut: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "lauf:   ${GITHUB_RUN_ID}"
+          } > dist/bereitstellung.txt
+
+      # dist/ wird als eigener, jedes Mal neu erzeugter Zweig veroeffentlicht.
+      # Die Dateien liegen dort flach im Wurzelverzeichnis, damit Plesk sie
+      # unveraendert nach httpdocs uebernehmen kann. Das .gitignore des
+      # Repositorys greift hier nicht, weil dies ein frisches Repository ist.
+      - name: Ergebnis auf den Zweig plesk-build legen
+        working-directory: dist
+        run: |
+          git init -b plesk-build
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Build aus ${GITHUB_SHA::7}"
+          git push --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" \
+            plesk-build
