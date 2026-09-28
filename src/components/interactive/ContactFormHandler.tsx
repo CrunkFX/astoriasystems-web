@@ -60,6 +60,12 @@ export default function ContactFormHandler({ locale, labels }: Props) {
 
   return (
     <form onSubmit={handleSubmit} class="space-y-5">
+      {/* Honigtopf: Menschen sehen das Feld nicht, Bots füllen es aus – der Endpunkt verwirft die
+          Anfrage dann still (antwortet trotzdem mit Erfolg, damit der Bot nichts lernt). */}
+      <div class="hidden" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label for="name" class="block text-sm font-medium mb-1.5">{labels.name} *</label>

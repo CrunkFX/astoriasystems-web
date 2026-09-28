@@ -1,13 +1,13 @@
 # Astoria Systems Website
 
-Modern, high-performance company website for Astoria Systems GmbH. Built with Astro, Tailwind CSS 4, and Preact. Deployed on Cloudflare Pages.
+Modern, high-performance company website for Astoria Systems GmbH. Built with Astro, Tailwind CSS 4, and Preact. Deployed on Ploi (nginx) following the `AstoriaSystems/website-deploy-template` convention.
 
 ## Tech Stack
 
 - **Astro 5** - Static-first framework with zero JS by default
 - **Tailwind CSS 4** - Utility-first CSS with automatic tree-shaking
 - **Preact** - Lightweight interactive islands (theme toggle, mobile nav, language switcher)
-- **Cloudflare Pages** - Edge deployment with auto-deploy on push
+- **Ploi** - nginx on the company web server, deployed on push to `main` via GitHub Actions and the Ploi deploy webhook
 
 ## Features
 
@@ -16,7 +16,7 @@ Modern, high-performance company website for Astoria Systems GmbH. Built with As
 - Glassmorphism design with animated gradients
 - Mobile-first responsive design
 - Comprehensive SEO (Schema.org, hreflang, OG tags, sitemap)
-- Contact form via Cloudflare Pages Function
+- Contact form sent via the Lettermint API (`server/kontakt.mjs`, a small Node service, see Deployment)
 - GDPR compliant (Bunny Fonts, EU hosting, no tracking)
 - WCAG accessible
 - Lighthouse 95+ target
@@ -62,49 +62,113 @@ src/
   styles/
     global.css     - Tailwind imports, theme tokens, glass effects
     animations.css - Scroll reveals, keyframes, glow effects
+server/
+  kontakt.mjs    - Contact form service behind nginx (POST /api/contact → Lettermint), outside dist/
+  kontakt.test.mjs - Tests: the real service in a Ploi-like site against a fake Lettermint (`pnpm test`)
+ploi/
+  deploy.sh      - Deploy steps run by Ploi (pnpm install, Astro build, atomic switch to dist/)
+  ploi.sh        - Ploi API helper (site-create, nginx-push, env-push, deploy, deploy-script)
+  nginx/         - nginx additions (astro.conf) and the full site config (webserver-template.conf)
+  .env.production.example - Environment of the Ploi site (SITE_URL, Lettermint token and addresses)
 functions/
   api/
-    contact.ts   - Cloudflare Pages Function for contact form
+    contact.ts   - Cloudflare Pages Function for the contact form (transition only, see Deployment)
 public/
-  _headers       - Security and cache headers
-  _redirects     - Legacy URL redirects
+  _headers       - Cloudflare Pages headers (transition only; nginx sets them from ploi/nginx/)
+  _redirects     - Cloudflare Pages redirects (transition only; nginx handles them from ploi/nginx/)
   robots.txt     - Crawler instructions
   favicon.svg    - Site favicon
 ```
 
-## Deployment to Cloudflare Pages
+## Deployment (Ploi)
 
-### Via Git Integration (Recommended)
-
-1. Push this repo to GitHub
-2. In Cloudflare Dashboard > Pages > Create Project
-3. Connect your GitHub repo
-4. Build settings:
-   - Build command: `pnpm build`
-   - Build output directory: `dist`
-   - Node.js version: Set `NODE_VERSION=20` in environment variables
-5. Deploy
-
-### Via Wrangler CLI
+The site is hosted on **ploi.io** (nginx, server `as-srv-02`, site `www.astoria.systems`, web directory
+`/dist`), following `AstoriaSystems/website-deploy-template`. Ploi pulls `main` on every deployment and
+runs the site's deploy script:
 
 ```bash
-npx wrangler pages deploy dist
+cd {SITE_DIRECTORY}      # with zero-downtime deployment: cd {RELEASE}
+git pull origin {BRANCH}
+bash ploi/deploy.sh
 ```
 
-### Environment Variables
+[`ploi/deploy.sh`](ploi/deploy.sh) builds on the server (`pnpm install --frozen-lockfile`, `astro build`
+into `.dist-next`, smoke checks, `bereitstellung.txt` with the commit) and switches atomically to `dist/`.
+Node ≥ 22.12 is required (Astro 6); the server runs Node 24, `.nvmrc` matches it.
 
-For the contact form to send emails, set these in Cloudflare Pages settings:
+### Site setup (once)
 
-| Variable | Description |
-|----------|-------------|
-| `RESEND_API_KEY` | API key from resend.com for email delivery |
-| `CONTACT_EMAIL` | Email address to receive form submissions (default: service@astoria.systems) |
+1. *Add site* → *Advanced*: domain `www.astoria.systems`, **web directory `/dist`**, PHP "none", webserver template
+   "Astro static" (or paste [`ploi/nginx/webserver-template.conf`](ploi/nginx/webserver-template.conf)
+   under Site → *Manage* → *NGINX configuration* afterwards), *Create system user* on. Add the alias
+   `astoria.systems` (Site → *Aliases*).
+2. *Repository*: this repo, branch `main`, deploy script as above. Keep *Quick Deploy* off: the CI
+   workflow triggers the deploy webhook only after a green build.
+3. *Environment*: contents of [`ploi/.env.production.example`](ploi/.env.production.example), with the
+   Lettermint sending token filled in. The token lives only there, never in the repository.
+4. *Server* → *Daemons* → add: command `node /home/<system user>/www.astoria.systems/server/kontakt.mjs`
+   (absolute path through the site directory, not the release), user = the site's system user, 1 process.
+   This runs the contact form service; after a deploy it restarts itself with the new version.
+5. *SSL* → Let's Encrypt for `www.astoria.systems,astoria.systems` once DNS points to the server. Ploi then
+   redirects http → https and `astoria.systems` → `www.astoria.systems` itself (the site is named `www.*`),
+   so the nginx config contains no host redirect of its own.
+6. Optional: *Settings* → Zero-Downtime deployment; the deploy script then starts with `cd {RELEASE}`.
 
-### Custom Domain
+Alternatively: `bash ploi/ploi.sh site-create --env-file ploi/.env.site` or the *Ploi* workflow under
+Actions (needs `PLOI_API_TOKEN` / `PLOI_SERVER_ID`).
 
-1. In Cloudflare Pages project settings > Custom domains
-2. Add `astoria.systems` and `www.astoria.systems`
-3. DNS will be configured automatically if domain is on Cloudflare
+### nginx
+
+Pages are built as `produkte/index.html` (Astro's default `build.format: 'directory'`) but addressed
+without a trailing slash (`trailingSlash: 'never'`, matching canonical and hreflang). Ploi's plain "Astro
+static" template would redirect `/produkte` to `/produkte/`, i.e. the canonical URL itself, so
+[`ploi/nginx/astro.conf`](ploi/nginx/astro.conf) serves `/produkte` from `produkte/index.html` directly and
+redirects `/produkte/` → `/produkte`. It also carries what used to live in `public/_headers` and
+`public/_redirects`: HSTS and the redirects of the old Odoo URLs (`/our-services` → `/produkte`, …).
+Everything stays static except one location: `POST /api/contact` is proxied to the contact form service on
+`127.0.0.1:3811`. No PHP is needed on the server.
+Install once with `bash ploi/ploi.sh nginx-push` or use the full
+[`ploi/nginx/webserver-template.conf`](ploi/nginx/webserver-template.conf); `deploy.sh` reports after
+every run whether the additions are present (marker `# astoriasystems-web nginx`).
+
+### CI
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) builds every push and pull request (pnpm, Node
+from `.nvmrc`) and checks that the build is complete and that canonical and sitemap use `SITE_URL`
+(repository variable, default `https://www.astoria.systems`), then tests the contact form service
+(`pnpm test`). On `main`, after a green run, it POSTs the Ploi deploy
+webhook (secret `PLOI_DEPLOY_WEBHOOK_URL`, Ploi → Site → *Repository*). Without the secret the build
+still runs and the deployment is skipped with a warning.
+
+### Contact form
+
+`src/components/interactive/ContactFormHandler.tsx` posts JSON `{name, email, phone?, company, subject,
+message, website}` to `/api/contact` – the same path as the former Cloudflare Pages Function, so the form
+works on both during the transition. `website` is a honeypot field that stays empty for humans.
+
+On Ploi, nginx proxies that path to [`server/kontakt.mjs`](server/kontakt.mjs), a small Node service without
+dependencies (outside `dist/`, never served). It runs as a Ploi daemon under the site's system user and
+listens on `127.0.0.1:3811`. The site itself stays static, and Node is on the server anyway because every
+site builds with it. The service validates the request, rate-limits it (5 per visitor in 10 minutes, 60 per
+hour in total; the visitor address comes from nginx as `X-Real-IP`), and sends it through the Lettermint API
+to `CONTACT_EMAIL` with `Reply-To` set to the sender, so a reply goes straight back.
+
+Settings come from the site's `.env` and are read on every request, so a change in the Ploi panel applies
+immediately: `LETTERMINT_TOKEN`, optional `LETTERMINT_ROUTE_ID`, `MAIL_FROM`, `CONTACT_EMAIL`, `KONTAKT_PORT`
+(see [`ploi/.env.production.example`](ploi/.env.production.example)). Form contents never go to the log.
+After a deploy the running service notices the new release (or the changed file), finishes open requests
+and exits; supervisor starts the new version. `deploy.sh` warns when the service does not answer or the token
+is missing, and names the exact daemon command.
+
+Responses: `200 {"success":true}`, otherwise `{"error":…}` with 400/403/404/405/413/415/429/500/502.
+Tests: `pnpm test`.
+
+### Transition from Cloudflare Pages
+
+`wrangler.jsonc`, `functions/api/contact.ts`, `public/_headers` and `public/_redirects` stay in the
+repository until DNS points to the Ploi server, so the Cloudflare deployment keeps working meanwhile;
+`ploi/deploy.sh` removes `_headers`/`_redirects` from the Ploi build. After the switch: delete these files,
+the Cloudflare Pages project and the SMTP variables there; `server/kontakt.mjs` replaces the function.
 
 ## Adding Content
 
