@@ -16,7 +16,7 @@ Modern, high-performance company website for Astoria Systems GmbH. Built with As
 - Glassmorphism design with animated gradients
 - Mobile-first responsive design
 - Comprehensive SEO (Schema.org, hreflang, OG tags, sitemap)
-- Contact form sent via the Lettermint API (`server/kontakt.php`, see Deployment)
+- Contact form sent via the Lettermint API (`server/kontakt.mjs`, a small Node service, see Deployment)
 - GDPR compliant (Bunny Fonts, EU hosting, no tracking)
 - WCAG accessible
 - Lighthouse 95+ target
@@ -63,8 +63,8 @@ src/
     global.css     - Tailwind imports, theme tokens, glass effects
     animations.css - Scroll reveals, keyframes, glow effects
 server/
-  kontakt.php    - Contact form handler behind nginx (POST /api/contact → Lettermint), outside dist/
-  kontakt.test.mjs - Tests: real PHP (php -S) against a fake Lettermint endpoint (`pnpm test`)
+  kontakt.mjs    - Contact form service behind nginx (POST /api/contact → Lettermint), outside dist/
+  kontakt.test.mjs - Tests: the real service in a Ploi-like site against a fake Lettermint (`pnpm test`)
 ploi/
   deploy.sh      - Deploy steps run by Ploi (pnpm install, Astro build, atomic switch to dist/)
   ploi.sh        - Ploi API helper (site-create, nginx-push, env-push, deploy, deploy-script)
@@ -98,10 +98,7 @@ Node ≥ 22.12 is required (Astro 6); the server runs Node 24, `.nvmrc` matches 
 
 ### Site setup (once)
 
-0. *Server* → *PHP*: install PHP 8.5 on the web server (as-srv-02 has no PHP yet). Only the contact form
-   needs it; the site itself stays static, and other static sites keep PHP "none".
-1. *Add site* → *Advanced*: domain `www.astoria.systems`, **web directory `/dist`**, **PHP version 8.5**
-   (creates the PHP-FPM pool `php8.5-fpm-<system user>` for `/api/contact`), webserver template
+1. *Add site* → *Advanced*: domain `www.astoria.systems`, **web directory `/dist`**, PHP "none", webserver template
    "Astro static" (or paste [`ploi/nginx/webserver-template.conf`](ploi/nginx/webserver-template.conf)
    under Site → *Manage* → *NGINX configuration* afterwards), *Create system user* on. Add the alias
    `astoria.systems` (Site → *Aliases*).
@@ -109,10 +106,13 @@ Node ≥ 22.12 is required (Astro 6); the server runs Node 24, `.nvmrc` matches 
    workflow triggers the deploy webhook only after a green build.
 3. *Environment*: contents of [`ploi/.env.production.example`](ploi/.env.production.example), with the
    Lettermint sending token filled in. The token lives only there, never in the repository.
-4. *SSL* → Let's Encrypt for `www.astoria.systems,astoria.systems` once DNS points to the server. Ploi then
+4. *Server* → *Daemons* → add: command `node /home/<system user>/www.astoria.systems/server/kontakt.mjs`
+   (absolute path through the site directory, not the release), user = the site's system user, 1 process.
+   This runs the contact form service; after a deploy it restarts itself with the new version.
+5. *SSL* → Let's Encrypt for `www.astoria.systems,astoria.systems` once DNS points to the server. Ploi then
    redirects http → https and `astoria.systems` → `www.astoria.systems` itself (the site is named `www.*`),
    so the nginx config contains no host redirect of its own.
-5. Optional: *Settings* → Zero-Downtime deployment; the deploy script then starts with `cd {RELEASE}`.
+6. Optional: *Settings* → Zero-Downtime deployment; the deploy script then starts with `cd {RELEASE}`.
 
 Alternatively: `bash ploi/ploi.sh site-create --env-file ploi/.env.site` or the *Ploi* workflow under
 Actions (needs `PLOI_API_TOKEN` / `PLOI_SERVER_ID`).
@@ -125,8 +125,8 @@ static" template would redirect `/produkte` to `/produkte/`, i.e. the canonical 
 [`ploi/nginx/astro.conf`](ploi/nginx/astro.conf) serves `/produkte` from `produkte/index.html` directly and
 redirects `/produkte/` → `/produkte`. It also carries what used to live in `public/_headers` and
 `public/_redirects`: HSTS and the redirects of the old Odoo URLs (`/our-services` → `/produkte`, …).
-Everything stays static except one location: `POST /api/contact` goes to `server/kontakt.php` through the
-site's PHP-FPM pool (placeholders `{SYSTEM_USER}`/`{DOMAIN}`, filled by `deploy.sh` and `nginx-push`).
+Everything stays static except one location: `POST /api/contact` is proxied to the contact form service on
+`127.0.0.1:3811`. No PHP is needed on the server.
 Install once with `bash ploi/ploi.sh nginx-push` or use the full
 [`ploi/nginx/webserver-template.conf`](ploi/nginx/webserver-template.conf); `deploy.sh` reports after
 every run whether the additions are present (marker `# astoriasystems-web nginx`).
@@ -135,8 +135,8 @@ every run whether the additions are present (marker `# astoriasystems-web nginx`
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) builds every push and pull request (pnpm, Node
 from `.nvmrc`) and checks that the build is complete and that canonical and sitemap use `SITE_URL`
-(repository variable, default `https://www.astoria.systems`). A second job lints `server/kontakt.php` on
-PHP 8.5 and runs its tests (`pnpm test`). On `main`, after both are green, it POSTs the Ploi deploy
+(repository variable, default `https://www.astoria.systems`), then tests the contact form service
+(`pnpm test`). On `main`, after a green run, it POSTs the Ploi deploy
 webhook (secret `PLOI_DEPLOY_WEBHOOK_URL`, Ploi → Site → *Repository*). Without the secret the build
 still runs and the deployment is skipped with a warning.
 
@@ -146,23 +146,29 @@ still runs and the deployment is skipped with a warning.
 message, website}` to `/api/contact` – the same path as the former Cloudflare Pages Function, so the form
 works on both during the transition. `website` is a honeypot field that stays empty for humans.
 
-On Ploi, nginx hands that path to [`server/kontakt.php`](server/kontakt.php) (outside `dist/`, never
-served). The script validates the request, rate-limits it (5 per address in 10 minutes, 60 per hour in
-total), and sends it through the Lettermint API to `CONTACT_EMAIL` with `Reply-To` set to the sender, so a
-reply goes straight back. Settings come from the site's `.env` (`LETTERMINT_TOKEN`, optional
-`LETTERMINT_ROUTE_ID`, `MAIL_FROM`, `CONTACT_EMAIL`, see
-[`ploi/.env.production.example`](ploi/.env.production.example)). Form contents never go to the log.
-`deploy.sh` warns when the PHP-FPM pool or the token is missing.
+On Ploi, nginx proxies that path to [`server/kontakt.mjs`](server/kontakt.mjs), a small Node service without
+dependencies (outside `dist/`, never served). It runs as a Ploi daemon under the site's system user and
+listens on `127.0.0.1:3811`. The site itself stays static, and Node is on the server anyway because every
+site builds with it. The service validates the request, rate-limits it (5 per visitor in 10 minutes, 60 per
+hour in total; the visitor address comes from nginx as `X-Real-IP`), and sends it through the Lettermint API
+to `CONTACT_EMAIL` with `Reply-To` set to the sender, so a reply goes straight back.
 
-Responses: `200 {"success":true}`, otherwise `{"error":…}` with 400/403/405/413/415/429/500/502.
-Tests: `pnpm test` (needs PHP ≥ 8.1 with curl locally).
+Settings come from the site's `.env` and are read on every request, so a change in the Ploi panel applies
+immediately: `LETTERMINT_TOKEN`, optional `LETTERMINT_ROUTE_ID`, `MAIL_FROM`, `CONTACT_EMAIL`, `KONTAKT_PORT`
+(see [`ploi/.env.production.example`](ploi/.env.production.example)). Form contents never go to the log.
+After a deploy the running service notices the new release (or the changed file), finishes open requests
+and exits; supervisor starts the new version. `deploy.sh` warns when the service does not answer or the token
+is missing, and names the exact daemon command.
+
+Responses: `200 {"success":true}`, otherwise `{"error":…}` with 400/403/404/405/413/415/429/500/502.
+Tests: `pnpm test`.
 
 ### Transition from Cloudflare Pages
 
 `wrangler.jsonc`, `functions/api/contact.ts`, `public/_headers` and `public/_redirects` stay in the
 repository until DNS points to the Ploi server, so the Cloudflare deployment keeps working meanwhile;
 `ploi/deploy.sh` removes `_headers`/`_redirects` from the Ploi build. After the switch: delete these files,
-the Cloudflare Pages project and the SMTP variables there; `server/kontakt.php` replaces the function.
+the Cloudflare Pages project and the SMTP variables there; `server/kontakt.mjs` replaces the function.
 
 ## Adding Content
 

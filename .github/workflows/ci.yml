@@ -1,7 +1,7 @@
 name: CI
 
-# Baut die Seite (pnpm, Node aus .nvmrc) und prüft Stichproben; prüft das Kontaktformular
-# (server/kontakt.php) mit PHP 8.5 wie auf dem Server. Bei Push auf main wird danach optional das
+# Baut die Seite (pnpm, Node aus .nvmrc), prüft Stichproben und testet den Kontakt-Dienst
+# (server/kontakt.mjs). Bei Push auf main wird danach optional das
 # Ploi-Deployment per Webhook ausgelöst (Secret PLOI_DEPLOY_WEBHOOK_URL: Ploi → Site → Repository).
 # Ohne Secret bleibt es beim Prüfen – dann übernimmt Quick Deploy in Ploi oder „Deploy now“ im Panel.
 
@@ -52,33 +52,13 @@ jobs:
             || { echo "::error::Sitemap nennt nicht ${SITE_URL}"; exit 1; }
           echo "Build vollständig, Canonical und Sitemap auf ${SITE_URL}."
 
-  kontakt:
-    name: Kontaktformular (PHP)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: curl, mbstring
-          coverage: none
-
-      - name: Syntax
-        run: php -l server/kontakt.php
-
-      # Echter PHP-Prozess (php -S) mit .env wie auf Ploi gegen einen nachgebildeten Lettermint-Endpunkt.
-      - name: Tests
-        run: node --test server/kontakt.test.mjs
+      # Echter Dienst aus einer Ploi-artigen Site (.env, Release-Symlink) gegen ein nachgebildetes Lettermint.
+      - name: Kontakt-Dienst
+        run: pnpm test
 
   deploy:
     name: Deploy via Ploi
-    needs: [build, kontakt]
+    needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 

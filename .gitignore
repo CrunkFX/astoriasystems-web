@@ -27,9 +27,6 @@ pnpm-debug.log*
 .dist-next/
 .dist-prev/
 
-# Kontaktformular (server/kontakt.php): Zähler der Drosselung im Site-Verzeichnis
-.kontakt/
-
 # Ploi-Zugangsdaten für ploi/ploi.sh – nur die Vorlage gehört ins Repository
 ploi/.env.*
 !ploi/.env.production.example

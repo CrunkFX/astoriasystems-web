@@ -1,18 +1,21 @@
-// Tests für server/kontakt.php – Aufruf: pnpm test (braucht php ≥ 8.1 mit curl).
+// Tests für server/kontakt.mjs – Aufruf: pnpm test.
 //
-// Jeder Test baut eine Site wie auf Ploi (<wurzel>/server/kontakt.php und <wurzel>/.env) und startet PHP
-// ohne Umgebungsvariablen, wie PHP-FPM mit clear_env: die Einstellungen kommen nur aus der .env. Lettermint
-// ist nachgebildet – nie echte Aufrufe.
+// Jeder Test baut eine Site wie auf Ploi mit Zero-Downtime (<wurzel>/site → Symlink auf ein Release mit
+// server/kontakt.mjs und .env) und startet den Dienst wie der Daemon: `node <wurzel>/site/server/kontakt.mjs`,
+// ohne Einstellungen in der Umgebung – sie kommen nur aus der .env. Lettermint ist nachgebildet, nie echte
+// Aufrufe.
 import { after, before, beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { createServer, request } from 'node:http';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const HANDLER = join(dirname(fileURLToPath(import.meta.url)), 'kontakt.php');
+import { envLesen, siteVerzeichnis } from './kontakt.mjs';
+
+const DIENST = join(dirname(fileURLToPath(import.meta.url)), 'kontakt.mjs');
 
 const ANFRAGE = {
   name: 'Anna Müller',
@@ -50,7 +53,7 @@ beforeEach(() => {
   lettermint.status = 202;
 });
 
-// ---------------------------------------------------------------- Site mit .env und php -S
+// ---------------------------------------------------------------- Site mit Release-Symlink und Dienst
 const laufend = [];
 after(() => laufend.forEach((s) => s.stoppen()));
 
@@ -65,40 +68,48 @@ function freierPort() {
   });
 }
 
+function releaseAnlegen(wurzel, name, env) {
+  const release = join(wurzel, 'site-deploy', 'site', name);
+  mkdirSync(join(release, 'server'), { recursive: true });
+  copyFileSync(DIENST, join(release, 'server', 'kontakt.mjs'));
+  writeFileSync(join(release, '.env'), Object.entries(env).map(([k, v]) => `${k}=${v}`).join('\n') + '\n');
+  return release;
+}
+
 async function site(env) {
   const wurzel = mkdtempSync(join(tmpdir(), 'kontakt-'));
-  mkdirSync(join(wurzel, 'server'));
-  copyFileSync(HANDLER, join(wurzel, 'server', 'kontakt.php'));
-  writeFileSync(join(wurzel, '.env'), Object.entries(env).map(([k, v]) => `${k}=${v}`).join('\n') + '\n');
-
   const port = await freierPort();
-  const php = spawn('php', ['-S', `127.0.0.1:${port}`, join(wurzel, 'server', 'kontakt.php')], {
-    env: { PATH: process.env.PATH },
-    stdio: ['ignore', 'ignore', 'pipe'],
+  const alleEnv = { KONTAKT_PORT: String(port), ...env };
+  const release = releaseAnlegen(wurzel, 'r1', alleEnv);
+  symlinkSync(release, join(wurzel, 'site'));
+
+  const dienst = spawn(process.execPath, [join(wurzel, 'site', 'server', 'kontakt.mjs')], {
+    env: { PATH: process.env.PATH, KONTAKT_PRUEFEN_MS: '100' },
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
   let log = '';
-  php.stderr.on('data', (teil) => (log += teil));
+  dienst.stdout.on('data', (teil) => (log += teil));
+  dienst.stderr.on('data', (teil) => (log += teil));
+  const ende = new Promise((fertig) => dienst.on('exit', (code) => fertig(code)));
 
   const s = {
-    host: `127.0.0.1:${port}`,
+    port,
     wurzel,
+    env: alleEnv,
     log: () => log,
+    ende,
     stoppen: () => {
-      php.kill();
+      dienst.kill();
       rmSync(wurzel, { recursive: true, force: true });
     },
   };
   laufend.push(s);
 
   for (let i = 0; i < 100; i++) {
-    try {
-      await senden(s, { methode: 'GET' });
-      return s;
-    } catch {
-      await new Promise((warte) => setTimeout(warte, 50));
-    }
+    if (log.includes('bereit auf')) return s;
+    await new Promise((warte) => setTimeout(warte, 50));
   }
-  throw new Error(`php -S startet nicht: ${log}`);
+  throw new Error(`Dienst startet nicht: ${log}`);
 }
 
 function eingerichtet(extra = {}) {
@@ -111,16 +122,20 @@ function eingerichtet(extra = {}) {
   });
 }
 
-function senden(s, { methode = 'POST', daten = ANFRAGE, kopf = {} } = {}) {
+function senden(s, { methode = 'POST', pfad = '/api/contact', daten = ANFRAGE, kopf = {} } = {}) {
   const koerper = typeof daten === 'string' ? daten : JSON.stringify(daten);
   return new Promise((fertig, fehler) => {
     const req = request(
       {
         host: '127.0.0.1',
-        port: Number(s.host.split(':')[1]),
-        path: '/api/contact',
+        port: s.port,
+        path: pfad,
         method: methode,
-        headers: methode === 'POST' ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(koerper), ...kopf } : kopf,
+        headers: {
+          Host: 'www.astoria.example',
+          ...(methode === 'POST' ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(koerper) } : {}),
+          ...kopf,
+        },
       },
       (res) => {
         let text = '';
@@ -138,7 +153,7 @@ function senden(s, { methode = 'POST', daten = ANFRAGE, kopf = {} } = {}) {
 test('Anfrage geht als Mail über Lettermint an das Service-Postfach, Antwort an den Absender', async () => {
   const s = await eingerichtet({ LETTERMINT_ROUTE_ID: 'website' });
 
-  const antwort = await senden(s, { kopf: { Origin: `http://${s.host}` } });
+  const antwort = await senden(s, { kopf: { Origin: 'https://www.astoria.example' } });
   assert.equal(antwort.status, 200);
   assert.deepEqual(antwort.json, { success: true });
   assert.equal(antwort.kopf['cache-control'], 'no-store');
@@ -199,16 +214,18 @@ test('Pflichtfelder, gültige Adresse und Längen', async () => {
     assert.equal(antwort.status, 400, JSON.stringify(daten));
     assert.ok(antwort.json.error);
   }
+  assert.equal((await senden(s, { daten: '[1, 2]' })).status, 400);
   assert.equal(lettermint.anfragen.length, 0);
 });
 
-test('nur POST mit JSON von der eigenen Seite', async () => {
+test('nur POST /api/contact mit JSON von der eigenen Seite', async () => {
   const s = await eingerichtet();
 
   const get = await senden(s, { methode: 'GET' });
   assert.equal(get.status, 405);
   assert.equal(get.kopf.allow, 'POST');
 
+  assert.equal((await senden(s, { pfad: '/anderes' })).status, 404);
   assert.equal((await senden(s, { kopf: { 'Content-Type': 'text/plain' } })).status, 415);
   assert.equal((await senden(s, { kopf: { Origin: 'https://boese.example' } })).status, 403);
   assert.equal((await senden(s, { kopf: { Origin: 'null' } })).status, 403);
@@ -242,16 +259,55 @@ test('API-Adresse nur über https oder auf dem eigenen Rechner', async () => {
 
   assert.equal((await senden(s)).status, 502);
   assert.match(s.log(), /LETTERMINT_BASE_URL ist nicht erlaubt/);
+  assert.equal(lettermint.anfragen.length, 0);
 });
 
-test('Drosselung: fünf Anfragen je Adresse in zehn Minuten', async () => {
+test('Drosselung: fünf Anfragen je Besucher (X-Real-IP von nginx) in zehn Minuten', async () => {
   const s = await eingerichtet();
+  const anna = { 'X-Real-IP': '203.0.113.7' };
 
   for (let i = 0; i < 5; i++) {
-    assert.equal((await senden(s)).status, 200);
+    assert.equal((await senden(s, { kopf: anna })).status, 200);
   }
-  const sechste = await senden(s);
+  const sechste = await senden(s, { kopf: anna });
   assert.equal(sechste.status, 429);
   assert.ok(Number(sechste.kopf['retry-after']) > 0);
-  assert.equal(lettermint.anfragen.length, 5);
+
+  // Ein anderer Besucher ist nicht betroffen.
+  assert.equal((await senden(s, { kopf: { 'X-Real-IP': '198.51.100.9' } })).status, 200);
+  assert.equal(lettermint.anfragen.length, 6);
+});
+
+test('Änderung der .env gilt ohne Neustart', async () => {
+  const s = await eingerichtet();
+  writeFileSync(join(s.wurzel, 'site', '.env'), Object.entries({ ...s.env, CONTACT_EMAIL: 'neu@astoria.example' }).map(([k, v]) => `${k}=${v}`).join('\n'));
+
+  assert.equal((await senden(s)).status, 200);
+  assert.deepEqual(lettermint.anfragen[0].koerper.to, ['neu@astoria.example']);
+});
+
+test('neues Release: der Dienst beendet sich sauber, damit supervisor die neue Version startet', async () => {
+  const s = await eingerichtet();
+  const r2 = releaseAnlegen(s.wurzel, 'r2', s.env);
+  unlinkSync(join(s.wurzel, 'site'));
+  symlinkSync(r2, join(s.wurzel, 'site'));
+
+  const code = await Promise.race([s.ende, new Promise((fertig) => setTimeout(() => fertig('läuft noch'), 3000))]);
+  assert.equal(code, 0);
+  assert.match(s.log(), /neue Version erkannt/);
+});
+
+test('Site-Verzeichnis: Symlink-Pfad bleibt, Release-Pfad von Ploi wird zurückgerechnet', () => {
+  assert.equal(siteVerzeichnis('/home/astoria/www.astoria.systems/server/kontakt.mjs'), '/home/astoria/www.astoria.systems');
+  assert.equal(
+    siteVerzeichnis('/home/astoria/www.astoria.systems-deploy/www.astoria.systems/28092026_120000/server/kontakt.mjs'),
+    '/home/astoria/www.astoria.systems',
+  );
+});
+
+test('.env-Leser: Anführungszeichen, Kommentare, export', () => {
+  assert.deepEqual(
+    envLesen('# Kommentar\nA=1\nexport B="zwei drei"\nC=\'vier\'\nD=fünf # Kommentar\nkaputt\nE=\n'),
+    { A: '1', B: 'zwei drei', C: 'vier', D: 'fünf', E: '' },
+  );
 });
