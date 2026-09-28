@@ -11,7 +11,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test server/kontakt.test.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "^5.0.0",

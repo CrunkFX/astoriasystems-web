@@ -4,7 +4,7 @@
 # nginx-Ergänzungen einspielen, Deployment auslösen.
 #
 #   bash ploi/ploi.sh site-create           Site (+ Benutzer) + Repository + Deploy-Script + Env + nginx + SSL + Quick Deploy
-#   bash ploi/ploi.sh env-push              SITE_URL in die Environment der Site schreiben
+#   bash ploi/ploi.sh env-push              Environment der Site ersetzen (SITE_URL + Kontaktformular)
 #   bash ploi/ploi.sh env-pull              aktuelle Environment der Site anzeigen
 #   bash ploi/ploi.sh nginx-push            ploi/nginx/astro.conf in die nginx-Konfiguration der Site einfügen
 #   bash ploi/ploi.sh nginx-pull            aktuelle nginx-Konfiguration der Site anzeigen
@@ -28,6 +28,8 @@
 #   optional             GIT_BRANCH (main), PLOI_SYSTEM_USER (ploi; mit --create-user aus der Domain
 #                        abgeleitet: www.kunde.de → kunde), PLOI_SOURCE_PROVIDER_ID,
 #                        SITE_URL (Standard: https://SITE_DOMAIN), ZERO_DOWNTIME=1 (für deploy-script)
+#   Kontaktformular      LETTERMINT_TOKEN, LETTERMINT_ROUTE_ID, MAIL_FROM, CONTACT_EMAIL (env-push/site-create
+#                        schreiben gesetzte Werte in die Environment; siehe ploi/.env.production.example)
 #
 # Voraussetzungen: bash, curl, jq.
 set -euo pipefail
@@ -178,12 +180,18 @@ EOF
 
 env_content() {
     printf 'SITE_URL=%s\n' "${SITE_URL:-https://${SITE_DOMAIN}}"
+    # Kontaktformular (server/kontakt.php): nur gesetzte Werte. env-push ersetzt die ganze .env – ohne
+    # LETTERMINT_TOKEN hier wäre er danach weg.
+    local name
+    for name in LETTERMINT_TOKEN LETTERMINT_ROUTE_ID MAIL_FROM CONTACT_EMAIL; do
+        [[ -z "${!name:-}" ]] || printf '%s="%s"\n' "$name" "${!name}"
+    done
 }
 
 # Fügt ploi/nginx/astro.conf hinter der Zeile `include /etc/nginx/ploi/<domain>/server/*;` ein.
 nginx_with_snippet() {
-    local config="$1"
-    awk -v snippet="$NGINX_SNIPPET" '
+    local config="$1" snippet="${2:-$NGINX_SNIPPET}"
+    awk -v snippet="$snippet" '
         {
             print
             if (!done && $0 ~ /include \/etc\/nginx\/ploi\/[^ ]*\/server\/\*;/) {
@@ -208,8 +216,11 @@ cmd_env_push() {
     require_tools curl jq
     require_vars SITE_DOMAIN
     resolve_site_id
+    [[ -n "${LETTERMINT_TOKEN:-}" ]] \
+        || warn "LETTERMINT_TOKEN nicht gesetzt – die Environment der Site wird ohne ihn ersetzt, das Kontaktformular antwortet danach mit 500."
     api PATCH "$(site_path /env)" "$(jq -n --arg content "$(env_content)" '{content: $content}')" >/dev/null
-    log "Environment der Site ${PLOI_SITE_ID} gesetzt: $(env_content | tr '\n' ' ')"
+    # Nur die Namen ins Log – der Token ist geheim.
+    log "Environment der Site ${PLOI_SITE_ID} gesetzt: $(env_content | cut -d= -f1 | tr '\n' ' ')"
 }
 
 cmd_nginx_pull() {
@@ -236,8 +247,20 @@ cmd_nginx_push() {
         return 0
     fi
 
-    updated="$(nginx_with_snippet "$current")" \
-        || die "Zeile 'include /etc/nginx/ploi/<domain>/server/*;' nicht gefunden. Inhalt von ploi/nginx/astro.conf im Panel unter Site → Manage → NGINX configuration in den server{}-Block einfügen."
+    # Platzhalter der Ergänzungen füllen: {SYSTEM_USER} (PHP-FPM-Pool des Kontaktformulars) und {DOMAIN}.
+    local site user domain snippet
+    site="$(api GET "$(site_path)")"
+    user="$(jq -r '.data.system_user // empty' <<<"$site")"
+    domain="${SITE_DOMAIN:-$(jq -r '.data.domain // .data.root_domain // empty' <<<"$site")}"
+    [[ -n "$user" && -n "$domain" ]] || die "Systembenutzer oder Domain der Site ${PLOI_SITE_ID} nicht ermittelbar."
+    snippet="$(mktemp)"
+    sed -e "s/{SYSTEM_USER}/${user}/g" -e "s/{DOMAIN}/${domain}/g" "$NGINX_SNIPPET" > "$snippet"
+
+    if ! updated="$(nginx_with_snippet "$current" "$snippet")"; then
+        rm -f "$snippet"
+        die "Zeile 'include /etc/nginx/ploi/<domain>/server/*;' nicht gefunden. Inhalt von ploi/nginx/astro.conf ({SYSTEM_USER} = ${user}, {DOMAIN} = ${domain}) im Panel unter Site → Manage → NGINX configuration in den server{}-Block einfügen."
+    fi
+    rm -f "$snippet"
 
     api PATCH "$(site_path /nginx-configuration)" "$(jq -n --arg content "$updated" '{content: $content}')" >/dev/null
     log "nginx-Konfiguration der Site ${PLOI_SITE_ID} ergänzt."

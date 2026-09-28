@@ -16,11 +16,6 @@ interface Props {
   };
 }
 
-// Endpunkt des Kontaktformulars: PUBLIC_CONTACT_ENDPOINT (Ploi → Site → Environment, siehe
-// ploi/.env.production.example), sonst die Cloudflare Pages Function unter /api/contact
-// (functions/api/contact.ts). Erwartet POST mit JSON und antwortet 2xx bei Erfolg.
-const CONTACT_ENDPOINT: string = import.meta.env.PUBLIC_CONTACT_ENDPOINT || '/api/contact';
-
 export default function ContactFormHandler({ locale, labels }: Props) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
@@ -33,7 +28,7 @@ export default function ContactFormHandler({ locale, labels }: Props) {
     const body = Object.fromEntries(data.entries());
 
     try {
-      const res = await fetch(CONTACT_ENDPOINT, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

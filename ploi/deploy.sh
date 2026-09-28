@@ -6,8 +6,8 @@
 #   git pull origin {BRANCH}
 #   bash ploi/deploy.sh
 #
-# Ablauf: Node prüfen → pnpm install → Astro-Build nach .dist-next → Stichproben → bereitstellung.txt
-# → atomar nach dist/ umschalten (Web-Directory der Site) → nginx-Ergänzungen prüfen.
+# Ablauf: Node prüfen → Kontaktformular prüfen → pnpm install → Astro-Build nach .dist-next → Stichproben
+# → bereitstellung.txt → atomar nach dist/ umschalten (Web-Directory der Site) → nginx-Ergänzungen prüfen.
 #
 # Entspricht AstoriaSystems/website-deploy-template. Abweichungen: pnpm statt npm (pnpm-lock.yaml), und
 # die Cloudflare-Pages-Dateien _headers/_redirects aus public/ kommen nicht mit ins Web-Directory –
@@ -79,6 +79,20 @@ SITE_URL_EFFEKTIV="${SITE_URL_EFFEKTIV:-${SITE_URL:-https://${DOMAIN}}}"
 export SITE_URL="$SITE_URL_EFFEKTIV"
 log "SITE_URL: ${SITE_URL}"
 
+# ----------------------------------------------------------------------------- Kontaktformular
+# server/kontakt.php beantwortet POST /api/contact über den PHP-FPM-Pool der Site (ploi/nginx/) und
+# verschickt über Lettermint. Hier nur die Voraussetzungen prüfen, damit Fehlendes im Deploy-Log steht.
+FPM_SOCKET="/run/php/php8.5-fpm-$(id -un).sock"
+if [[ ! -S "$FPM_SOCKET" ]]; then
+    warn "Kein PHP-FPM-Pool ${FPM_SOCKET} – in Ploi PHP 8.5 auf dem Server installieren (Server → PHP) und der Site zuweisen (Site → Settings → PHP version). Bis dahin antwortet das Kontaktformular mit 502."
+elif command -v php >/dev/null 2>&1; then
+    PHP_LINT="$(php -l server/kontakt.php 2>&1)" || die "server/kontakt.php: ${PHP_LINT}"
+    log "Kontaktformular: PHP-FPM-Pool vorhanden, server/kontakt.php geprüft"
+fi
+if ! grep -qsE '^[[:space:]]*(export[[:space:]]+)?LETTERMINT_TOKEN=[^[:space:]]' .env; then
+    warn "LETTERMINT_TOKEN fehlt in der Environment der Site – das Kontaktformular antwortet mit 500 (Vorlage: ploi/.env.production.example)."
+fi
+
 # ----------------------------------------------------------------------------- Build
 log "pnpm install"
 "${PNPM[@]}" install --frozen-lockfile --prefer-offline
@@ -114,9 +128,11 @@ rm -rf "$PREV"
 
 # ----------------------------------------------------------------------------- nginx
 # ploi/nginx/astro.conf ergänzt das Ploi-Webserver-Template „Astro static“ um die Umleitungen der alten
-# Odoo-Adressen (früher public/_redirects) und HSTS (früher public/_headers). Das Kopieren braucht sudo –
-# isolierte Site-Benutzer haben es nicht; dann einmalig `bash ploi/ploi.sh nginx-push` (Ploi-API) oder
-# ploi/nginx/webserver-template.conf im Panel unter Site → Manage → NGINX configuration einsetzen.
+# Odoo-Adressen (früher public/_redirects), HSTS (früher public/_headers) und das Kontaktformular
+# (/api/contact → server/kontakt.php); die Platzhalter {SYSTEM_USER} und {DOMAIN} werden hier gefüllt.
+# Das Kopieren braucht sudo – isolierte Site-Benutzer haben es nicht; dann einmalig
+# `bash ploi/ploi.sh nginx-push` (Ploi-API) oder ploi/nginx/webserver-template.conf im Panel unter
+# Site → Manage → NGINX configuration einsetzen.
 NGINX_INCLUDE_DIR="/etc/nginx/ploi/${DOMAIN}/server"
 NGINX_TARGET="${NGINX_INCLUDE_DIR}/astro.conf"
 NGINX_CONF="/etc/nginx/sites-available/${DOMAIN}"
@@ -124,12 +140,14 @@ NGINX_MARKER="# astoriasystems-web nginx"
 nginx_has_include() {
     [[ -r "$NGINX_TARGET" ]] || grep -qsF "$NGINX_MARKER" "$NGINX_CONF" 2>/dev/null
 }
+NGINX_SNIPPET="$(mktemp)"
+sed -e "s/{SYSTEM_USER}/$(id -un)/g" -e "s/{DOMAIN}/${DOMAIN}/g" ploi/nginx/astro.conf > "$NGINX_SNIPPET"
 if sudo -n true 2>/dev/null; then
     if [[ ! -d "$NGINX_INCLUDE_DIR" ]]; then
         warn "${NGINX_INCLUDE_DIR} nicht gefunden – bitte \`bash ploi/ploi.sh nginx-push\` ausführen."
-    elif sudo -n cmp -s ploi/nginx/astro.conf "$NGINX_TARGET" 2>/dev/null; then
+    elif sudo -n cmp -s "$NGINX_SNIPPET" "$NGINX_TARGET" 2>/dev/null; then
         log "nginx-Include ist aktuell"
-    elif sudo -n install -m 644 ploi/nginx/astro.conf "$NGINX_TARGET" 2>/dev/null; then
+    elif sudo -n install -m 644 "$NGINX_SNIPPET" "$NGINX_TARGET" 2>/dev/null; then
         if sudo -n nginx -t >/dev/null 2>&1; then
             sudo -n service nginx reload
             log "nginx-Include installiert und nginx neu geladen"
@@ -143,7 +161,8 @@ if sudo -n true 2>/dev/null; then
 elif nginx_has_include; then
     log "nginx-Konfiguration enthält die astoria-Ergänzungen"
 else
-    warn "Kein sudo für $(id -un) (isolierter Site-Benutzer) und keine astoria-Ergänzungen in ${NGINX_CONF} – einmalig \`bash ploi/ploi.sh nginx-push\` ausführen, sonst fehlen die Umleitungen der alten Adressen (/our-services & Co.), X-Frame-Options DENY und HSTS."
+    warn "Kein sudo für $(id -un) (isolierter Site-Benutzer) und keine astoria-Ergänzungen in ${NGINX_CONF} – einmalig \`bash ploi/ploi.sh nginx-push\` ausführen, sonst fehlen das Kontaktformular (/api/contact), die Umleitungen der alten Adressen (/our-services & Co.), X-Frame-Options DENY und HSTS."
 fi
+rm -f "$NGINX_SNIPPET"
 
 echo "✅ Deployment abgeschlossen ($(git rev-parse --short HEAD)) → ${SITE_URL}"
