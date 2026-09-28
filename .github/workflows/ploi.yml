@@ -1,0 +1,88 @@
+name: Ploi
+
+# 1-Klick-Deployment: Actions → "Ploi" → "Run workflow" → Domain eintragen → Run.
+# Legt die Site komplett an (Benutzer, Site, Repository, Zero-Downtime, Deploy-Script, Environment,
+# nginx-Ergänzungen, SSL, Quick Deploy, erstes Deployment) oder führt einzelne Schritte für eine
+# bestehende Site aus.
+#
+# Einmalig in GitHub (am besten auf Organisations-Ebene, dann gilt es für alle Kunden-Repos):
+#   Settings → Secrets and variables → Actions
+#   Secret   PLOI_API_TOKEN   ploi.io → Profil → API
+#   Variable PLOI_SERVER_ID   Server-ID (steht in der URL des Servers im Ploi-Panel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Was soll passieren?
+        type: choice
+        default: site-create
+        options:
+          - site-create
+          - deploy
+          - nginx-push
+          - env-push
+          - deploy-script
+      domain:
+        description: Domain der Webseite (z. B. www.kunde.de)
+        type: string
+        required: true
+      server_id:
+        description: Ploi-Server-ID (leer = Variable PLOI_SERVER_ID)
+        type: string
+        default: ''
+      create_user:
+        description: Eigenen Systembenutzer anlegen (Website-Isolation)
+        type: boolean
+        default: true
+      zero_downtime:
+        description: Zero-Downtime-Deployment aktivieren
+        type: boolean
+        default: true
+      ssl:
+        description: Let's-Encrypt-Zertifikat anfordern (DNS muss bereits zeigen)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ploi-${{ inputs.domain }}
+  cancel-in-progress: false
+
+jobs:
+  ploi:
+    name: ${{ inputs.action }} ${{ inputs.domain }}
+    runs-on: ubuntu-latest
+
+    env:
+      PLOI_API_TOKEN: ${{ secrets.PLOI_API_TOKEN }}
+      PLOI_SERVER_ID: ${{ inputs.server_id || vars.PLOI_SERVER_ID }}
+      SITE_DOMAIN: ${{ inputs.domain }}
+      GIT_REPOSITORY: ${{ github.repository }}
+      GIT_BRANCH: ${{ github.ref_name }}
+      ZERO_DOWNTIME: ${{ inputs.zero_downtime && '1' || '0' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Voraussetzungen prüfen
+        run: |
+          [ -n "$PLOI_API_TOKEN" ] || { echo "Secret PLOI_API_TOKEN fehlt."; exit 1; }
+          [ -n "$PLOI_SERVER_ID" ] || { echo "Variable PLOI_SERVER_ID fehlt (oder server_id eingeben)."; exit 1; }
+          command -v jq >/dev/null
+
+      - name: Site anlegen
+        if: inputs.action == 'site-create'
+        run: |
+          args=()
+          ${{ inputs.create_user }} && args+=(--create-user)
+          ${{ inputs.zero_downtime }} && args+=(--zero-downtime)
+          ${{ inputs.ssl }} || args+=(--no-ssl)
+          bash ploi/ploi.sh site-create "${args[@]}"
+
+      - name: ${{ inputs.action }}
+        if: inputs.action != 'site-create'
+        run: bash ploi/ploi.sh "${{ inputs.action }}"

@@ -19,7 +19,8 @@ const {
   serviceDescription,
 } = Astro.props;
 
-const siteUrl = 'https://www.astoria.systems';
+// Aus `site` in astro.config.mjs (SITE_URL), ohne Slash am Ende.
+const siteUrl = (Astro.site?.href ?? 'https://www.astoria.systems/').replace(/\/$/, '');
 
 const organization = {
   '@type': 'Organization',

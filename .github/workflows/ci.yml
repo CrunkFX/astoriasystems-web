@@ -1,0 +1,70 @@
+name: CI
+
+# Baut die Seite (pnpm, Node aus .nvmrc) und prüft Stichproben. Bei Push auf main wird optional das
+# Ploi-Deployment per Webhook ausgelöst (Secret PLOI_DEPLOY_WEBHOOK_URL: Ploi → Site → Repository).
+# Ohne Secret bleibt es beim Bauen – dann übernimmt Quick Deploy in Ploi oder „Deploy now“ im Panel.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Stichproben
+    runs-on: ubuntu-latest
+
+    env:
+      # Kanonische Adresse wie in der Ploi-Environment der Site (ploi/.env.production.example).
+      SITE_URL: ${{ vars.SITE_URL || 'https://www.astoria.systems' }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # pnpm-Version aus packageManager in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Stichproben
+        run: |
+          for datei in index.html 404.html en/index.html kontakt/index.html produkte/index.html sitemap-index.xml robots.txt; do
+            [ -f "dist/$datei" ] || { echo "::error::dist/$datei fehlt"; exit 1; }
+          done
+          grep -q "rel=\"canonical\" href=\"${SITE_URL}/\"" dist/index.html \
+            || { echo "::error::Canonical der Startseite ist nicht ${SITE_URL}/"; exit 1; }
+          grep -qE "<loc>${SITE_URL}/?</loc>" dist/sitemap-0.xml \
+            || { echo "::error::Sitemap nennt nicht ${SITE_URL}"; exit 1; }
+          echo "Build vollständig, Canonical und Sitemap auf ${SITE_URL}."
+
+  deploy:
+    name: Deploy via Ploi
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ploi-Deployment anstoßen
+        env:
+          PLOI_DEPLOY_WEBHOOK_URL: ${{ secrets.PLOI_DEPLOY_WEBHOOK_URL }}
+        run: |
+          if [ -z "$PLOI_DEPLOY_WEBHOOK_URL" ]; then
+            echo "::warning::Secret PLOI_DEPLOY_WEBHOOK_URL ist nicht gesetzt – Deployment wird übersprungen (Ploi Quick Deploy oder „Deploy now“ übernimmt)."
+            exit 0
+          fi
+          curl --fail --silent --show-error --request POST "$PLOI_DEPLOY_WEBHOOK_URL"
+          echo "Ploi-Deployment ausgelöst."

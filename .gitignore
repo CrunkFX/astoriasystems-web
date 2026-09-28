@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Ploi-Deployment (ploi/deploy.sh): Zwischenstände des Builds
+.dist-next/
+.dist-prev/
+
+# Ploi-Zugangsdaten für ploi/ploi.sh – nur die Vorlage gehört ins Repository
+ploi/.env.*
+!ploi/.env.production.example
