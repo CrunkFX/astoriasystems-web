@@ -133,7 +133,8 @@ still runs and the deployment is skipped with a warning.
 ### Contact form
 
 `src/components/interactive/ContactFormHandler.tsx` posts JSON `{name, email, phone?, company, subject,
-message}` to `PUBLIC_CONTACT_ENDPOINT` (Ploi environment). On Ploi there is no Cloudflare Pages Function,
+message, website}` to `PUBLIC_CONTACT_ENDPOINT` (Ploi environment); `website` is a honeypot field that
+stays empty for humans. On Ploi there is no Cloudflare Pages Function,
 so the endpoint has to be provided elsewhere – intended: the portal (`https://portal.astoria.systems/api/kontakt`),
 which must answer 2xx on success and allow the origin `https://www.astoria.systems` via CORS
 (preflight `OPTIONS`, `Content-Type: application/json`). Without the variable the form posts to
